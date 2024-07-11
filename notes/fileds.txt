@@ -1,0 +1,55 @@
+- employee_id
+- month
+- allowance
+- grade
+- percentage_allowance
+- grade_Allowance
+- initial_salary
+- grade_allowance_ratio
+- secondary_salary
+- allowance_boys
+- nature_work_increase
+- termination_service
+- z_Income
+- gross_salary
+- late_receivables
+- total_discounts
+- net_salary
+- amount_letters
+- bank
+- branch_number
+- account_number
+- resident_exemption
+- annual_taxable_amount
+- tax
+- exemptions
+- amount_tax
+
+
+- الموظف
+- الشهر
+- العلاوة
+- الدرجة
+- نسبة العلاوة
+- علاوة درجة
+- الراتب الأولي
+- نسبة علاوة درجة
+- الراتب الثانوي
+- علاوة الأولاد
+- إضافة حسب طبيعة عمل
+- نهاية الخدمة
+- ض.دخل
+- إجمالي الراتب
+- مستحقات متأخرة
+- اجمالي الخصومات
+- صافي الراتب
+- المبلغ بالحروف
+- بيان الرواتب
+- البنك
+- رقم الفرع
+- رقم الحساب المحول له الراتب
+- اعفاء مقيم
+- مبلغ السنوي الخاضع للضريبة
+- الضريبة
+- الاعفائات
+- مبلغ ضريبة
