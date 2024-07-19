@@ -7,9 +7,11 @@
                     <p class="card-text">هنا يتم عرض بيانات المستخدمين ويمكنك التحكم في صلاحياتهم كاملة</p>
                 </div>
                 <div class="col-auto">
+                    @can('create', 'App\Models\User')
                     <a class="btn btn-success" href="{{route('users.create')}}">
                         <i class="fe fe-plus"></i>
                     </a>
+                    @endcan
                 </div>
             </div>
             <div class="row my-4">

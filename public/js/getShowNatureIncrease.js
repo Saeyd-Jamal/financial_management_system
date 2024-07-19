@@ -19,17 +19,11 @@
                             <div class="row">
                                 <div class="form-group p-3 col-4">
                                     <label for="nature_work">طبيعة العمل</label>
-                                    <select class="custom-select" id="nature_work" name="nature_work" required>
-                                        <option>عرض القيم المتوفرة</option>
-                                        <option selected value="`+ response['nature_work'] +`" >`+ response['nature_work'] +`</option>
-                                    </select>
+                                    <input type="text" id="nature_work" name="nature_work" class="form-control" placeholder="أدخل طبيعة العمل"  value="`+ response['nature_work'] +`" required="required">
                                 </div>
                                 <div class="form-group p-3 col-5">
                                     <label for="scientific_qualification">المؤهل العلمي</label>
-                                    <select class="custom-select" id="scientific_qualification" name="scientific_qualification" required>
-                                        <option>عرض القيم المتوفرة</option>
-                                        <option selected value="`+ response['scientific_qualification'] +`">`+ response['scientific_qualification'] +`</option>
-                                    </select>
+                                    <input type="text" id="scientific_qualification" name="scientific_qualification" class="form-control" placeholder="أدخل المؤهل العلمي"  value="`+ response['scientific_qualification'] +`" required="required">
                                 </div>
                                 <div class="form-group p-3 col-3">
                                     <label for="percentage">النسبة</label>

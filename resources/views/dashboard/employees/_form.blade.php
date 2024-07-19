@@ -14,19 +14,18 @@
     </div>
     <div class="form-group p-3 col-3">
         <label for="gender">الجنس</label>
-        <select class="custom-select" id="gender" name="gender"  >
+        <select class="custom-select" id="gender" name="gender" required >
             <option value="ذكر">ذكر</option>
-            <option value="أنثى">أنثى</option>
+            <option value="انثى">انثى</option>
         </select>
     </div>
     <div class="form-group p-3 col-3">
-        <label for="matrimonial_status">الحالة الزوجية</label>
-        <select class="custom-select" id="matrimonial_status" name="matrimonial_status" required>
-            <option @selected($employee->matrimonial_status == null)>عرض القيم المتوفرة</option>
-            @foreach ($matrimonial_status as $matrimonial_statusV)
-                <option value="{{$matrimonial_statusV['value']}}" @selected($employee->matrimonial_status == $matrimonial_statusV)>{{$matrimonial_statusV['value']}}</option>
+        <x-form.input name="matrimonial_status" placeholder="أدخل الحالة الزوجية" :value="$employee->matrimonial_status" label="الحالة الزوجية" list="matrimonial_status_list" required />
+        <datalist id="matrimonial_status_list">
+            @foreach ($matrimonial_status as $matrimonial_status)
+                <option value="{{ $matrimonial_status }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
     <div class="form-group p-3 col-3">
         <x-form.input type="number" label="عدد الزوجات" :value="$employee->number_wives"  name="number_wives" placeholder="0" required />
@@ -37,29 +36,27 @@
     <div class="form-group p-3 col-3">
         <x-form.input type="number" label="عدد الأولاد في الجامعة" :value="$employee->number_university_children"  name="number_university_children" placeholder="0" required />
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="scientific_qualification">المؤهل العلمي</label>
-        <select class="custom-select" id="scientific_qualification" name="scientific_qualification" required>
-            <option @selected($employee->scientific_qualification == null)>عرض القيم المتوفرة</option>
-            @foreach ($scientific_qualification as $scientific_qualificationV)
-                <option value="{{$scientific_qualificationV['value']}}" @selected($employee->scientific_qualification == $scientific_qualificationV)>{{$scientific_qualificationV['value']}}</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="scientific_qualification" placeholder="أدخل المؤهل العلمي" :value="$employee->scientific_qualification" label="المؤهل العلمي" list="scientific_qualification_list" required />
+        <datalist id="scientific_qualification_list">
+            @foreach ($scientific_qualification as $scientific_qualification)
+                <option value="{{ $scientific_qualification }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="text" label="التخصص" :value="$employee->specialization"  name="specialization" placeholder="محاسبة...." required />
+        <x-form.input type="text" label="التخصص" :value="$employee->specialization"  name="specialization" placeholder="محاسبة...." />
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="text" label="الجامعة" :value="$employee->university"  name="university" placeholder="الأزهر...." required />
+        <x-form.input type="text" label="الجامعة" :value="$employee->university"  name="university" placeholder="الأزهر...." />
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="area">المنطقة</label>
-        <select class="custom-select" id="area" name="area" required>
-            <option @selected($employee->area == null)>عرض القيم المتوفرة</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="area" placeholder="أدخل المنطقة" :value="$employee->area" label="المنظقة" list="areas_list" required />
+        <datalist id="areas_list">
             @foreach ($areas as $area)
-                <option value="{{$area['value']}}" @selected($employee->area == $area)>{{$area['value']}}</option>
+                <option value="{{ $area }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
     <div class="form-group p-3 col-3">
         <x-form.input type="text" label="العنوان بالتفصيل" :value="$employee->address"  name="address" placeholder="دير البلح - شارع يافا - حي البشارة - مستشفى يافا" required />
@@ -76,7 +73,7 @@
 <h2 class="h3">بيانات العمل</h2>
 <div class="row">
     <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" />
+        <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" required />
     </div>
     <div class="form-group p-3 col-3">
         <label for="grade">الدرجة في سلم الرواتب</label>
@@ -98,7 +95,7 @@
         </select>
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="10%.." />
+        <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="10%.."/>
     </div>
     <div class="form-group p-3 col-3">
         <label for="salary_category">فئة الراتب</label>
@@ -124,133 +121,108 @@
     <div class="form-group p-3 col-3">
         <x-form.input type="date" label="تاريخ التقاعد" :value="$workData->date_retirement" name="date_retirement" readonly />
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="working_status">حالةا لدوام</label>
-        <select class="custom-select" id="working_status" name="working_status" required>
-            <option @selected($workData->working_status == null)>عرض القيم المتوفرة</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="working_status" placeholder="أدخل حالة الدوام" :value="$workData->working_status" label="حالة الدوام" list="working_status_list" required />
+        <datalist id="working_status_list">
             @foreach ($working_status as $working_status)
-                <option value="{{$working_status['value']}}" @selected($workData->working_status == $working_status['value'])>{{$working_status['value']}}</option>
+                <option value="{{ $working_status }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="type_appointment">نوع التعين</label>
-        <select class="custom-select" id="type_appointment" name="type_appointment" required>
-            <option @selected($workData->type_appointment == null)>عرض القيم المتوفرة</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="type_appointment" placeholder="أدخل نوع التعين" :value="$workData->type_appointment" label="نوع التعين" list="type_appointment_list" required />
+        <datalist id="type_appointment_list">
             @foreach ($type_appointment as $type_appointment)
-                <option value="{{$type_appointment['value']}}" @selected($workData->type_appointment == $type_appointment['value'])>{{$type_appointment['value']}}</option>
+                <option value="{{ $type_appointment }}">
             @endforeach
-        </select>
-    </div>
-    <div class="form-group p-3 col-3">
-        <label for="field_action">مجال العمل</label>
-        <select class="custom-select" id="field_action" name="field_action" required>
-            <option @selected($workData->field_action == null)>عرض القيم المتوفرة</option>
-            @foreach ($field_action as $field_action)
-                <option value="{{$field_action['value']}}" @selected($workData->field_action == $field_action['value'])>{{$field_action['value']}}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group p-3 col-3">
-        <label for="government_official">موظف حكومة</label>
-        <select class="custom-select" id="government_official" name="government_official" required>
-            <option value="غير موظف" @selected($workData->government_official == null || $workData->government_official == "غير موظف")>غير موظف</option>
-            @foreach ($government_official as $government_official)
-                <option value="{{$government_official['value']}}" @selected($workData->government_official == $government_official['value'])>{{$government_official['value']}}</option>
-            @endforeach
-        </select>
+        </datalist>
     </div>
     <div class="form-group p-3 col-3">
         <label for="dual_function">مزدوج الوظيفة</label>
-        <select class="custom-select" id="dual_function" name="dual_function" >
-            <option value="لا" @selected($workData->dual_function == "لا" || $workData->dual_function == null)>لا</option>
-            <option value="نعم" @selected($workData->dual_function == "نعم")>نعم</option>
+        <select class="custom-select" id="dual_function" name="dual_function" required >
+            <option value="غير موظف" @selected($workData->dual_function == "غير موظف" || $workData->dual_function == null)>غير موظف</option>
+            <option value="موظف" @selected($workData->dual_function == "موظف")>موظف</option>
         </select>
     </div>
-
-    <div class="form-group p-3 col-3">
-        <label for="state_effectiveness">حالة الفعالية</label>
-        <select class="custom-select" id="state_effectiveness" name="state_effectiveness" required>
-            <option @selected($workData->state_effectiveness == null)>عرض القيم المتوفرة</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="field_action" placeholder="أدخل مجال العمل" :value="$workData->field_action" label="مجال العمل" list="field_action_list" required />
+        <datalist id="field_action_list">
+            @foreach ($field_action as $field_action)
+                <option value="{{ $field_action }}">
+            @endforeach
+        </datalist>
+    </div>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="state_effectiveness" placeholder="أدخل حالة الفعالية" :value="$workData->state_effectiveness" label="حالة الفعالية" list="state_effectiveness_list" required />
+        <datalist id="state_effectiveness_list">
             @foreach ($state_effectiveness as $state_effectiveness)
-                <option value="{{$state_effectiveness['value']}}" @selected($workData->state_effectiveness == $state_effectiveness['value'])>{{$state_effectiveness['value']}}</option>
+                <option value="{{ $state_effectiveness }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="nature_work">طبيعةالعمل</label>
-        <select class="custom-select" id="nature_work" name="nature_work" required>
-            <option @selected($workData->nature_work == null)>عرض القيم المتوفرة</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="nature_work" placeholder="أدخل طبيعة العمل" :value="$workData->nature_work" label="طبيعة العمل" list="nature_work_list" required />
+        <datalist id="nature_work_list">
             @foreach ($nature_work as $nature_work)
-                <option value="{{$nature_work['value']}}" @selected($workData->nature_work == $nature_work['value'])>{{$nature_work['value']}}</option>
+                <option value="{{ $nature_work }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="association">الجمعية</label>
-        <select class="custom-select" id="association" name="association" required>
-            <option @selected($workData->association == null)>عرض القيم المتوفرة</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="association" placeholder="أدخل الجمعية" :value="$workData->association" label="الجمعية" list="association_list" required />
+        <datalist id="association_list">
             @foreach ($association as $association)
-                <option value="{{$association['value']}}" @selected($workData->association == $association['value'])>{{$association['value']}}</option>
+                <option value="{{ $association }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="workplace">مكان العمل</label>
-        <select class="custom-select" id="workplace" name="workplace" required>
-            <option @selected($workData->workplace == null)>عرض القيم المتوفرة</option>
-            @foreach ($workplace as $workplaceV)
-                <option value="{{$workplaceV['value']}}" @selected($workData->workplace == $workplaceV['value'])>{{$workplaceV['value']}}</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="workplace" placeholder="أدخل مكان العمل" :value="$workData->workplace" label="مكان العمل" list="workplace_list" required />
+        <datalist id="workplace_list">
+            @foreach ($workplace as $workplace)
+                <option value="{{ $workplace }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="section">القسم</label>
-        <select class="custom-select" id="section" name="section" required>
-            <option @selected($workData->section == null)>عرض القيم المتوفرة</option>
-            @foreach ($section as $sectionV)
-                <option value="{{$sectionV['value']}}" @selected($workData->section == $sectionV['value'])>{{$sectionV['value']}}</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="section" placeholder="أدخل القسم" :value="$workData->section" label="القسم" list="section_list" required />
+        <datalist id="section_list">
+            @foreach ($section as $section)
+                <option value="{{ $section }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="dependence">التبعية</label>
-        <select class="custom-select" id="dependence" name="dependence" required>
-            <option @selected($workData->dependence == null)>عرض القيم المتوفرة</option>
-            @foreach ($dependence as $dependenceV)
-                <option value="{{$dependenceV['value']}}" @selected($workData->dependence == $dependenceV['value'])>{{$dependenceV['value']}}</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="dependence" placeholder="أدخل التبعية" :value="$workData->dependence" label="التبعية" list="dependence_list" required />
+        <datalist id="dependence_list">
+            @foreach ($dependence as $dependence)
+                <option value="{{ $dependence }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="branch">الفرع</label>
-        <select class="custom-select" id="branch" name="branch" required>
-            <option @selected($workData->branch == null)>عرض القيم المتوفرة</option>
-            @foreach ($branch as $branchV)
-                <option value="{{$branchV['value']}}" @selected($workData->branch == $branchV['value'])>{{$branchV['value']}}</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="establishment" placeholder="أدخل المنشأة" :value="$workData->establishment" label="المنشأة" list="establishment_list" required />
+        <datalist id="establishment_list">
+            @foreach ($establishment as $establishment)
+                <option value="{{ $establishment }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <label for="establishment">المنشأة</label>
-        <select class="custom-select" id="establishment" name="establishment" required>
-            <option @selected($workData->establishment == null)>عرض القيم المتوفرة</option>
-            @foreach ($establishment as $establishmentV)
-                <option value="{{$establishmentV['value']}}" @selected($workData->establishment == $establishmentV['value'])>{{$establishmentV['value']}}</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="foundation_E" placeholder="أدخل المؤسسة بالإنجليزي" :value="$workData->foundation_E" label="المؤسسة بالإنجليزي" list="foundation_E_list" required />
+        <datalist id="foundation_E_list">
+            @foreach ($foundation_E as $foundation_E)
+                <option value="{{ $foundation_E }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
-    <div class="form-group p-3 col-3">
-        <x-form.input label="بيان الراتب" :value="$workData->payroll_statement" name="payroll_statement" placeholder="0" />
-    </div>
-    <div class="form-group p-3 col-3">
-        <label for="foundation_E">المؤسسة E</label>
-        <select class="custom-select" id="foundation_E" name="foundation_E" required>
-            <option @selected($workData->foundation_E == null)>عرض القيم المتوفرة</option>
-            @foreach ($foundation_E as $foundation_EV)
-                <option value="{{$foundation_EV['value']}}" @selected($workData->foundation_E == $foundation_EV['value'])>{{$foundation_EV['value']}}</option>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="payroll_statement" placeholder="أدخل بيان الراتب" :value="$employee->payroll_statement" label="بيان الراتب" list="payroll_statement_list" required />
+        <datalist id="payroll_statement_list">
+            @foreach ($payroll_statement as $payroll_statement)
+                <option value="{{ $payroll_statement }}">
             @endforeach
-        </select>
+        </datalist>
     </div>
 
 </div>

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\FixedEntries;
+use App\Models\Salary;
 use App\Models\Total;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -105,7 +107,6 @@ class FixedEntriesController extends Controller
     {
         if($request->{"administrative_allowance"."_create"} == true){
             $this->updateEntries($request,"administrative_allowance","administrative_allowance".'_months');
-            return $request->all();
         }
         if($request->{"scientific_qualification_allowance"."_create"} == true){
             $this->updateEntries($request,"scientific_qualification_allowance","scientific_qualification_allowance".'_months');
@@ -162,6 +163,11 @@ class FixedEntriesController extends Controller
         if($request->{"savings_5"."_create"} == true){
             $this->updateEntries($request,"savings_5","savings_5".'_months');
         }
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
+        if($salary != null){
+            $employee = Employee::findOrFail($request->employee_id);
+            AddSalaryEmployee::addSalary($employee);
+        }
     }
     // public Function
 
@@ -193,7 +199,7 @@ class FixedEntriesController extends Controller
     {
         $fixed_entrie = FixedEntries::with(['employee'])->where('employee_id',$id)->get();
         $fixed_entrie['employee'] = FixedEntries::with(['employee'])->where('employee_id',$id)->first()->employee;
-        $total_association_loan_old = Total::where('employee_id',$id)->first()['total_association_loan'];
+        $total_association_loan_old = (Total::where('employee_id',$id)->first() == null) ? 0 : Total::where('employee_id',$id)->first()['total_association_loan'];
         $btn_label = "تعديل";
         $month = $this->thisMonth;
         $year = $this->thisYear;
@@ -205,15 +211,11 @@ class FixedEntriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $fixedEntries = FixedEntries::with(['employee'])->findOrFail($id);
-
-        $all = $request->all();
-        foreach ($all as $key => $value) {
-            if($value == null){
-                $all[$key] = 0.00;
-            }
+        $employee = Employee::findOrFail($id);
+        $salary = Salary::where('employee_id',$id)->where('month',Carbon::now()->format('Y-m'))->first();
+        if($salary != null){
+            AddSalaryEmployee::addSalary($employee);
         }
-        $fixedEntries->update($all);
         return redirect()->route('fixed_entries.index')->with('success','تم تحديث الثوابت بنجاح');
     }
 

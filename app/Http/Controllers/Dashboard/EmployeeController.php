@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Dashboard;
 
 use Alkoumi\LaravelArabicNumbers\Numbers;
+use App\Exports\EmployeesDataExport;
+use App\Exports\EmployeesExport;
+use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequset;
 use App\Imports\EmployeesImport;
 use App\Models\Constant;
 use App\Models\Employee;
+use App\Models\Salary;
 use App\Models\SalaryScale;
+use App\Models\User;
 use App\Models\WorkData;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,46 +25,67 @@ use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class EmployeeController extends Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        // $this->authorizeResource(Employee::class, 'employee');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        Gate::authorize('employees.view');
-        $employees = Employee::orderBy('name')->paginate(10);
-        return view('dashboard.employees.index', compact('employees'));
+        $this->authorize('view', Employee::class);
+        $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
+        $working_status = WorkData::select('working_status')->distinct()->pluck('working_status')->toArray();
+        $nature_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();
+        $type_appointment = WorkData::select('type_appointment')->distinct()->pluck('type_appointment')->toArray();
+        $field_action = WorkData::select('field_action')->distinct()->pluck('field_action')->toArray();
+        $matrimonial_status = Employee::select('matrimonial_status')->distinct()->pluck('matrimonial_status')->toArray();
+        $scientific_qualification = Employee::select('scientific_qualification')->distinct()->pluck('scientific_qualification')->toArray();
+        $state_effectiveness = WorkData::select('state_effectiveness')->distinct()->pluck('state_effectiveness')->toArray();
+        $association =  WorkData::select('association')->distinct()->pluck('association')->toArray();
+        $workplace = WorkData::select('workplace')->distinct()->pluck('workplace')->toArray();
+        $section = WorkData::select('section')->distinct()->pluck('section')->toArray();
+        $dependence = WorkData::select('dependence')->distinct()->pluck('dependence')->toArray();
+        $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
+        $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
+
+        $employees = Employee::paginate(10);
+
+        return view('dashboard.employees.index', compact('employees',"areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement"));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(EmployeeRequset $request)
     {
+        $advance_payment_rate = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
+        $advance_payment_permanent = Constant::where('type_constant','advance_payment_permanent')->first('value')->value;
+        $advance_payment_non_permanent = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
+        $advance_payment_riyadh = Constant::where('type_constant','advance_payment_riyadh')->first('value')->value;
+        $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
+        $working_status = WorkData::select('working_status')->distinct()->pluck('working_status')->toArray();
+        $nature_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();
+        $type_appointment = WorkData::select('type_appointment')->distinct()->pluck('type_appointment')->toArray();
+        $field_action = WorkData::select('field_action')->distinct()->pluck('field_action')->toArray();
+        $matrimonial_status = Employee::select('matrimonial_status')->distinct()->pluck('matrimonial_status')->toArray();
+        $scientific_qualification = Employee::select('scientific_qualification')->distinct()->pluck('scientific_qualification')->toArray();
+        $state_effectiveness = WorkData::select('state_effectiveness')->distinct()->pluck('state_effectiveness')->toArray();
+        $association =  WorkData::select('association')->distinct()->pluck('association')->toArray();
+        $workplace = WorkData::select('workplace')->distinct()->pluck('workplace')->toArray();
+        $section = WorkData::select('section')->distinct()->pluck('section')->toArray();
+        $dependence = WorkData::select('dependence')->distinct()->pluck('dependence')->toArray();
+        $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
+        $foundation_E = WorkData::select('foundation_E')->distinct()->pluck('foundation_E')->toArray();
+        $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
 
-
-        $advance_payment_rate = $this->advance_payment_rate;
-        $advance_payment_permanent = $this->advance_payment_permanent;
-        $advance_payment_non_permanent = $this->advance_payment_non_permanent;
-        $advance_payment_riyadh = $this->advance_payment_riyadh;
-        $areas = $this->areas;
-        $working_status = $this->working_status;
-        $nature_work = $this->nature_work;
-        $type_appointment = $this->type_appointment;
-        $government_official = $this->government_official;
-        $field_action = $this->field_action;
-        $matrimonial_status = $this->matrimonial_status;
-        $scientific_qualification = $this->scientific_qualification;
-        $state_effectiveness = $this->state_effectiveness;
-        $association = $this->association;
-        $workplace = $this->workplace;
-        $section = $this->section;
-        $dependence = $this->dependence;
-        $branch = $this->branch;
-        $establishment = $this->establishment;
-        $foundation_E = $this->foundation_E;
         $employee = new Employee();
         $workData = new WorkData();
-        return view('dashboard.employees.create', compact('employee','workData',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","government_official","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","branch","establishment","foundation_E"));
+
+        return view('dashboard.employees.create', compact('employee','workData',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement"));
     }
 
     /**
@@ -77,7 +104,7 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(EmployeeRequset $request, Employee $employee)
+    public function show(Request $request, Employee $employee)
     {
         if ($request->showModel == true) {
             $employee = Employee::with(['workData'])->find($employee->id);
@@ -89,34 +116,35 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Employee $employee)
+    public function edit(EmployeeRequset $request,Employee $employee)
     {
-        $advance_payment_rate = $this->advance_payment_rate;
-        $advance_payment_permanent = $this->advance_payment_permanent;
-        $advance_payment_non_permanent = $this->advance_payment_non_permanent;
-        $advance_payment_riyadh = $this->advance_payment_riyadh;
-        $areas = $this->areas;
-        $working_status = $this->working_status;
-        $nature_work = $this->nature_work;
-        $type_appointment = $this->type_appointment;
-        $government_official = $this->government_official;
-        $field_action = $this->field_action;
-        $matrimonial_status = $this->matrimonial_status;
-        $scientific_qualification = $this->scientific_qualification;
-        $state_effectiveness = $this->state_effectiveness;
-        $association = $this->association;
-        $workplace = $this->workplace;
-        $section = $this->section;
-        $dependence = $this->dependence;
-        $branch = $this->branch;
-        $establishment = $this->establishment;
-        $foundation_E = $this->foundation_E;
+        $advance_payment_rate = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
+        $advance_payment_permanent = Constant::where('type_constant','advance_payment_permanent')->first('value')->value;
+        $advance_payment_non_permanent = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
+        $advance_payment_riyadh = Constant::where('type_constant','advance_payment_riyadh')->first('value')->value;
+        $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
+        $working_status = WorkData::select('working_status')->distinct()->pluck('working_status')->toArray();
+        $nature_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();
+        $type_appointment = WorkData::select('type_appointment')->distinct()->pluck('type_appointment')->toArray();
+        $field_action = WorkData::select('field_action')->distinct()->pluck('field_action')->toArray();
+        $matrimonial_status = Employee::select('matrimonial_status')->distinct()->pluck('matrimonial_status')->toArray();
+        $scientific_qualification = Employee::select('scientific_qualification')->distinct()->pluck('scientific_qualification')->toArray();
+        $state_effectiveness = WorkData::select('state_effectiveness')->distinct()->pluck('state_effectiveness')->toArray();
+        $association =  WorkData::select('association')->distinct()->pluck('association')->toArray();
+        $workplace = WorkData::select('workplace')->distinct()->pluck('workplace')->toArray();
+        $section = WorkData::select('section')->distinct()->pluck('section')->toArray();
+        $dependence = WorkData::select('dependence')->distinct()->pluck('dependence')->toArray();
+        $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
+        $foundation_E = WorkData::select('foundation_E')->distinct()->pluck('foundation_E')->toArray();
+        $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
+
         $btn_label = "تعديل";
         $workData = WorkData::where('employee_id', $employee->id)->first();
         if ($workData == null) {
             $workData = new WorkData();
         }
-        return view('dashboard.employees.edit', compact('employee','workData','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","government_official","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","branch","establishment","foundation_E"));
+
+        return view('dashboard.employees.edit', compact('employee','workData','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement"));
     }
 
     /**
@@ -142,14 +170,17 @@ class EmployeeController extends Controller
         WorkData::updateOrCreate([
             'employee_id' => $employee->id
         ], $request->all());
-
-
+        $salary = Salary::where('employee_id',$employee->id)->where('month',Carbon::now()->format('Y-m'))->first();
+        if($salary != null){
+            AddSalaryEmployee::addSalary($employee);
+        }
+        // AddSalaryEmployee::addSalary($employee);
         return redirect()->route('employees.index')->with('success', 'تم تحديث بيانات الموظف المختار');
     }
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Employee $employee)
+    public function destroy(EmployeeRequset $request,Employee $employee)
     {
         $employee->delete();
         return redirect()->route('employees.index')->with('danger', 'تم حذف بيانات الموظف المحدد');
@@ -168,25 +199,127 @@ class EmployeeController extends Controller
         if($employee_search_name != ""){
             $employees = $employees->where('name','LIKE',"%{$employee_search_name}%");
         }
+
+
         return $employees->get();
     }
 
-    // Execl Import
+    // filterEmployee function
+    public function filterEmployee(Request $request)
+    {
+        $valInput = $request->post('val');
+        $filedsEmpolyees = [
+            'name',
+            'employee_id',
+            'gender',
+            'matrimonial_status',
+            'scientific_qualification',
+            'area',
+        ];
+        $filedsWork = [
+            'working_status',
+            'type_appointment',
+            'field_action',
+            'dual_function',
+            'state_effectiveness',
+            'nature_work',
+            'association',
+            'workplace',
+            'section',
+            'dependence',
+            'establishment',
+            'payroll_statement'
+        ];
+
+        $employees = new Employee();
+        foreach($filedsEmpolyees as $filed){
+            $valInput = $request->post($filed);
+            if($valInput != null || $valInput != ""){
+                $employees = Employee::where($filed,'LIKE',"{$valInput}%");
+            }
+        }
+        foreach($filedsWork as $filed){
+            $valInput = $request->post($filed);
+            if($valInput != null || $valInput != ""){
+                $employees = $employees->whereHas('workData', function($query) use ($filed, $valInput) {
+                    $query->where($filed,'LIKE',"{$valInput}%");
+                });
+            }
+        }
+        return $employees->get();
+    }
+
+    // Execl
     public function import(Request $request)
     {
+        // $this->authorize('import', Employee::class);
         $file = $request->file('fileUplode');
         if($file == null){
             return redirect()->back()->with('error', 'لم يتم رفع الملف بشكل صحيح');
         }
+
         Excel::import(new EmployeesImport, $file);
 
         return redirect()->route('employees.index')->with('success', 'تم رفع الملف');
     }
-    // PDF Export
-    public function viewPDF()
+    public function export(Request $request)
     {
-        $employees = Employee::paginate(100);
-        $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees]);
+        $this->authorize('export', Employee::class);
+        $time = Carbon::now();
+        $filename = 'سجلات الموظفين' . $time .'.xlsx';
+        return Excel::download(new EmployeesDataExport, $filename);
+    }
+
+
+    // PDF Export
+    public function viewPDF(Request $request)
+    {
+        if($request->has('filter')){
+            parse_str( $request->data, $data);
+            $filedsEmpolyees = [
+                'name',
+                'employee_id',
+                'gender',
+                'matrimonial_status',
+                'scientific_qualification',
+                'area',
+            ];
+            $filedsWork = [
+                'working_status',
+                'type_appointment',
+                'field_action',
+                'dual_function',
+                'state_effectiveness',
+                'nature_work',
+                'association',
+                'workplace',
+                'section',
+                'dependence',
+                'establishment',
+                'payroll_statement'
+            ];
+            $employees = new Employee();
+            foreach($filedsEmpolyees as $filed){
+                $valInput = $data[$filed];
+                if($valInput != ""){
+                    $employees = Employee::where($filed,'LIKE',"%{$valInput}%");
+                }
+            }
+            foreach($filedsWork as $filed){
+                $valInput = $data[$filed];
+                if($valInput != ""){
+                    $employees = $employees->whereHas('workData', function($query) use ($filed, $valInput) {
+                        $query->where($filed,'LIKE',"%{$valInput}%");
+                    });
+
+                }
+            }
+            session()->put('employees', $employees->get());
+            return "filter Done";
+        }
+        $this->authorize('export', Employee::class);
+        $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  session('employees')]);
+        session()->remove('employees');
         return $pdf->stream();
     }
 }

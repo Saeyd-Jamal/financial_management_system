@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\CurrencyController;
 use App\Http\Controllers\Dashboard\EmployeeController;
 use App\Http\Controllers\Dashboard\FixedEntriesController;
 use App\Http\Controllers\Dashboard\NatureWorkIncreaseController;
+use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SalaryController;
 use App\Http\Controllers\Dashboard\SalaryScaleController;
 use App\Http\Controllers\Dashboard\TotalController;
@@ -24,11 +25,13 @@ Route::group([
 ], function () {
     // outhers fields
     Route::post('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
+    Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
     Route::post('/fixed_entries/association_loan', [FixedEntriesController::class,'associationLoan'])->name('fixed_entries.associationLoan');
     Route::post('/fixed_entries/getFixedEntriesData', [FixedEntriesController::class,'getFixedEntriesData'])->name('fixed_entries.getFixedEntriesData');
+
     Route::post('/bakcups/getDataAll', [SystemOperationsController::class,'bakcupsData'])->name('bakcups.bakcupsData');
 
-
+    Route::post('/salaries/createAllSalaries', [SalaryController::class,'createAllSalaries'])->name('salaries.createAllSalaries');
 
 
     // soft delete for salaries
@@ -38,7 +41,10 @@ Route::group([
 
 
     // Excel
-    Route::post('/employees/importExcel', [EmployeeController::class,'import'])->name('employees.importExcel');
+    Route::post('employees/importExcel', [EmployeeController::class,'import'])->name('employees.importExcel');
+    Route::get('employees/exportExcel', [EmployeeController::class,'export'])->name('employees.exportExcel');
+    Route::post('banks_employees/importExcel', [BanksEmployeesController::class,'import'])->name('banks_employees.importExcel');
+    Route::get('banks_employees/exportExcel', [BanksEmployeesController::class,'export'])->name('banks_employees.exportExcel');
 
     // PDF Export
     Route::post('employees/view_pdf', [EmployeeController::class, 'viewPDF'])->name('employees.view_pdf');
@@ -60,6 +66,7 @@ Route::group([
         'totals' => TotalController::class,
         'salaries' => SalaryController::class,
         'users' => UserController::class,
+        // 'roles' => RoleController::class,
     ]);
 });
 

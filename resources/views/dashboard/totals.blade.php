@@ -75,13 +75,13 @@
                         </div>
                         <div class="row">
                             <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0"  label="إجمالي المستحقات" name="total_receivables" placeholder="5000...." />
+                                <x-form.input type="number" min="0" value="0"  label="إجمالي المستحقات" name="total_receivables" placeholder="5000...." />
                             </div>
                             <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0"  label="إجمالي الإدخارات" name="total_savings" placeholder="5000...." />
+                                <x-form.input type="number" min="0" value="0"  label="إجمالي الإدخارات" name="total_savings" placeholder="5000...." />
                             </div>
                             <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0"  label="إجمالي القروض" name="total_association_loan" placeholder="5000...." />
+                                <x-form.input type="number" min="0"  value="0" label="إجمالي القروض" name="total_association_loan" placeholder="5000...." />
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">

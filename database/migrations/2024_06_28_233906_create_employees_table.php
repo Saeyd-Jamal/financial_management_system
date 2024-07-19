@@ -25,12 +25,12 @@ return new class extends Migration
             $table->smallInteger('number_children')->default(0);
             $table->smallInteger('number_university_children')->default(0)->comment('عدد الأولاد في الجامعة');
             $table->string('scientific_qualification')->comment('المؤهل العلمي');
-            $table->string('specialization')->comment('التخصص');
-            $table->string('university');
+            $table->string('specialization')->nullable()->comment('التخصص');
+            $table->string('university')->nullable();
             $table->string('area');
             $table->string('address');
             $table->string('email')->nullable();
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->timestamps();
         });
     }

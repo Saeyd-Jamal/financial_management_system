@@ -13,8 +13,14 @@ class EmployeeRequset extends FormRequest
      */
     public function authorize(): bool
     {
-        if($this->route('employee')){
+        if($this->method() == 'GET'){
+            return Gate::allows('employees.view');
+        }
+        if($this->route('employee') && ($this->method() == 'PUT' || $this->method() == 'GET' )){
             return Gate::allows('employees.edit');
+        }
+        if($this->method() == 'delete' && $this->route('employee')){
+            return Gate::allows('employees.delete');
         }
         return Gate::allows('employees.create');
     }

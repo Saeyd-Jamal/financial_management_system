@@ -10,4 +10,5 @@
             @include("dashboard.users._form")
         </form>
     </div>
+
 </x-front-layout>

@@ -21,7 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind('abilities', function() {
+            return include base_path('data/abilities.php');
+        });
     }
 
     /**
@@ -32,11 +34,10 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
 
         //Authouration
-        Gate::define('employees.view',function ($user) {
-            return true;
-        });
-        Gate::define('employees.edit',function ($user) {
-            return true;
+        Gate::before(function ($user, $ability) {
+            if($user->super_admin) {
+                return true;
+            }
         });
     }
 }

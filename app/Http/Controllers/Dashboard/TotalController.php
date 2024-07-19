@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
+use App\Models\Salary;
 use App\Models\Total;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TotalController extends Controller
@@ -27,6 +31,11 @@ class TotalController extends Controller
             'employee_id' => 'required|exists:employees,id|unique:totals,employee_id',
         ]);
         Total::create($request->all());
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
+        if($salary != null){
+            $employee = Employee::findOrFail($request->employee_id);
+            AddSalaryEmployee::addSalary($employee);
+        }
         return redirect()->route('totals.index')->with('success', 'تم إضافة إجمايات جديدة');
     }
 
@@ -56,6 +65,11 @@ class TotalController extends Controller
             'employee_id' => 'required|exists:employees,id',
         ]);
         $total->update($request->all());
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
+        if($salary != null){
+            $employee = Employee::findOrFail($request->employee_id);
+            AddSalaryEmployee::addSalary($employee);
+        }
         return redirect()->route('totals.index')->with('success', 'تم تعديل الإجماليات لموظف');
     }
 

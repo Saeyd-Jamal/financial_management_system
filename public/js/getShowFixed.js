@@ -30,12 +30,11 @@
                                         <td>`+ response[index]['association_loan'] +`</td>
                                         <td>`+ response[index]['tuition_fees'] +`</td>
                                         <td>`+ response[index]['voluntary_contributions'] +`</td>
-                                        <td>`+ response[index]['employee']['salary_category'] +`</td>
                                     </tr>`);
                     }
                 }else{
                     $("#fixed_entries_table").append(
-                        "<tr><td colspan='5'>يرجى أختيار شهر أخر لانه لايوجد بيانات لهذا الشهر</td></tr>"
+                        '<tr><td colspan="14" class="text-center text-danger">لا يوجد بيانات لعرضها"></td></tr>'
                     );
                 }
             },

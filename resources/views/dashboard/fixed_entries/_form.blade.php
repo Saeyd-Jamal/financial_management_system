@@ -64,9 +64,9 @@
     <div class="col">
     </div>
     <div class="col-auto">
-        <button type="submit" class="btn btn-primary">
+        <a href="{{route('fixed_entries.index')}}" class="btn btn-primary">
             {{$btn_label ?? "أضف"}}
-        </button>
+        </a>
     </div>
 </div>
 

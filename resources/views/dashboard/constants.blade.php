@@ -193,12 +193,13 @@
             <div class="row p-3">
                 <div class="form-group m-0 col-12 d-flex justify-content-between align-items-end">
                     <div class="input-group">
-                        <select class="custom-select" id="areas" name="areas">
+                        <select class="selectpicker" id="areas" name="areas">
                             <option selected>عرض القيم المتوفرة</option>
                             @foreach ($areas as $area)
                                 <option value="{{$area['id']}}">{{$area['value']}}</option>
                             @endforeach
                         </select>
+
                         <div class="input-group-prepend">
                             <button class="btn btn-danger" type="submit">
                                 <i class="fe fe-delete fe-30"></i>

@@ -56,12 +56,8 @@
                                         <li>رقم الهاتف : ` +
                     response["phone_number"] +
                     `</li>
-                                        <li>فئة الراتب : ` +
-                    response["salary_category"] +
-                    `</li>
-                                    </ul>`
+                    </ul>`
                 let WorkData = "";
-                let btnWorkData = "";
                 if (response["work_data"] != null) {
                     WorkData =
                         `<h3 class="h3">بيانات العمل</h3>
@@ -74,9 +70,6 @@
                         `</li>
                             <li>مجال العمل : ` +
                         response["work_data"]["field_action"] +
-                        `</li>
-                            <li>موظف حكومة : ` +
-                        response["work_data"]["government_official"] +
                         `</li>
                             <li>مزدوج الوظيفة : ` +
                         response["work_data"]["dual_function"] +
@@ -111,22 +104,16 @@
                             <li>تاريخ التقاعد : ` +
                         response["work_data"]["date_retirement"] +
                         `</li>
-                            <li>الفرع : ` +
-                        response["work_data"]["branch"] +
-                        `</li>
                             <li>المنشأة : ` +
                         response["work_data"]["establishment"] +
                         `</li>
                             <li>المؤسسة E : ` +
                         response["work_data"]["foundation_E"] +
                         `</li>
+                                        <li>فئة الراتب : ` +
+                        response["work_data"]["salary_category"] +
+                        `</li>
                         </ul>`;
-                    btnWorkData =
-                        `<a href="` +
-                        app_link +
-                        `work_data_employees/` +
-                        response["id"] +
-                        `/edit" target="_blank" class="btn btn-primary">تعديل بيانات العمل</a>`;
                 }
 
                 let modalDiv =
@@ -174,7 +161,6 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a href="` + app_link + `employees/` + response["id"] + `/edit" target="_blank" class="btn btn-primary">تعديل البينات الشخصية</a>
-                                    ` + btnWorkData + `
                                 </div>
                                 </div>
                             </div>

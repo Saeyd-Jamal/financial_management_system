@@ -12,6 +12,7 @@
         "laravel/fortify": "^1.21",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "laraveldaily/laravel-charts": "^0.2.3",
         "maatwebsite/excel": "^3.1"
     },
     "require-dev": {

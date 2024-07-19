@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\NatureWorkIncrease;
+use App\Models\WorkData;
 use Illuminate\Http\Request;
 
 class NatureWorkIncreaseController extends Controller
@@ -14,8 +16,8 @@ class NatureWorkIncreaseController extends Controller
     public function index()
     {
         $nature_work_increases = NatureWorkIncrease::get();
-        $nature_work = $this->nature_work;
-        $scientific_qualification = $this->scientific_qualification;
+        $nature_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();
+        $scientific_qualification = Employee::select('scientific_qualification')->distinct()->pluck('scientific_qualification')->toArray();
         return view('dashboard.nature_work_increases', compact('nature_work_increases','nature_work','scientific_qualification'));
     }
 
@@ -46,8 +48,8 @@ class NatureWorkIncreaseController extends Controller
      */
     public function edit(NatureWorkIncrease $natureWorkIncrease)
     {
-        $natureWorkIncrease->natures_work = $this->nature_work;
-        $natureWorkIncrease->scientifics_qualification = $this->scientific_qualification;
+        $natureWorkIncrease->natures_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();
+        $natureWorkIncrease->scientifics_qualification = Employee::select('scientific_qualification')->distinct()->pluck('scientific_qualification')->toArray();
         return $natureWorkIncrease;
     }
 

@@ -9,7 +9,11 @@
         <x-form.input type="email" label="البريد الالكتروني" :value="$user->email"  name="email" placeholder="example@gmail.com"/>
     </div>
     <div class="form-group p-3 col-4">
-        <x-form.input type="password" label="كلمة المرور" name="password" placeholder="****" required/>
+        @if (isset($btn_label))
+        <x-form.input type="password" label="كلمة المرور" name="password" placeholder="****"  />
+        @else
+        <x-form.input type="password" label="كلمة المرور" name="password" placeholder="****" required />
+        @endif
     </div>
 
     @if (!isset($btn_label))
@@ -18,6 +22,19 @@
     </div>
     @endif
 
+</div>
+<div class="row ml-3">
+    <fieldset>
+        <legend>الصلاحيات</legend>
+        @foreach (app('abilities') as $ability_name => $ability)
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="abilities[]" id="ability-{{$ability_name}}" value="{{$ability_name}}" @checked(in_array($ability_name, $user->roles()->pluck('role_name')->toArray())) >
+                <label class="form-check-label" for="ability-{{$ability_name}}">
+                    {{$ability}}
+                </label>
+            </div>
+        @endforeach
+    </fieldset>
 </div>
 
 <div class="row align-items-center mb-2">

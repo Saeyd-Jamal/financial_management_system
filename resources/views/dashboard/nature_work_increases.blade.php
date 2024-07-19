@@ -62,22 +62,20 @@
                         @csrf
                         <div class="row">
                             <div class="form-group p-3 col-4">
-                                <label for="nature_work">طبيعة العمل</label>
-                                <select class="custom-select" id="nature_work" name="nature_work" required>
-                                    <option>عرض القيم المتوفرة</option>
-                                    @foreach ($nature_work as $nature_work)
-                                        <option value="{{$nature_work['value']}}" >{{$nature_work['value']}}</option>
-                                    @endforeach
-                                </select>
+                                <x-form.input name="nature_work" placeholder="أدخل طبيعة العمل" label="طبيعة العمل" list="nature_work_list" required />
+                                    <datalist id="nature_work_list">
+                                        @foreach ($nature_work as $nature_work)
+                                            <option value="{{ $nature_work }}">
+                                        @endforeach
+                                    </datalist>
                             </div>
                             <div class="form-group p-3 col-5">
-                                <label for="scientific_qualification">المؤهل العلمي</label>
-                                <select class="custom-select" id="scientific_qualification" name="scientific_qualification" required>
-                                    <option>عرض القيم المتوفرة</option>
-                                    @foreach ($scientific_qualification as $scientific_qualificationV)
-                                        <option value="{{$scientific_qualificationV['value']}}">{{$scientific_qualificationV['value']}}</option>
-                                    @endforeach
-                                </select>
+                                <x-form.input name="scientific_qualification" placeholder="أدخل المؤهل العلمي" label="المؤهل العلمي" list="scientific_qualification_list" required />
+                                    <datalist id="scientific_qualification_list">
+                                        @foreach ($scientific_qualification as $scientific_qualification)
+                                            <option value="{{ $scientific_qualification }}">
+                                        @endforeach
+                                    </datalist>
                             </div>
                             <div class="form-group p-3 col-3">
                                 <x-form.input type="number" min="0" max="100"  label="النسبة" name="percentage" placeholder="25%" required/>

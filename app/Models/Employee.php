@@ -59,7 +59,7 @@ class Employee extends Model
     {
         return $this->hasMany(FixedEntries::class,'employee_id');
     }
-    public function salary() :HasMany
+    public function salaries() :HasMany
     {
         return $this->hasMany(Salary::class,'employee_id');
     }
@@ -79,5 +79,15 @@ class Employee extends Model
         return  [
             'required' => 'هذا الحقل مطلوب',
         ];
+    }
+
+
+    // functions
+    public static function convertDateExcel($date){
+        $unix_date = ($date - 25569) * 86400;
+        $excel_date = 25569 + ($unix_date / 86400);
+        $unix_date = ($excel_date - 25569) * 86400;
+        $date_f = gmdate("Y-m-d", $unix_date);
+        return $date_f;
     }
 }

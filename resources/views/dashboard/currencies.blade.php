@@ -41,7 +41,6 @@
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" data-toggle="modal"
                                             data-target="#edit_{{$currency->id}}">تعديل</a>
-
                                         <form action="{{route('currencies.destroy',$currency->id)}}" method="post">
                                             @csrf
                                             @method('delete')

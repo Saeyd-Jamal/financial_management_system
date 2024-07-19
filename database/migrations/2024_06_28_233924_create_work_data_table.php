@@ -14,14 +14,13 @@ return new class extends Migration
         Schema::create('work_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
-            $table->enum('working_status',['نعم','لا'])->comment('حالة الدوام');
+            $table->string('working_status')->comment('حالة الدوام');
             $table->string('type_appointment')->comment('نوع التعين');
             $table->string('field_action')->comment('مجال العمل');
             $table->smallInteger('allowance')->default(0)->comment('العلاوة في سلم الرواتب');
             $table->string('grade',3)->default(10)->comment('الدرجة في سلم الرواتب');
             $table->smallInteger('grade_allowance_ratio')->default(0)->comment('نسبة علاوة درجة');
-            $table->string('government_official')->comment('موظف حكومة')->nullable();
-            $table->enum('dual_function',['موظف','غير موظف'])->comment('مزدوج الوظيفة');
+            $table->string('dual_function')->comment('مزدوج الوظيفة')->nullable();
             $table->integer('years_service')->nullable()->comment('سنوات الخدمة');
             $table->string('nature_work')->comment('طبيعة العمل');
             $table->string('state_effectiveness')->comment('حالة الفعالية');
@@ -30,13 +29,12 @@ return new class extends Migration
             $table->string('section');
             $table->string('dependence')->comment('التبعية');
             $table->date('working_date')->comment('تاريخ العمل');
-            $table->date('date_installation')->comment('تاريخ التثبيت');
+            $table->date('date_installation')->nullable()->comment('تاريخ التثبيت');
             $table->date('date_retirement')->comment('تاريخ التقاعد');
             $table->string('payroll_statement')->comment('بيان الراتب');
-            $table->string('branch')->comment('الفرع');
             $table->string('establishment')->comment('المنشاءة');
             $table->string('foundation_E')->comment('المؤسسة E');
-            $table->string('salary_category')->comment('فئة الراتب المستخدمة للنظام');
+            $table->string('salary_category')->nullable()->comment('فئة الراتب المستخدمة للنظام');
 
             $table->timestamps();
         });

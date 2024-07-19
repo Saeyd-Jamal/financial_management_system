@@ -1,4 +1,4 @@
-<nav class="topnav navbar navbar-light">
+<nav class="topnav navbar navbar-light" style="background-color: rgb(153 252 255 / 23%) !important; box-shadow: 0px 1px 3px rgb(84 10 10 / 24%);">
     <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
         <i class="fe fe-menu navbar-toggler-icon"></i>
     </button>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
-            $table->string('month')->unique();
+            $table->string('month');
             $table->smallInteger('percentage_allowance')->default(0)->comment('نسبة العلاوة من طبيعة العمل');
             $table->smallInteger('grade_Allowance')->default(0)->comment('علاوة درجة');
             $table->decimal('initial_salary', 10, 2)->default(0)->comment('الراتب الأولي');
@@ -38,6 +38,7 @@ return new class extends Migration
             $table->decimal('amount_tax', 10, 2)->default(0)->comment('مبلغ ضريبة');
             $table->softDeletes();
             $table->timestamps();
+            $table->unique(['employee_id','month']);
         });
     }
 

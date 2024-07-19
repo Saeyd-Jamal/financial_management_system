@@ -9,5 +9,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Schedule::job(new CreateSalary())->monthlyOn('5');
+// Schedule::job(new CreateSalary())->monthlyOn('5');
+// Schedule::job(new CreateSalary())->everyTenSeconds();m  mmmmmmmmmmm
 

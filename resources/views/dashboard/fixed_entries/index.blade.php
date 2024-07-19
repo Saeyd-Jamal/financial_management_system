@@ -41,7 +41,6 @@
                                         <th>قرض جمعية </th>
                                         <th>رسوم دراسية</th>
                                         <th>تبرعات</th>
-                                        <th>فئة الراتب</th>
                                     </tr>
                                 </thead>
                                 <tbody id="fixed_entries_table">
@@ -61,7 +60,6 @@
                                         <td>{{$fixed_entrie->association_loan}}</td>
                                         <td>{{$fixed_entrie->tuition_fees}}</td>
                                         <td>{{$fixed_entrie->voluntary_contributions}}</td>
-                                        <td>{{$fixed_entrie->employee->salary_category}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

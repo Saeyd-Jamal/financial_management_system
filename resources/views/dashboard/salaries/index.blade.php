@@ -7,21 +7,27 @@
                     <p class="card-text">هنا يتم عرض الرواتب الشهرية لكل موظف</p>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-success" href="{{route('salaries.create')}}">
+                    {{-- <a class="btn btn-success" href="{{route('salaries.create')}}">
                         <i class="fe fe-plus"></i>
                     </a>
                     <a class="btn btn-danger" href="{{route('salaries.trashed')}}">
                         <i class="fe fe-trash"></i>
-                    </a>
-                    <form action="{{route('salaries.view_pdf')}}" method="post" class="d-inline" target="_blank">
+                    </a> --}}
+                    {{-- <form action="{{route('salaries.view_pdf')}}" method="post" class="d-inline" target="_blank">
                         @csrf
                         <button type="submit" class="btn btn-primary">
-                            <i class="fe fe-download"></i>
+                            <i class="fe fe-printer"></i>
                         </button>
-                    </form>
-                    <button style="display: none;" id="openModalShow" data-toggle="modal" data-target="#ModalShow">
-                        Launch demo modal
-                    </button>
+                    </form> --}}
+                    @if ($btn_download_salary == "active")
+                        <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
+                            @csrf
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fe fe-activity"></i>
+                                <span>تحميل جميع الرواتب</span>
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
             <div class="row my-4">
@@ -37,7 +43,7 @@
                                         <th>الاسم</th>
                                         <th>الشهر</th>
                                         <th>الراتب الأولي</th>
-                                        <th>نسبة علاوة درجة</th>
+                                        <th> علاوة درجة</th>
                                         <th>الراتب الاساسي</th>
                                         <th>اجمالي الإضافات</th>
                                         <th>اجمالي الراتب</th>
@@ -52,10 +58,11 @@
                                 <tbody>
                                     @foreach($salaries as $salary)
                                     <tr>
+                                        <td>{{$loop->iteration}}</td>
                                         <td>{{$salary->employee->name}}</td>
                                         <td>{{$salary->month}}</td>
                                         <td>{{$salary->initial_salary}}</td>
-                                        <td>{{$salary->grade_allowance_ratio}}</td>
+                                        <td>{{$salary->grade_Allowance}}</td>
                                         <td>{{$salary->secondary_salary}}</td>
                                         <td>{{$salary->gross_salary}}</td>
                                         <td>{{$salary->late_receivables}}</td>
@@ -63,16 +70,16 @@
                                         <td>{{$salary->net_salary}}</td>
                                         <td>{{$salary->bank}}</td>
                                         <td>{{$salary->account_number}}</td>
-                                        <td>{{$salary->annual_taxable_amount}}</td>
+                                        <td>{{number_format($salary->annual_taxable_amount / $USD,2)}}</td>
                                         <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <span class="text-muted sr-only">Action</span>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
+                                                <a class="dropdown-item" target="_blank" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="{{route('salaries.show',$salary->id)}}">عرض</a>
-                                                <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                    href="{{route('salaries.edit',$salary->id)}}">تعديل</a>
+                                                {{-- <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
+                                                    href="{{route('salaries.edit',$salary->id)}}">تعديل</a> --}}
                                                 <form action="{{route('salaries.destroy',$salary->id)}}" method="post">
                                                     @csrf
                                                     @method('delete')
@@ -94,12 +101,4 @@
             </div> <!-- end section -->
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
-    @push('scripts')
-        <script src="{{asset('assets/js/ajax.min.js')}}"></script>
-        <script>
-            const csrf_token = "{{csrf_token()}}";
-            const app_link = "{{config('app.url')}}";
-            </script>
-        <script src="{{asset('js/getShowsalary.js')}}"></script>
-    @endpush
 </x-front-layout>

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Imports\BanksEmployeesImport;
 use App\Models\Bank;
 use App\Models\BanksEmployees;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BanksEmployeesController extends Controller
 {
@@ -67,13 +69,14 @@ class BanksEmployeesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BanksEmployees $banksEmployees)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'employee_id' =>'required|exists:employees,id',
             'bank_id' =>'required|exists:banks,id',
             'account_number' =>'required|min:9|max:9',
         ]);
+        $banksEmployees = BanksEmployees::findOrFail($id);
         $banksEmployees->update($request->all());
         return redirect()->route('banks_employees.index')->with('success', 'تم تحديث حساب البنك');
     }
@@ -87,6 +90,28 @@ class BanksEmployeesController extends Controller
         $banksEmployees->delete();
 
         return redirect()->route('banks_employees.index')->with('success', 'تم حذف حساب البنك');
+    }
+
+    // Execl
+    public function import(Request $request)
+    {
+        // $this->authorize('import', Employee::class);
+        $file = $request->file('fileUplode');
+        if($file == null){
+            return redirect()->back()->with('error', 'لم يتم رفع الملف بشكل صحيح');
+        }
+
+        // dd($request->all());
+        Excel::import(new BanksEmployeesImport, $file);
+
+        return redirect()->route('banks_employees.index')->with('success', 'تم رفع الملف');
+    }
+    public function export(Request $request)
+    {
+        // $this->authorize('export', Employee::class);
+        // $time = Carbon::now();
+        // $filename = 'سجلات الموظفين' . $time .'.xlsx';
+        // return Excel::download(new EmployeesDataExport, $filename);
     }
 
 }
