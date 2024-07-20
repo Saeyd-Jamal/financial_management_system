@@ -68,6 +68,9 @@
                             <li>نوع التعين : ` +
                         response["work_data"]["type_appointment"] +
                         `</li>
+                            <li>نسبة العلاوة من طبيعة العمل: ` +
+                        response["work_data"]["percentage_allowance"] +
+                        `</li>
                             <li>مجال العمل : ` +
                         response["work_data"]["field_action"] +
                         `</li>

@@ -37,11 +37,6 @@
         'totals.edit' => 'تعديل اجماليات',
         'totals.delete' => 'حذف اجماليات',
 
-        'nature_work_increases.view' => 'عرض طبيعة العمل',
-        'nature_work_increases.create' => 'اضافة طبيعة العمل',
-        'nature_work_increases.edit' => 'تعديل طبيعة العمل',
-        'nature_work_increases.delete' => 'حذف طبيعة العمل',
-
         'fixed_entries.view' => 'عرض القيود الثابتة',
         'fixed_entries.create' => 'اضافة قيد ثابت',
         'fixed_entries.edit' => 'تعديل قيد ثابت',

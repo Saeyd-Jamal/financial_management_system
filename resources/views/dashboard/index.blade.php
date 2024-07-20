@@ -1,4 +1,7 @@
 <x-front-layout>
+    @push('styles')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @endpush
     <div class="row align-items-center mb-2">
         <div class="col">
             @auth
@@ -24,13 +27,7 @@
     </div>
     <div class="row">
         <div class="shadow p-3 mb-5 bg-white rounded col-md-6">
-            <h3>{{ $chartEmployees->options['chart_title'] }}</h3>
-            {!! $chartEmployees->renderHtml() !!}
+            {!! $chart->render() !!}
         </div>
     </div>
-
-    @push('scripts')
-    {!! $chartEmployees->renderChartJsLibrary() !!}
-    {!! $chartEmployees->renderJs() !!}
-    @endpush
 </x-front-layout>

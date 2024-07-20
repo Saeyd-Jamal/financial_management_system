@@ -11,9 +11,9 @@ use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class EmployeesImport implements ToModel, WithHeadingRow, SkipsOnError
+class EmployeesImport implements ToModel, WithHeadingRow//, SkipsOnError
 {
-    use SkipsErrors;
+    // use SkipsErrors;
     /**
      * @param array $row
      *
@@ -48,6 +48,7 @@ class EmployeesImport implements ToModel, WithHeadingRow, SkipsOnError
                 'working_status' => $row['hal_aldoam'],
                 'type_appointment' => $row['noaa_altaayn'],
                 'field_action' => $row['mgal_alaaml'],
+                'percentage_allowance' => $row['nsb_aalao_tbyaa_alaaml'],
                 'allowance' => $row['alaalao'],
                 'grade' => $row['aldrg'],
                 'grade_allowance_ratio' => $row['nsb_aalao_drg'],

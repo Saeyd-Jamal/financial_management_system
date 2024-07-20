@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
+use App\Imports\TotalsImport;
 use App\Models\Employee;
 use App\Models\Salary;
 use App\Models\Total;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TotalController extends Controller
 {
@@ -17,7 +19,7 @@ class TotalController extends Controller
      */
     public function index()
     {
-        $totals = Total::get();
+        $totals = Total::with(['employee'])->paginate(15);
         $total = new Total();
         return view('dashboard.totals', compact('totals','total'));
     }
@@ -80,5 +82,27 @@ class TotalController extends Controller
     {
         $total->delete();
         return redirect()->route('totals.index')->with('danger', 'تم حذف الإجماليات لموظف');
+    }
+
+    // Execl
+    public function import(Request $request)
+    {
+        // $this->authorize('import', Employee::class);
+        $file = $request->file('fileUplode');
+        if($file == null){
+            return redirect()->back()->with('error', 'لم يتم رفع الملف بشكل صحيح');
+        }
+
+        // dd($request->all());
+        Excel::import(new TotalsImport, $file);
+
+        return redirect()->route('banks_employees.index')->with('success', 'تم رفع الملف');
+    }
+    public function export(Request $request)
+    {
+        // $this->authorize('export', Employee::class);
+        // $time = Carbon::now();
+        // $filename = 'سجلات الموظفين' . $time .'.xlsx';
+        // return Excel::download(new EmployeesDataExport, $filename);
     }
 }

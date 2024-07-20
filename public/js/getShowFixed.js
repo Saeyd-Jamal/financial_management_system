@@ -39,7 +39,7 @@
                 }
             },
             error: function (error) {
-                console.error("Error removing product from wishlist:", error);
+                console.error("Error :", error);
             },
         });
     });
@@ -82,7 +82,7 @@
                                     <li>خصم اللجنة : `+ response['paradise_discount'] +` </li>
                                     <li>خصومات أخرى : `+ response['other_discounts'] +` </li>
                                     <li>تبرعات للحركة : `+ response['proportion_voluntary'] +` </li>
-                                    <li>إدخار 5% : `+ response['savings_5'] +` </li>
+                                    <li>إدخار 5% : `+ response['savings_rate'] +` </li>
                                 </ul>
                             `;
                 $("div#showFixed").append(modalDiv);
@@ -98,7 +98,7 @@
                 $("#openModalShow").click();
             },
             error: function (error) {
-                console.error("Error removing product from wishlist:", error);
+                console.error("Error: ", error);
             },
         });
     });
@@ -137,7 +137,7 @@
                                     <li>خصم اللجنة : `+ response['paradise_discount'] +` </li>
                                     <li>خصومات أخرى : `+ response['other_discounts'] +` </li>
                                     <li>تبرعات للحركة : `+ response['proportion_voluntary'] +` </li>
-                                    <li>إدخار 5% : `+ response['savings_5'] +` </li>
+                                    <li>إدخار 5% : `+ response['savings_rate'] +` </li>
                                 </ul>
                             `;
                 $("div#showFixed").append(modalDiv);
@@ -152,7 +152,7 @@
                 $("div.modal-footer").append(`<a href="`+app_link+`fixed_entries/`+ response['employee_id'] +`/edit" target="_blank" class="btn btn-primary mr-3">تعديل</a>`);
             },
             error: function (error) {
-                console.error("Error removing product from wishlist:", error);
+                console.error("Error :", error);
             },
         });
     });

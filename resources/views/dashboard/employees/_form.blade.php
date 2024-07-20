@@ -95,7 +95,10 @@
         </select>
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="10%.."/>
+        <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="10.."/>
+    </div>
+    <div class="form-group p-3 col-3">
+        <x-form.input type="number" label="نسبة علاوة طبيعة العمل" :value="$workData->percentage_allowance" name="percentage_allowance" placeholder="10.."/>
     </div>
     <div class="form-group p-3 col-3">
         <label for="salary_category">فئة الراتب</label>

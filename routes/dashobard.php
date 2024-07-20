@@ -26,7 +26,6 @@ Route::group([
     // outhers fields
     Route::post('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
     Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
-    Route::post('/fixed_entries/association_loan', [FixedEntriesController::class,'associationLoan'])->name('fixed_entries.associationLoan');
     Route::post('/fixed_entries/getFixedEntriesData', [FixedEntriesController::class,'getFixedEntriesData'])->name('fixed_entries.getFixedEntriesData');
 
     Route::post('/bakcups/getDataAll', [SystemOperationsController::class,'bakcupsData'])->name('bakcups.bakcupsData');
@@ -45,6 +44,8 @@ Route::group([
     Route::get('employees/exportExcel', [EmployeeController::class,'export'])->name('employees.exportExcel');
     Route::post('banks_employees/importExcel', [BanksEmployeesController::class,'import'])->name('banks_employees.importExcel');
     Route::get('banks_employees/exportExcel', [BanksEmployeesController::class,'export'])->name('banks_employees.exportExcel');
+    Route::post('totals/importExcel', [TotalController::class,'import'])->name('totals.importExcel');
+    Route::get('totals/exportExcel', [TotalController::class,'export'])->name('totals.exportExcel');
 
     // PDF Export
     Route::post('employees/view_pdf', [EmployeeController::class, 'viewPDF'])->name('employees.view_pdf');
@@ -61,7 +62,6 @@ Route::group([
         'banks' => BankController::class,
         'banks_employees' => BanksEmployeesController::class,
         'fixed_entries' => FixedEntriesController::class,
-        'nature_work_increases' => NatureWorkIncreaseController::class,
         'salary_scales' => SalaryScaleController::class,
         'totals' => TotalController::class,
         'salaries' => SalaryController::class,

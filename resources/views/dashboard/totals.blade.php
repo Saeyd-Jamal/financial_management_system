@@ -27,22 +27,29 @@
                                         <th>#</th>
                                         <th>الموظف</th>
                                         <th>إجمالي المستحقات</th>
-                                        <th>إجمالي الإدخارات</th>
-                                        <th>إجمالي القروض</th>
+                                        <th>إجمالي الإدخارات $</th>
+                                        <th>إجمالي قرض الجمعية</th>
+                                        <th>إجمالي قرض الإدخار $</th>
+                                        <th>إجمالي قرض اللجنة (الشيكل)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($totals as $total)
                                     <tr class="total_select" data-id="{{$total->id}}">
-                                        <td>{{$total->id}}</td>
+                                        <td>{{$loop->iteration}}</td>
                                         <td>{{$total->employee->name}}</td>
                                         <td>{{$total->total_receivables}}</td>
                                         <td>{{$total->total_savings}}</td>
                                         <td>{{$total->total_association_loan}}</td>
+                                        <td>{{$total->total_savings_loan}}</td>
+                                        <td>{{$total->total_shekel_loan}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div>
+                                {{$totals->links()}}
+                            </div>
                         </div>
                     </div>
                 </div> <!-- simple table -->
@@ -51,7 +58,7 @@
     </div> <!-- .row -->
     {{-- create model --}}
     <div class="modal fade" id="createItem" tabindex="-2" role="dialog" aria-labelledby="createItemLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createItemLabel">إنشاء إجماليات جديدة</h5>
@@ -81,7 +88,13 @@
                                 <x-form.input type="number" min="0" value="0"  label="إجمالي الإدخارات" name="total_savings" placeholder="5000...." />
                             </div>
                             <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0"  value="0" label="إجمالي القروض" name="total_association_loan" placeholder="5000...." />
+                                <x-form.input type="number" min="0"  value="0" label="إجمالي قرض الجمعية" name="total_association_loan" placeholder="5000...." />
+                            </div>
+                            <div class="form-group p-3 col-4">
+                                <x-form.input type="number" min="0"  value="0" label="إجمالي قرض الإدخار" name="total_savings_loan" placeholder="5000...." />
+                            </div>
+                            <div class="form-group p-3 col-4">
+                                <x-form.input type="number" min="0"  value="0" label="إجمالي قرض اللجنة (الشيكل)" name="total_shekel_loan" placeholder="5000...." />
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -94,12 +107,35 @@
                             </div>
                         </div>
                     </form>
+                    @can('import','App\\Models\Employee')
+                    <div class="col-md-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header">
+                                <strong>إستيراد ملف إكسيل</strong>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ route('totals.importExcel') }}" enctype="multipart/form-data" method="post">
+                                    @csrf
+                                    <label for="images" class="drop-container" id="dropcontainer">
+                                        <span class="drop-title">إسقاط الملف هنا</span>
+                                        or
+                                        <input type="file" name="fileUplode" id="fileUplode" accept=".xlsx, .xls, .csv, .xml , .xlsm" required>
+                                    </label>
+                                    <button type="submit" class="btn btn-primary">ارسال</button>
+                                </form>
+                                <p class="text-muted font-weight-bold h6">لتحميل نموذج الإدخال <a
+                                        href="{{ asset('files/style_totals.xlsx') }}" download="نموذج الإدخال"
+                                        target="_blank">إضغط هنا</a></p>
+                            </div> <!-- .card-body -->
+                        </div> <!-- .card -->
+                    </div> <!-- .col -->
+                    @endcan
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade" id="editItem" tabindex="-3" role="dialog" aria-labelledby="editItemLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-dialog  modal-dialog-centered  modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editItemLabel">تعديل نسبة </h5>

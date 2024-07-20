@@ -24,13 +24,24 @@
                             </div>
                             <div class="row">
                                 <div class="form-group p-3 col-4">
-                                    <input type="number" min="0" value="`+ response['total_receivables'] +`"  label="إجمالي المستحقات" name="total_receivables" id="total_receivables" class="form-control" placeholder="5000...." />
+                                    <label for="total_receivables">إجمالي المستحقات</label>
+                                    <input type="number" min="0" value="`+ response['total_receivables'] +`" name="total_receivables" id="total_receivables" class="form-control" placeholder="5000...." />
                                 </div>
                                 <div class="form-group p-3 col-4">
-                                    <input type="number" min="0" value="`+ response['total_savings'] +`" label="إجمالي الإدخارات" name="total_savings" id="total_savings" class="form-control" placeholder="5000...." />
+                                    <label for="total_savings">إجمالي الإدخارات</label>
+                                    <input type="number" min="0" value="`+ response['total_savings'] +`" name="total_savings" id="total_savings" class="form-control" placeholder="5000...." />
                                 </div>
                                 <div class="form-group p-3 col-4">
-                                    <input type="number" min="0" value="`+ response['total_association_loan'] +`"  label="إجمالي القروض" name="total_association_loan" id="total_association_loan" class="form-control" placeholder="5000...." />
+                                    <label for="total_association_loan">إجمالي قرض الجمعية</label>
+                                    <input type="number" min="0" value="`+ response['total_association_loan'] +`"  name="total_association_loan" id="total_association_loan" class="form-control" placeholder="5000...." />
+                                </div>
+                                <div class="form-group p-3 col-4">
+                                    <label for="total_savings_loan">إجمالي قرض الإدخار $</label>
+                                    <input type="number" min="0" value="`+ response['total_savings_loan'] +`"  name="total_savings_loan" id="total_savings_loan" class="form-control" placeholder="5000...." />
+                                </div>
+                                <div class="form-group p-3 col-4">
+                                    <label for="total_shekel_loan">إجمالي قرض اللجنة (الشيكل)</label>
+                                    <input type="number" min="0" value="`+ response['total_shekel_loan'] +`"  name="total_shekel_loan" id="total_shekel_loan" class="form-control" placeholder="5000...." />
                                 </div>
                             </div>
                             <div class="row align-items-center mb-2">

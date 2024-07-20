@@ -17,6 +17,7 @@ class WorkData extends Model
         'working_status',
         'type_appointment',
         'field_action',
+        'percentage_allowance',
         'government_official',
         'dual_function',
         'years_service',
@@ -36,7 +37,7 @@ class WorkData extends Model
         'allowance',
         'grade',
         'grade_allowance_ratio',
-        'salary_category'
+        'salary_category',
     ];
 
     // Relationships

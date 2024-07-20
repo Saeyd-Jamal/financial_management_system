@@ -9,6 +9,7 @@
         "alkoumi/laravel-arabic-numbers": "^1.1",
         "barryvdh/laravel-dompdf": "^2.2",
         "carlos-meneses/laravel-mpdf": "^2.1",
+        "icehouse-ventures/laravel-chartjs": "^1.3",
         "laravel/fortify": "^1.21",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",

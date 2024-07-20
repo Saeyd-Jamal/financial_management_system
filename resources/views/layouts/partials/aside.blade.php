@@ -57,14 +57,6 @@
                 </a>
             </li>
             @endcan
-            @can('view','App\\Models\NatureWorkIncrease')
-            <li class="nav-item w-100">
-                <a class="nav-link" href="{{route('nature_work_increases.index')}}">
-                    <i class="fe fe-book fe-16"></i>
-                    <span class="ml-3 item-text">علاوة طبيعة العمل</span>
-                </a>
-            </li>
-            @endcan
             @can('view','App\\Models\FixedEntries')
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{route('fixed_entries.index')}}">

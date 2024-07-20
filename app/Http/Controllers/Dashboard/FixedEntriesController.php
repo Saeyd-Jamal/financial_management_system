@@ -10,6 +10,7 @@ use App\Models\Salary;
 use App\Models\Total;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class FixedEntriesController extends Controller
@@ -89,7 +90,11 @@ class FixedEntriesController extends Controller
         $month = $this->thisMonth;
         $year = $this->thisYear;
         $total_association_loan_old = "";
-        return view('dashboard.fixed_entries.create', compact('fixed_entrie','month','year','total_association_loan_old'));
+        $total_shekel_loan_old = "";
+        $total_savings_loan_old = "";
+
+
+        return view('dashboard.fixed_entries.create', compact('fixed_entrie','month','year','total_association_loan_old','total_shekel_loan_old','total_savings_loan_old'));
     }
 
     /**
@@ -105,64 +110,46 @@ class FixedEntriesController extends Controller
     // ]);
     public function store(Request $request)
     {
-        if($request->{"administrative_allowance"."_create"} == true){
-            $this->updateEntries($request,"administrative_allowance","administrative_allowance".'_months');
+        $fields = [
+            'administrative_allowance',
+            'scientific_qualification_allowance',
+            'transport',
+            'extra_allowance',
+            'salary_allowance',
+            'ex_addition',
+            'mobile_allowance',
+            'health_insurance',
+            'f_Oredo',
+            'tuition_fees',
+            'voluntary_contributions',
+            'savings_loan',
+            'shekel_loan',
+            'paradise_discount',
+            'other_discounts',
+            'proportion_voluntary',
+            'savings_rate',
+        ];
+        foreach ($fields as $field) {
+            if($request->{$field."_create"} == true) {
+                $this->updateEntries($request, $field, $field.'_months');
+            }
         }
-        if($request->{"scientific_qualification_allowance"."_create"} == true){
-            $this->updateEntries($request,"scientific_qualification_allowance","scientific_qualification_allowance".'_months');
+        $fieldsLoan = [
+            'association_loan',
+            'savings_loan',
+            'shekel_loan',
+        ];
+        foreach ($fieldsLoan as $field) {
+            if($request->{$field."_create"} == true) {
+                $this->updateEntries($request, $field, $field.'_months');
+                Total::updateOrCreate([
+                    'employee_id' => $request->employee_id,
+                ],[
+                    'total_'.$field => $request->post('total_'.$field),
+                ]);
+            }
         }
-        if($request->{"transport"."_create"} == true){
-            $this->updateEntries($request,"transport","transport".'_months');
-        }
-        if($request->{"extra_allowance"."_create"} == true){
-            $this->updateEntries($request,"extra_allowance","extra_allowance".'_months');
-        }
-        if($request->{"salary_allowance"."_create"} == true){
-            $this->updateEntries($request,"salary_allowance","salary_allowance".'_months');
-        }
-        if($request->{"ex_addition"."_create"} == true){
-            $this->updateEntries($request,"ex_addition","ex_addition".'_months');
-        }
-        if($request->{"mobile_allowance"."_create"} == true){
-            $this->updateEntries($request,"mobile_allowance","mobile_allowance".'_months');
-        }
-        if($request->{"health_insurance"."_create"} == true){
-            $this->updateEntries($request,"health_insurance","health_insurance".'_months');
-        }
-        if($request->{"f_Oredo"."_create"} == true){
-            $this->updateEntries($request,"f_Oredo","f_Oredo".'_months');
-        }
-        if($request->{"association_loan"."_create"} == true){
-            $this->updateEntries($request,"association_loan","association_loan".'_months');
-            $totals = Total::where('employee_id',$request->employee_id)->first();
-            $totals->update([
-                'total_association_loan' => $request->post('total_association_loan'),
-            ]);
-        }
-        if($request->{"tuition_fees"."_create"} == true){
-            $this->updateEntries($request,"tuition_fees","tuition_fees".'_months');
-        }
-        if($request->{"voluntary_contributions"."_create"} == true){
-            $this->updateEntries($request,"voluntary_contributions","voluntary_contributions".'_months');
-        }
-        if($request->{"savings_loan"."_create"} == true){
-            $this->updateEntries($request,"savings_loan","savings_loan".'_months');
-        }
-        if($request->{"shekel_loan"."_create"} == true){
-            $this->updateEntries($request,"shekel_loan","shekel_loan".'_months');
-        }
-        if($request->{"paradise_discount"."_create"} == true){
-            $this->updateEntries($request,"paradise_discount","paradise_discount".'_months');
-        }
-        if($request->{"other_discounts"."_create"} == true){
-            $this->updateEntries($request,"other_discounts","other_discounts".'_months');
-        }
-        if($request->{"proportion_voluntary"."_create"} == true){
-            $this->updateEntries($request,"proportion_voluntary","proportion_voluntary".'_months');
-        }
-        if($request->{"savings_5"."_create"} == true){
-            $this->updateEntries($request,"savings_5","savings_5".'_months');
-        }
+
         $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
             $employee = Employee::findOrFail($request->employee_id);
@@ -200,10 +187,12 @@ class FixedEntriesController extends Controller
         $fixed_entrie = FixedEntries::with(['employee'])->where('employee_id',$id)->get();
         $fixed_entrie['employee'] = FixedEntries::with(['employee'])->where('employee_id',$id)->first()->employee;
         $total_association_loan_old = (Total::where('employee_id',$id)->first() == null) ? 0 : Total::where('employee_id',$id)->first()['total_association_loan'];
+        $total_shekel_loan_old = (Total::where('employee_id',$id)->first() == null) ? 0 : Total::where('employee_id',$id)->first()['total_shekel_loan'];
+        $total_savings_loan_old = (Total::where('employee_id',$id)->first() == null) ? 0 : Total::where('employee_id',$id)->first()['total_savings_loan'];
         $btn_label = "تعديل";
         $month = $this->thisMonth;
         $year = $this->thisYear;
-        return view('dashboard.fixed_entries.edit', compact('fixed_entrie','btn_label','month','year','total_association_loan_old'));
+        return view('dashboard.fixed_entries.edit', compact('fixed_entrie','btn_label','month','year','total_association_loan_old','total_shekel_loan_old','total_savings_loan_old'));
     }
 
     /**
@@ -231,36 +220,16 @@ class FixedEntriesController extends Controller
 
 
     // others Functions
-    public function associationLoan(Request $request){
-        if($request->association_loan == ""){
-            for($i=1;$i<=12;$i++){
-                if($i<10){
-                    $month = '0'.$i;
-                }else{
-                    $month = $i;
-                }
-                if($request[$month] != null){
-                    FixedEntries::updateOrCreate([
-                        'employee_id' => $request->employee_id,
-                        'month' => $this->thisYear.'-'.$month,
-                    ],[
-                        'association_loan' => $request["$month"],
-                    ]);
-                }
-            }
-            Total::updateOrCreate([
-                'employee_id' => $request->employee_id,
-            ],[
-                'total_association_loan' => $request->post('total_association_loan'),
-            ]);
-        }
-    }
     public function getFixedEntriesData(Request $request){
         $totals = Total::where('employee_id',$request->employee_id)->first();
         if($totals == null){
             return  0.00;
         }
-        return $totals->total_association_loan;
+        return [
+            'total_association_loan' => $totals->total_association_loan,
+            'total_shekel_loan' => $totals->total_shekel_loan,
+            'total_savings_loan' => $totals->total_savings_loan
+        ];
     }
     public function getFixedEntriesFialds($fixed_entrie,$year,$month,$filedName){
         $reslut = $fixed_entrie->where('month',($year . '-' . $month))->first();

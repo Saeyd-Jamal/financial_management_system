@@ -29,17 +29,15 @@ class AddSalaryEmployee{
         $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
         // مزدوج الوظيفة
         $dual_function = $employee->dual_function;
-        //dual_function المزدوج الوظيفي
 
         if($dual_function == "غير موظف"){
             $dual_function = null;
         }
-
         // مبلغ السلفة من حالة الدوام
         $working_status = $employee->workData->working_status;
-        if($working_status == "مداوم"){
+        if($working_status == "مداوم" || $working_status == "نعم"){
             $advance_payment = Constant::where('type_constant','advance_payment_permanent')->first('value')->value;
-        }elseif($working_status == "غير مداوم"){
+        }elseif($working_status == "غير مداوم" || $working_status == "لا"){
             $advance_payment = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
         }elseif($working_status == "رياض"){
             $advance_payment = Constant::where('type_constant','advance_payment_riyadh')->first('value')->value;
@@ -56,13 +54,13 @@ class AddSalaryEmployee{
                 $account_default = $bank->bank_employee->where('employee_id',$employee->id)->first();
             }
         }
+
         $bank = Bank::find($account_default->bank_id)->first()->name;
         $branch_number = Bank::find($account_default->bank_id)->first()->id;
         $account_number = $account_default->id;
 
         // الحسابات
-        $percentage_allowance_filed = NatureWorkIncrease::where('nature_work',$employee->workData->nature_work)->where('scientific_qualification',$employee->scientific_qualification)->first();
-        $percentage_allowance = ($percentage_allowance_filed != null) ? $percentage_allowance_filed->percentage : 0; //نسبة علاوة من طبيعة العمل
+        $percentage_allowance = ($employee->workData->percentage_allowance != null) ? $employee->workData->percentage_allowance : 100; //نسبة علاوة من طبيعة العمل
         $initial_salary = SalaryScale::where('id',$employee->workData->allowance)->first()->{$employee->workData->grade}; // الراتب الأولي
 
         $grade_allowance_ratio = $employee->workData->grade_allowance_ratio; // نسبة علاوة درجة
@@ -75,21 +73,19 @@ class AddSalaryEmployee{
         $secondary_salary = $initial_salary + $grade_Allowance; // الراتب الثانوي
 
         // الإضافات الثابتة
-        if($employee->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج"){
+        if($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج"){
             $allowance_boys = (($employee->number_children * 20) + 60);
-        }elseif($employee->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج - موظفة حكومة"){
+        }elseif($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج - موظفة حكومة"){
             $allowance_boys = ($employee->number_children * 20);
         }else{
             $allowance_boys = 0;
         }
-        $nature_work_increase =  (($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
+
+        $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
 
         // المدخلات الثابتة
-        foreach($employee->fixedEntries as $fixedEntries){
-            if($fixedEntries->month == $thisYear.'-'.$thisMonth){
-                $fixedEntries = $employee->fixedEntries->first();
-            }
-        }
+        $fixedEntries = $employee->fixedEntries->where('month',$thisYear.'-'.$thisMonth)->first();
+
 
         $administrative_allowance = $fixedEntries->administrative_allowance ?? 0;
         $scientific_qualification_allowance = $fixedEntries->scientific_qualification_allowance ?? 0;
@@ -109,24 +105,24 @@ class AddSalaryEmployee{
         $association_loan = $fixedEntries->association_loan ?? 0;
         $tuition_fees = $fixedEntries->tuition_fees ?? 0;
         $voluntary_contributions = $fixedEntries->voluntary_contributions ?? 0;
-        $savings_loan = $fixedEntries->savings_loan ?? 0;
+        $savings_loan = ($fixedEntries->savings_loan * $USD)  ?? 0;
         $shekel_loan = $fixedEntries->shekel_loan ?? 0;
         $paradise_discount = $fixedEntries->paradise_discount ?? 0;
         $other_discounts = $fixedEntries->other_discounts ?? 0;
         $proportion_voluntary = $fixedEntries->proportion_voluntary ?? 0;
-        $savings_5 = $fixedEntries->savings_5 ?? 0;
+        $savings_rate = $fixedEntries->savings_rate ?? 0;
 
 
         // إضافات للمبلغ الضريبية العملة شيكل
-        $amount_tax = $working_status == "مداوم" ? ($secondary_salary + $nature_work_increase - $termination_service - $health_insurance - $savings_5 - $voluntary_contributions) : 0; // المبلغ الضريبي
+        $amount_tax = $working_status == "مداوم" || $working_status == "نعم"  ? ($secondary_salary + $nature_work_increase - $termination_service - $health_insurance - $savings_rate - $voluntary_contributions) / $USD : 0; // المبلغ الضريبي
 
-        $exemptions = ($dual_function == "غير موظف") ? ((3000 + ($employee->matrimonial_status == "متزوج"? 500 : 0) + ($employee->matrimonial_status == "متزوج - موظفة وكالة"? $employee->number_children *500 : 0) +  ($employee->matrimonial_status == "متزوج - موظفة حكومة"? $employee->number_children *500 : 0) + ($employee->number_university_children * 12)) / 12) * $USD : 0; // الاعفاءات
+        $exemptions = ($dual_function == null) ? ((3000 + ($employee->matrimonial_status == "متزوج"? 500 : 0) + ($employee->matrimonial_status == "متزوج - موظفة وكالة"? $employee->number_children *500 : 0) +  ($employee->matrimonial_status == "متزوج - موظفة حكومة"? $employee->number_children *500 : 0) + ($employee->number_university_children * 12)) / 12) : 0; // الاعفاءات
 
-        $tax = ($amount_tax -$exemptions < 0) ? 0 : ($amount_tax-$exemptions); // الضريبة
+        $tax = ($amount_tax -$exemptions < 0) ? 0 : ($amount_tax - $exemptions); // الضريبة
 
-        $resident_exemption = ($dual_function == "غير موظف") ? 0 : 3000; // إعفاء مقيم
+        $resident_exemption = ($dual_function == null) ? 0 : 3000; // إعفاء مقيم
 
-        $annual_taxable_amount = $tax * 12 ; // مبلغ الضريبة الخاضع السنوي بالشيكل
+        $annual_taxable_amount = $tax * 12 ; // مبلغ الضريبة الخاضع السنوي بالدولار
 
         // ضريبة الدخل
         if($annual_taxable_amount<=10000){
@@ -139,10 +135,11 @@ class AddSalaryEmployee{
             $z_Income = 0;
         }
         $z_Income = ($z_Income / 12) * $USD;
+
         // تم إيقاف الضريبة لفترة الحرب
         $z_Income = 0;
 
-        $total_discounts = ($termination_service + $health_insurance + $f_Oredo + $association_loan + $tuition_fees + $voluntary_contributions + $savings_loan + $shekel_loan + $paradise_discount + $other_discounts + $proportion_voluntary + $savings_5 + $z_Income);
+        $total_discounts = ($termination_service + $health_insurance + $f_Oredo + $association_loan + $tuition_fees + $voluntary_contributions + $savings_loan + $shekel_loan + $paradise_discount + $other_discounts + $proportion_voluntary + $savings_rate + $z_Income);
 
         // إجمالي الراتب
         $gross_salary = ($secondary_salary + $total_additions) - $total_discounts;
@@ -152,6 +149,9 @@ class AddSalaryEmployee{
         $net_salary = $gross_salary - $late_receivables;
 
         $amount_letters = Numbers::TafqeetMoney($net_salary,'ILS'); // المبلغ بالنص
+
+        // قرض الإدخار
+        $savings_loan = $fixedEntries->savings_loan ?? 0;
 
         DB::beginTransaction();
         try{
@@ -176,7 +176,7 @@ class AddSalaryEmployee{
                 'branch_number' => $branch_number,
                 'account_number' => $account_number,
                 'resident_exemption' => $resident_exemption,
-                'annual_taxable_amount' => $annual_taxable_amount,
+                'annual_taxable_amount' => $annual_taxable_amount, // مبلغ الضريبة الخاضع السنوي بالدولار
                 'tax' => $tax,
                 'exemptions' => $exemptions,
                 'amount_tax' => $amount_tax,
@@ -184,7 +184,8 @@ class AddSalaryEmployee{
             Total::updateOrCreate([
                 'employee_id' => $employee->id,
             ],[
-                'total_receivables' => DB::raw('total_receivables + '.($late_receivables / $USD)),
+                'total_receivables' => DB::raw('total_receivables + '.($late_receivables)),
+                'total_savings' => DB::raw('total_savings + '.($savings_loan + (($savings_rate + $termination_service) / $USD ))),
             ]);
             DB::commit();
         }catch(\Exception $e){

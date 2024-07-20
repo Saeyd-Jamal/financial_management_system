@@ -3,38 +3,41 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
 class HomeController extends Controller
 {
     public function index(){
-        $chartEmployeesOptions = [
-            'chart_title' => 'عدد الموظفين حسب المناطق',
-            'chart_type' => 'bar',
-            'report_type' => 'group_by_string',
-            'model' => 'App\Models\Employee',
-            // 'conditions'            => [
-            //     ['name' => 'Food', 'condition' => 'category_id = 1', 'color' => 'black', 'fill' => true],
-            //     ['name' => 'Transport', 'condition' => 'category_id = 2', 'color' => 'blue', 'fill' => true],
-            // ],
-
-            'group_by_field' => 'area',
-            // 'group_by_period' => 'day',
-
-            // 'aggregate_function' => 'sum',
-            // 'aggregate_field' => 'amount',
-            // 'aggregate_transform' => function($value) {
-            //     return round($value / 100, 2);
-            // },
-
-            // 'filter_field' => 'transaction_date',
-            // 'filter_days' => 30, // show only transactions for last 30 days
-            // 'filter_period' => 'week', // show only transactions for this week
-            // 'continuous_time' => true, // show continuous timeline including dates without data
-        ];
-        $chartEmployees = new LaravelChart($chartEmployeesOptions);
-
-        return view('dashboard.index', compact('chartEmployees'));
+        $employees = Employee::get();
+        $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
+        $employeesPerArea = collect($areas)->map(function ($areas) {
+            return [
+                "count" => Employee::where("area", "=", $areas)->count(),
+                'name' => $areas
+            ];
+        });
+        $employeesPerArea = $employeesPerArea->pluck('count')->toArray();
+        $chart = app()->chartjs
+            ->name('barChartTest')
+            ->type('bar')
+            ->size(['width' => 400, 'height' => 200])
+            ->labels($areas)
+            ->datasets([
+                [
+                    "label" => "عدد الموظفين حسب المناطق",
+                    'backgroundColor' => ['#1abc9c', '#16a085', '#2ecc71', '#27ae60', '#3498db', '#2980b9', '#9b59b6', '#8e44ad', '#e74c3c'],
+                    'data' => $employeesPerArea
+                ],
+            ])
+            ->options([
+                "scales" => [
+                    "y" => [
+                        "beginAtZero" => true
+                        ]
+                    ]
+        ]);
+        return view('dashboard.index', compact('chart'));
     }
 }
