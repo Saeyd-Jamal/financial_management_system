@@ -85,32 +85,34 @@ class AddSalaryEmployee{
 
         // المدخلات الثابتة
         $fixedEntries = $employee->fixedEntries->where('month',$thisYear.'-'.$thisMonth)->first();
+        if($fixedEntries != null){
 
+        }
 
-        $administrative_allowance = $fixedEntries->administrative_allowance ?? 0;
-        $scientific_qualification_allowance = $fixedEntries->scientific_qualification_allowance ?? 0;
-        $transport = $fixedEntries->transport ?? 0;
-        $extra_allowance = $fixedEntries->extra_allowance ?? 0;
-        $salary_allowance = $fixedEntries->salary_allowance ?? 0;
-        $ex_addition = $fixedEntries->ex_addition ?? 0;
-        $mobile_allowance = $fixedEntries->mobile_allowance ?? 0;
+        $administrative_allowance = ($fixedEntries != null) ? $fixedEntries->administrative_allowance : 0;
+        $scientific_qualification_allowance = ($fixedEntries != null) ? $fixedEntries->scientific_qualification_allowance : 0;
+        $transport = ($fixedEntries != null) ? $fixedEntries->transport : 0;
+        $extra_allowance = ($fixedEntries != null) ?  $fixedEntries->extra_allowance : 0;
+        $salary_allowance = ($fixedEntries != null) ? $fixedEntries->salary_allowance : 0;
+        $ex_addition = ($fixedEntries != null) ? $fixedEntries->ex_addition : 0;
+        $mobile_allowance = ($fixedEntries != null) ? $fixedEntries->mobile_allowance : 0;
 
         $termination_service = $dual_function == null ?  number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*0.1,2) : 0;
 
         $total_additions = ($allowance_boys + $nature_work_increase + $administrative_allowance + $scientific_qualification_allowance + $transport + $extra_allowance + $salary_allowance + $ex_addition + $mobile_allowance +$termination_service);
 
         // الخصومات
-        $health_insurance = $fixedEntries->health_insurance ?? 0;
-        $f_Oredo = $fixedEntries->f_Oredo ?? 0;
-        $association_loan = $fixedEntries->association_loan ?? 0;
-        $tuition_fees = $fixedEntries->tuition_fees ?? 0;
-        $voluntary_contributions = $fixedEntries->voluntary_contributions ?? 0;
-        $savings_loan = ($fixedEntries->savings_loan * $USD)  ?? 0;
-        $shekel_loan = $fixedEntries->shekel_loan ?? 0;
-        $paradise_discount = $fixedEntries->paradise_discount ?? 0;
-        $other_discounts = $fixedEntries->other_discounts ?? 0;
-        $proportion_voluntary = $fixedEntries->proportion_voluntary ?? 0;
-        $savings_rate = $fixedEntries->savings_rate ?? 0;
+        $health_insurance = ($fixedEntries != null) ? $fixedEntries->health_insurance : 0;
+        $f_Oredo = $fixedEntries != null ? $fixedEntries->f_Oredo : 0;
+        $association_loan = $fixedEntries != null ? $fixedEntries->association_loan : 0;
+        $tuition_fees = $fixedEntries != null ? $fixedEntries->tuition_fees : 0;
+        $voluntary_contributions = $fixedEntries != null ? $fixedEntries->voluntary_contributions : 0;
+        $savings_loan = $fixedEntries != null ? ($fixedEntries->savings_loan * $USD)  : 0;
+        $shekel_loan = $fixedEntries != null ? $fixedEntries->shekel_loan : 0;
+        $paradise_discount = $fixedEntries != null ? $fixedEntries->paradise_discount : 0;
+        $other_discounts = $fixedEntries != null ? $fixedEntries->other_discounts : 0;
+        $proportion_voluntary = $fixedEntries != null ? $fixedEntries->proportion_voluntary : 0;
+        $savings_rate = $fixedEntries != null ? $fixedEntries->savings_rate : 0;
 
 
         // إضافات للمبلغ الضريبية العملة شيكل
@@ -120,7 +122,7 @@ class AddSalaryEmployee{
 
         $tax = ($amount_tax -$exemptions < 0) ? 0 : ($amount_tax - $exemptions); // الضريبة
 
-        $resident_exemption = ($dual_function == null) ? 0 : 3000; // إعفاء مقيم
+        $resident_exemption = ($dual_function != null) ? 0 : 3000; // إعفاء مقيم
 
         $annual_taxable_amount = $tax * 12 ; // مبلغ الضريبة الخاضع السنوي بالدولار
 
@@ -146,12 +148,13 @@ class AddSalaryEmployee{
 
         $late_receivables = ($gross_salary >= $advance_payment) ? $gross_salary - $advance_payment : 0; // مستحقات متأخرة
 
+
         $net_salary = $gross_salary - $late_receivables;
 
         $amount_letters = Numbers::TafqeetMoney($net_salary,'ILS'); // المبلغ بالنص
 
         // قرض الإدخار
-        $savings_loan = $fixedEntries->savings_loan ?? 0;
+        $savings_loan = $fixedEntries != null ? $fixedEntries->savings_loan : 0;
 
         DB::beginTransaction();
         try{

@@ -13,12 +13,12 @@
                     <a class="btn btn-danger" href="{{route('salaries.trashed')}}">
                         <i class="fe fe-trash"></i>
                     </a> --}}
-                    {{-- <form action="{{route('salaries.view_pdf')}}" method="post" class="d-inline" target="_blank">
+                    <form action="{{route('salaries.view_pdf')}}" method="post" class="d-inline" target="_blank">
                         @csrf
                         <button type="submit" class="btn btn-primary">
                             <i class="fe fe-printer"></i>
                         </button>
-                    </form> --}}
+                    </form>
                     @if ($btn_download_salary == "active")
                         <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
                             @csrf
@@ -70,7 +70,7 @@
                                         <td>{{$salary->net_salary}}</td>
                                         <td>{{$salary->bank}}</td>
                                         <td>{{$salary->account_number}}</td>
-                                        <td>{{number_format($salary->annual_taxable_amount / $USD,2)}}</td>
+                                        <td>{{number_format($salary->annual_taxable_amount,2)}}</td>
                                         <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <span class="text-muted sr-only">Action</span>

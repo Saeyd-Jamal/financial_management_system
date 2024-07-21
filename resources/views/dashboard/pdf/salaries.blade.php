@@ -3,22 +3,11 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>جدول الموظفين</title>
+    <title>جدول رواتب الموظفين</title>
     <style>
-        body {
-            font-family: 'XBRiyaz', sans-serif;
-        }
-
-        @page {
-            header: page-header;
-            footer: page-footer;
-        }
-    </style>
-    {{-- <style>
         table {
             border-collapse: collapse;
         }
-
         .table {
             width: 100%;
             margin-bottom: 1rem;
@@ -365,123 +354,153 @@
         .table-responsive>.table-bordered {
             border: 0;
         }
-    </style> --}}
+    </style>
     <style>
-        table.blueTable {
-            border: 1px solid #1C6EA4;
-            background-color: #EEEEEE;
-            width: 100%;
-            height: 200px;
-            text-align: right;
-            border-collapse: collapse;
+        body {
+            font-family: 'XBRiyaz', sans-serif;
+            font-size: 10px;
         }
 
-        table.blueTable td,
-        table.blueTable th {
-            border: 1px solid #4C4C4C;
-            padding: 4px 5px;
+        @page {
+            header: page-header;
+            footer: page-footer;
         }
-
-        table.blueTable tbody td {
-            font-size: 13px;
+        .table th{
+            color: #000;
+            font-size: bold;
         }
-
-        table.blueTable tr:nth-child(even) {
-            background: #D0E4F5;
+        .table td{
+            color: #252525;
         }
-
-        table.blueTable thead {
-            background: #757575;
-            background: -moz-linear-gradient(top, #979797 0%, #828282 66%, #757575 100%);
-            background: -webkit-linear-gradient(top, #979797 0%, #828282 66%, #757575 100%);
-            background: linear-gradient(to bottom, #979797 0%, #828282 66%, #757575 100%);
-            border-bottom: 2px solid #000000;
-        }
-
-        table.blueTable thead th {
-            font-size: 15px;
-            font-weight: bold;
-            color: #000000;
-            text-align: center;
-            border-left: 1px solid #24282A;
-        }
-
-        table.blueTable thead th:first-child {
-            border-left: none;
-        }
-
-        table.blueTable tfoot {
-            font-size: 11px;
-            font-weight: bold;
-            color: #FFFFFF;
-            background: #D0E4F5;
-            background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-            background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-            background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-            border-top: 2px solid #444444;
-        }
-
-        table.blueTable tfoot td {
-            font-size: 11px;
-        }
-
-        table.blueTable tfoot .links {
-            text-align: right;
-        }
-
-        table.blueTable tfoot .links a {
-            display: inline-block;
-            background: #1C6EA4;
-            color: #FFFFFF;
-            padding: 2px 8px;
-            border-radius: 5px;
+        .table tfoot tr{
+            color: #000;
         }
     </style>
+
 </head>
 
 <body>
     <htmlpageheader name="page-header">
-
+        <p>
+            <span>قسم الرواتب والموظفين</span> /
+            <span>الرواتب الشهرية</span>
+        </p>
     </htmlpageheader>
 
     <div lang="ar">
-        <table class="table blueTable" style="margin-top: 20px">
+        <table class="table">
             <thead>
-                <tr style="background: #ffffff; border:0;">
-                    <td colspan="2" style="border:0;">
+                <tr>
+                    <td colspan="7">
                         <img src="{{ public_path('assets/images/logo.png') }}" style="max-width: 80px;" alt="">
                     </td>
-                    <td colspan="3" align="center" style="color: #000;border:0;">
+                    <td colspan="8" align="center" style="color: #000;">
                         <p>بسم الله الرحمن الرحيم</p>
-                        <h1>جدول الموظفين</h1>
+                        <h1>رواتب الموظفين لشهر : {{$month}}</h1>
                     </td>
-                    <td colspan="3" style="border:0;"></td>
+                    <td colspan="9"></td>
                 </tr>
-                <tr class="table-bordered">
+                <tr class="table-bordered" style="color: #000; background-color: #e1e1e1;font-size:12px;">
                     <th>#</th>
-                    <th>الاسم</th>
-                    <th>رقم الهوية</th>
-                    <th>العمر</th>
-                    <th>الحالة الزوجية</th>
-                    <th>رقم الهاتف</th>
-                    <th>المنطقة</th>
-                    <th>المؤهل العلمي</th>
+                    <th style="width: 150px">الاسم</th>
+                    <th>مكان العمل</th>
+                    <th>الراتب الاساسي</th>
+                    <th>علاوة الأولاد</th>
+                    <th>علاوة طبيعة العمل</th>
+                    <th>علاوة إدارية</th>
+                    <th>علاوة مؤهل علمي</th>
+                    <th>المواصلات</th>
+                    <th>بدل إضافي +-</th>
+                    <th>علاوة أغراض راتب</th>
+                    <th>إضافة بأثر رجعي</th>
+                    <th>علاوة جوال</th>
+                    <th>نهاية الخدمة</th>
+                    <th>إجمالي الراتب</th>
+                    <th>تأمين صحي</th>
+                    <th>ض.دخل</th>
+                    <th>إدخار 5%</th>
+                    <th>قرض الجمعية</th>
+                    <th>قرض الإدخار</th>
+                    <th>قرض شيكل</th>
+                    <th>مستحقات متأخرة</th>
+                    <th>إجمالي الخصومات</th>
+                    <th>صافي الراتب</th>
                 </tr>
             </thead>
             <tbody class="table  table-bordered">
-                @foreach ($employees as $employee)
+                @foreach($salaries as $salary)
+                    @php
+                        $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
+                    @endphp
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $employee->name }}</td>
-                        <td>{{ $employee->employee_id }}</td>
-                        <td>{{ $employee->age }}</td>
-                        <td>{{ $employee->matrimonial_status }}</td>
-                        <td>{{ $employee->phone_number }}</td>
-                        <td>{{ $employee->area }}</td>
-                        <td>{{ $employee->scientific_qualification }}</td>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$salary->employee->name ?? ''}}</td>
+                        <td>{{$salary->employee->workData->workplace ?? ''}}</td>
+                        <td>{{$salary->secondary_salary ?? ''}}</td>
+                        <td>{{$salary->allowance_boys ?? ''}}</td>
+                        <td>{{$salary->nature_work_increase ?? ''}}</td>
+                        <td>{{$fixedEntries->administrative_allowance ?? ''}}</td>
+                        <td>{{$fixedEntries->scientific_qualification_allowance ?? ''}}</td>
+                        <td>{{$fixedEntries->transport ?? ''}}</td>
+                        <td>{{$fixedEntries->extra_allowance ?? ''}}</td>
+                        <td>{{$fixedEntries->salary_allowance ?? ''}}</td>
+                        <td>{{$fixedEntries->ex_addition ?? ''}}</td>
+                        <td>{{$fixedEntries->mobile_allowance ?? ''}}</td>
+                        <td>{{$salary->termination_service ?? ''}}</td>
+                        <td>{{$salary->grade_Allowance + $salary->total_discounts ?? ''}}</td>
+                        <td>{{$fixedEntries->health_insurance ?? ''}}</td>
+                        <td>{{$salary->z_Income ?? ''}}</td>
+                        <td>{{$fixedEntries->savings_rate ?? ''}}</td>
+                        <td>{{$fixedEntries->association_loan ?? ''}}</td>
+                        <td>{{$fixedEntries != null  ? $fixedEntries->savings_loan * $USD : ''}}</td>
+                        <td>{{$fixedEntries->shekel_loan ?? ''}}</td>
+                        <td>{{$salary->late_receivables ?? ''}}</td>
+                        <td>{{$salary->total_discounts ?? ''}}</td>
+                        <td style="color: #000;">{{$salary->net_salary ?? ''}}</td>
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr class="table-bordered"  style="color: #000; background-color: #d2d2d2;">
+                    <td>00</td>
+                    <td>المجموع</td>
+                    <td></td>
+                    <td>{{$salariesTotalArray['secondary_salary']}}</td>
+                    <td>{{$salariesTotalArray['allowance_boys']}}</td>
+                    <td>{{$salariesTotalArray['nature_work_increase']}}</td>
+                    <td>{{$salariesTotalArray['administrative_allowance']}}</td>
+                    <td>{{$salariesTotalArray['scientific_qualification_allowance']}}</td>
+                    <td>{{$salariesTotalArray['transport']}}</td>
+                    <td>{{$salariesTotalArray['extra_allowance']}}</td>
+                    <td>{{$salariesTotalArray['salary_allowance']}}</td>
+                    <td>{{$salariesTotalArray['ex_addition']}}</td>
+                    <td>{{$salariesTotalArray['mobile_allowance']}}</td>
+                    <td>{{$salariesTotalArray['termination_service']}}</td>
+                    <td>{{$salariesTotalArray['gross_salary']}}</td>
+                    <td>{{$salariesTotalArray['health_insurance']}}</td>
+                    <td>{{$salariesTotalArray['z_Income']}}</td>
+                    <td>{{$salariesTotalArray['savings_rate']}}</td>
+                    <td>{{$salariesTotalArray['association_loan']}}</td>
+                    <td>{{$salariesTotalArray['savings_loan'] * $USD}}</td>
+                    <td>{{$salariesTotalArray['shekel_loan']}}</td>
+                    <td>{{$salariesTotalArray['late_receivables']}}</td>
+                    <td>{{$salariesTotalArray['total_discounts']}}</td>
+                    <td>{{$salariesTotalArray['net_salary']}}</td>
+                </tr>
+                <tr>
+                    <td colspan="13">سعر الدولار : {{$USD}}</td>
+                    <td colspan="2" style="text-align: left;">إجمالي : {{intval($salariesTotalArray['gross_salary'] / $USD)}} $</td>
+                    <td colspan="7"></td>
+                    <td colspan="2">إجمالي : {{intval($salariesTotalArray['net_salary']  / $USD)}} $</td>
+                </tr>
+            </tfoot>
+        </table>
+        <table width="100%" style="vertical-align: bottom; color: #000000; margin:30px 1em; font-size: 12px">
+            <tr>
+                <td width="33%">الختم</td>
+                <td width="33%" align="center">التوقيع</td>
+                <td width="33%" style="text-align: left; padding-left: 80px;">إعتماد</td>
+            </tr>
         </table>
         <htmlpagefooter name="page-footer">
             <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">
@@ -489,7 +508,7 @@
                     <td width="33%">{DATE j-m-Y}</td>
                     <td width="33%" align="center">{PAGENO}/{nbpg}</td>
                     @auth
-                        <td width="33%" style="text-align: left;">{{ Auth::user()->name }}</td>
+                        <td width="33%" style="text-align: left;">{{Auth::user()->name }}</td>
                     @else
                         <td width="33%" style="text-align: left;">اسم المستخدم</td>
                     @endauth

@@ -14,7 +14,6 @@ class Salary extends Model
     protected $fillable = [
         'employee_id',
         'month',
-
         'percentage_allowance',
         'grade_Allowance',
         'initial_salary',
@@ -27,6 +26,7 @@ class Salary extends Model
         'gross_secondary_salary',
         'late_receivables',
         'total_discounts',
+        'gross_salary',
         'net_salary',
         'amount_letters',
         'payroll_statement',

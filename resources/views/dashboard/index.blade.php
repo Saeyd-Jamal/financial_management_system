@@ -25,9 +25,15 @@
             </form>
         </div>
     </div>
-    <div class="row">
+    <div class="row justify-content-between">
         <div class="shadow p-3 mb-5 bg-white rounded col-md-6">
-            {!! $chart->render() !!}
+            <h3 class="h5">تصنيف الموظفين حسب المناطق</h3>
+            {!! $chartEmployeesArea->render() !!}
+        </div>
+        <div class="shadow p-3 mb-5 bg-white rounded col-md-4">
+            <h3 class="h5">تصنيف الموظفين حسب المؤهلات العلمية</h3>
+            {!! $chartEmployeesScientificQualification->render() !!}
         </div>
     </div>
+
 </x-front-layout>

@@ -11,6 +11,8 @@ class HomeController extends Controller
 {
     public function index(){
         $employees = Employee::get();
+
+        // تصنيف الموظفين حسب المناطق
         $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
         $employeesPerArea = collect($areas)->map(function ($areas) {
             return [
@@ -19,8 +21,8 @@ class HomeController extends Controller
             ];
         });
         $employeesPerArea = $employeesPerArea->pluck('count')->toArray();
-        $chart = app()->chartjs
-            ->name('barChartTest')
+        $chartEmployeesArea = app()->chartjs
+            ->name('employeesPerArea')
             ->type('bar')
             ->size(['width' => 400, 'height' => 200])
             ->labels($areas)
@@ -38,6 +40,30 @@ class HomeController extends Controller
                         ]
                     ]
         ]);
-        return view('dashboard.index', compact('chart'));
+
+        // تصنيف الموظفين حسب المؤهل العلمي
+        $scientific_qualification = Employee::select('scientific_qualification')->distinct()->pluck('scientific_qualification')->toArray();
+        $employeesPerScientificQualification = collect($scientific_qualification)->map(function ($scientific_qualification) {
+            return [
+                "count" => Employee::where("scientific_qualification", "=", $scientific_qualification)->count(),
+                'name' => $scientific_qualification
+            ];
+        });
+        $employeesPerScientificQualification = $employeesPerScientificQualification->pluck('count')->toArray();
+        $chartEmployeesScientificQualification = app()->chartjs
+            ->name('employeesPerScientificQualification')
+            ->type('pie')
+            ->size(['width' => 400, 'height' => 300])
+            ->labels($scientific_qualification)
+            ->datasets([
+                [
+                    'backgroundColor' => ['#3498db', '#2ecc71', '#e74c3c'],
+                    'hoverBackgroundColor' => ['#5dade2', '#58d68d', '#f1948a'],
+                    'data' => $employeesPerScientificQualification
+                ]
+            ])
+            ->options([]);
+        return view('dashboard.index', compact('chartEmployeesArea','chartEmployeesScientificQualification'));
     }
 }
+

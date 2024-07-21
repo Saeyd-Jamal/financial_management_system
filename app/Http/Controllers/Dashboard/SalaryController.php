@@ -8,10 +8,11 @@ use App\Models\BanksEmployees;
 use App\Models\Currency;
 use App\Models\Employee;
 use App\Models\Salary;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Mpdf\Mpdf;
 
 class SalaryController extends Controller
 {
@@ -128,8 +129,72 @@ class SalaryController extends Controller
     public function viewPDF()
     {
         $salaries = Salary::get();
-        $pdf = Pdf::loadView('dashboard.pdf.salaries', array('salaries' =>  $salaries));
-        return $pdf->stream();
+        $month = Carbon::now()->format('Y-m');
+        $USD = Currency::where('code', 'USD')->first() != null ? Currency::where('code', 'USD')->first()->value : 3.5;
+        $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
+            $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
+            return [
+                "secondary_salary" => $salary->secondary_salary ?? '0',
+                'allowance_boys' => $salary->allowance_boys ?? '0',
+                'nature_work_increase' => $salary->nature_work_increase ?? '0',
+                'administrative_allowance' => $fixedEntries->administrative_allowance ?? '0',
+                'scientific_qualification_allowance' => $fixedEntries->scientific_qualification_allowance ?? '0',
+                'transport' => $fixedEntries->transport ?? '0',
+                'extra_allowance' => $fixedEntries->extra_allowance ?? '0',
+                'salary_allowance' => $fixedEntries->salary_allowance ?? '0',
+                'ex_addition' => $fixedEntries->ex_addition ?? '0',
+                'mobile_allowance' => $fixedEntries->mobile_allowance ?? '0',
+                'termination_service' => $salary->termination_service ?? '0',
+                'gross_salary' => $salary->gross_salary + $salary->total_discounts ?? '0',
+                'health_insurance' => $fixedEntries->health_insurance ?? '0',
+                'z_Income' => $salary->z_Income ?? '0',
+                'savings_rate' => $fixedEntries->savings_rate ?? '0',
+                'association_loan' => $fixedEntries->association_loan ?? '0',
+                'savings_loan' => $fixedEntries->savings_loan ?? '0',
+                'shekel_loan' => $fixedEntries->shekel_loan ?? '0',
+                'late_receivables' => $salary->late_receivables ?? '0',
+                'total_discounts' => $salary->total_discounts ?? '0',
+                'net_salary' => $salary->net_salary ?? '0',
+            ];
+        });
+        $salariesTotalArray = [
+            'secondary_salary' => collect($salariesTotal->pluck('secondary_salary')->toArray())->sum(),
+            'allowance_boys' => collect($salariesTotal->pluck('allowance_boys')->toArray())->sum(),
+            'nature_work_increase' => collect($salariesTotal->pluck('nature_work_increase')->toArray())->sum(),
+            'administrative_allowance' => collect($salariesTotal->pluck('administrative_allowance')->toArray())->sum(),
+            'scientific_qualification_allowance' => collect($salariesTotal->pluck('scientific_qualification_allowance')->toArray())->sum(),
+            'transport' => collect($salariesTotal->pluck('transport')->toArray())->sum(),
+            'extra_allowance' => collect($salariesTotal->pluck('extra_allowance')->toArray())->sum(),
+            'salary_allowance' => collect($salariesTotal->pluck('salary_allowance')->toArray())->sum(),
+            'ex_addition' => collect($salariesTotal->pluck('ex_addition')->toArray())->sum(),
+            'mobile_allowance' => collect($salariesTotal->pluck('mobile_allowance')->toArray())->sum(),
+            'termination_service' => collect($salariesTotal->pluck('termination_service')->toArray())->sum(),
+            'gross_salary' => collect($salariesTotal->pluck('gross_salary')->toArray())->sum(),
+            'health_insurance' => collect($salariesTotal->pluck('health_insurance')->toArray())->sum(),
+            'z_Income' => collect($salariesTotal->pluck('z_Income')->toArray())->sum(),
+            'savings_rate' => collect($salariesTotal->pluck('savings_rate')->toArray())->sum(),
+            'association_loan' => collect($salariesTotal->pluck('association_loan')->toArray())->sum(),
+            'savings_loan' => collect($salariesTotal->pluck('savings_loan')->toArray())->sum(),
+            'shekel_loan' => collect($salariesTotal->pluck('shekel_loan')->toArray())->sum(),
+            'late_receivables' => collect($salariesTotal->pluck('late_receivables')->toArray())->sum(),
+            'total_discounts' => collect($salariesTotal->pluck('total_discounts')->toArray())->sum(),
+            'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
+        ];
+
+        $html = view('dashboard.pdf.salaries', compact('salaries','month','salariesTotalArray','USD'))->render();
+
+        // إعدادات mPDF
+        $mpdfConfig = [
+            'mode' => 'utf-8',
+            'format' => 'A4-L',
+            'default_font_size' => 12,
+            'default_font' => 'Arial'
+        ];
+
+        $mpdf = new Mpdf($mpdfConfig);
+        $mpdf->WriteHTML($html);
+        
+        $mpdf->Output();
     }
 
 
