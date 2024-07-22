@@ -27,10 +27,10 @@
         'currencies.edit' => 'تعديل عملة',
         'currencies.delete' => 'حذف عملة',
 
-        'salary_scales.view' => 'عرض نسب الرواتب',
-        'salary_scales.create' => 'اضافة نسبة راتب',
-        'salary_scales.edit' => 'تعديل نسبة راتب',
-        'salary_scales.delete' => 'حذف نسبة راتب',
+        'salary_scales.view' => 'عرض سلم الرواتب',
+        'salary_scales.create' => 'اضافة سلم راتب',
+        'salary_scales.edit' => 'تعديل سلم راتب',
+        'salary_scales.delete' => 'حذف سلم راتب',
 
         'totals.view' => 'عرض الاجماليات',
         'totals.create' => 'اضافة اجماليات',
@@ -46,5 +46,7 @@
         'salaries.create' => 'اضافة راتب',
         'salaries.edit' => 'تعديل راتب',
         'salaries.delete' => 'حذف راتب',
+
+        'report' => 'تقارير',
     ];
 

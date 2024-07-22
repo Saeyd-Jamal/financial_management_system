@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\CurrencyController;
 use App\Http\Controllers\Dashboard\EmployeeController;
 use App\Http\Controllers\Dashboard\FixedEntriesController;
 use App\Http\Controllers\Dashboard\NatureWorkIncreaseController;
+use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SalaryController;
 use App\Http\Controllers\Dashboard\SalaryScaleController;
@@ -56,6 +57,10 @@ Route::group([
     Route::post('/constants', [ConstantController::class,'store'])->name('constants.store');
     Route::delete('/constants/destroy', [ConstantController::class,'destroy'])->name('constants.destroy');
 
+
+    // Report
+    Route::get('/report', [ReportController::class,'index'])->name('report.index');
+    Route::post('/report/export', [ReportController::class,'export'])->name('report.export');
     Route::resources([
         'currencies' => CurrencyController::class,
         'employees' => EmployeeController::class,

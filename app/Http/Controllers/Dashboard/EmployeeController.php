@@ -311,7 +311,6 @@ class EmployeeController extends Controller
                     $employees = $employees->whereHas('workData', function($query) use ($filed, $valInput) {
                         $query->where($filed,'LIKE',"%{$valInput}%");
                     });
-
                 }
             }
             session()->put('employees', $employees->get());

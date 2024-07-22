@@ -63,7 +63,9 @@ class HomeController extends Controller
                 ]
             ])
             ->options([]);
-        return view('dashboard.index', compact('chartEmployeesArea','chartEmployeesScientificQualification'));
+
+        $countEmployees = Employee::count();
+        return view('dashboard.index', compact('chartEmployeesArea','chartEmployeesScientificQualification','countEmployees'));
     }
 }
 

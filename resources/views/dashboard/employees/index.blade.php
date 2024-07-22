@@ -200,7 +200,7 @@
                         </datalist>
                     </div>
                     <div class="form-group col-md-3">
-                        <x-form.input class="employee_filter" name="dual_function" placeholder="أدخل حالة الفعالية"
+                        <x-form.input class="employee_filter" name="dual_function" placeholder="أدخل الحالة"
                             label="مزدوج الوظيفة" list="dual_function_list" />
                         <datalist id="dual_function_list">
                             <option value="غير موظف">

@@ -34,6 +34,14 @@
                 </a>
             </li>
             @endcan
+            @can('report')
+            <li class="nav-item w-100">
+                <a class="nav-link" href="{{route('report.index')}}">
+                    <i class="fe fe-file fe-16"></i>
+                    <span class="ml-3 item-text">التقارير</span>
+                </a>
+            </li>
+            @endcan
         </ul>
         @can('view','App\\Models\FixedEntries')
         <p class="text-muted nav-heading mt-4 mb-1">

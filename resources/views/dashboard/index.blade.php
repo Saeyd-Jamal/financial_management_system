@@ -1,11 +1,11 @@
 <x-front-layout>
     @push('styles')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @endpush
     <div class="row align-items-center mb-2">
         <div class="col">
             @auth
-                <h2 class="h5 page-title">مرحبا : {{auth()->user()->name}}</h2>
+                <h2 class="h5 page-title">مرحبا : {{ auth()->user()->name }}</h2>
             @endauth
         </div>
         <div class="col-auto">
@@ -33,6 +33,24 @@
         <div class="shadow p-3 mb-5 bg-white rounded col-md-4">
             <h3 class="h5">تصنيف الموظفين حسب المؤهلات العلمية</h3>
             {!! $chartEmployeesScientificQualification->render() !!}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <span class="h2 mb-0">{{ $countEmployees }}</span>
+                            <p class="small text-muted mb-0">عدد الموظفين</p>
+                            <span class="badge badge-pill badge-warning">إجمالي</span>
+                        </div>
+                        <div class="col-auto">
+                            <span class="fe fe-32 fe-users text-muted mb-0"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

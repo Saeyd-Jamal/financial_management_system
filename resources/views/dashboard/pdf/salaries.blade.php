@@ -380,10 +380,35 @@
 </head>
 
 <body>
+    @php
+        $filedsEmpolyees = [
+            'gender',
+            'matrimonial_status',
+            'scientific_qualification',
+            'area',
+            'working_status',
+            'type_appointment',
+            'field_action',
+            'dual_function',
+            'state_effectiveness',
+            'nature_work',
+            'association',
+            'workplace',
+            'section',
+            'dependence',
+            'establishment',
+            'payroll_statement'
+        ];
+    @endphp
     <htmlpageheader name="page-header">
         <p>
             <span>قسم الرواتب والموظفين</span> /
             <span>الرواتب الشهرية</span>
+            @foreach ($filedsEmpolyees as $name)
+                @if ($filter["$name"] != null)
+                / <span>{{ $filter["$name"] }}</span>
+                @endif
+            @endforeach
         </p>
     </htmlpageheader>
 
