@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Total extends Model
+class ReceivablesLoans extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $table = 'totals';
     protected $guarded = [];
 
 

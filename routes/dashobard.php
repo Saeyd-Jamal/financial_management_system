@@ -25,7 +25,7 @@ Route::group([
     // 'as' => 'dashboard.'
 ], function () {
     // outhers fields
-    Route::post('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
+    Route::get('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
     Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
     Route::post('/fixed_entries/getFixedEntriesData', [FixedEntriesController::class,'getFixedEntriesData'])->name('fixed_entries.getFixedEntriesData');
 

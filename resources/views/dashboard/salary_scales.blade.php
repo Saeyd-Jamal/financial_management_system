@@ -7,12 +7,16 @@
                     <p class="card-text">هنا يتم عرض جدول سلم الرواتب المعتمد عليه</p>
                 </div>
                 <div class="col-auto">
+                    @can('create', 'App\\Models\SalaryScale')
                     <a type="button" class="btn btn-success text-white" data-toggle="modal" data-target="#createItem">
                         <i class="fe fe-plus f-16"></i>
                     </a>
+                    @endcan
+                    @can('edit', 'App\\Models\SalaryScale')
                     <a type="button" class="btn btn-info text-white" data-toggle="modal" data-target="#editItem">
                         <i class="fe fe-edit f-16"></i>
                     </a>
+                    @endcan
                 </div>
             </div>
             <div class="row my-4">
@@ -21,7 +25,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table table-hover">
+                            <table class="table table-bordered  table-hover">
                                 <thead>
                                     <tr>
                                         <th>العلاوة</th>
@@ -70,6 +74,7 @@
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
     {{-- create model --}}
+    @can('create', 'App\\Models\SalaryScale')
     <div class="modal fade" id="createItem" tabindex="-1" role="dialog" aria-labelledby="createItemLabel" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -176,6 +181,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('edit', 'App\\Models\SalaryScale')
     <div class="modal fade" id="editItem" tabindex="-1" role="dialog" aria-labelledby="editItemLabel" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -284,6 +291,8 @@
         </div>
     </div>
 
+    @endcan
+
     @push('scripts')
     <script src="{{asset('assets/js/ajax.min.js')}}"></script>
     <script>
@@ -293,3 +302,4 @@
     <script src="{{asset('js/getShowSalaryScales.js')}}"></script>
 @endpush
 </x-front-layout>
+

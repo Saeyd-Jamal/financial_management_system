@@ -3,13 +3,15 @@
         <div class="col-12">
             <div class="row align-items-center mb-2">
                 <div class="col">
-                    <h2 class="mb-2 page-title">جدول الإدخالات الثابتة</h2>
+                    <h2 class="mb-2 page-title">جدول التعديلات</h2>
                     <p class="card-text">هنا يتم عرض البيانات المدخلة الشهرية لكل موظف والتي تستخدم في الرواتب</p>
                 </div>
                 <div class="col-auto">
+                    @can('create', 'App\\Models\FixedEntries')
                     <a class="btn btn-success" href="{{ route('fixed_entries.create') }}">
                         <i class="fe fe-plus"></i>
                     </a>
+                    @endcan
                     <div class="form-group col-6 d-inline">
                         <input type="month" id="monthInputSearch" name="month" value="{{$monthNow}}" class="form-control">
                     </div>
@@ -24,7 +26,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table table-hover" >
+                            <table class="table table-bordered  table-hover" >
                                 <thead>
                                     <tr>
                                         <th>#</th>

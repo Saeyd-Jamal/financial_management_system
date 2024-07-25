@@ -7,18 +7,23 @@
                     <p class="card-text">هنا يتم عرض الرواتب الشهرية لكل موظف</p>
                 </div>
                 <div class="col-auto">
-                    {{-- <a class="btn btn-success" href="{{route('salaries.create')}}">
+                    {{-- @can('create', 'App\\Models\Salary')
+                    <a class="btn btn-success" href="{{route('salaries.create')}}">
                         <i class="fe fe-plus"></i>
                     </a>
+                    @endcan
                     <a class="btn btn-danger" href="{{route('salaries.trashed')}}">
                         <i class="fe fe-trash"></i>
                     </a> --}}
+                    @can('export', 'App\\Models\Salary')
                     <form action="{{route('salaries.view_pdf')}}" method="post" class="d-inline" target="_blank">
                         @csrf
                         <button type="submit" class="btn btn-primary">
                             <i class="fe fe-printer"></i>
                         </button>
                     </form>
+                    @endcan
+                    @can('createAll', 'App\\Models\Salary')
                     @if ($btn_download_salary == "active")
                         <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
                             @csrf
@@ -28,6 +33,7 @@
                             </button>
                         </form>
                     @endif
+                    @endcan
                 </div>
             </div>
             <div class="row my-4">
@@ -36,7 +42,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table">
+                            <table class="table table-bordered  table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -80,12 +86,14 @@
                                                     href="{{route('salaries.show',$salary->id)}}">عرض</a>
                                                 {{-- <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="{{route('salaries.edit',$salary->id)}}">تعديل</a> --}}
+                                                @can('delete', 'App\\Models\Salary')
                                                 <form action="{{route('salaries.destroy',$salary->id)}}" method="post">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="#">حذف</button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

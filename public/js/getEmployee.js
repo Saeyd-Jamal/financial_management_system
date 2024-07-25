@@ -4,7 +4,7 @@
         let employeeName = $('#employee_name_search').val();
         $.ajax({
             url: "/employees/getEmployee/", //data-id
-            method: "post",
+            method: "get",
             data: {
                 employeeId: employeeId,
                 employeeName: employeeName,

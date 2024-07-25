@@ -1,72 +1,4 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
-    @push('styles')
-        <style>
-            table.blueTable {
-                border: 1px solid #1C6EA4;
-                width: 100%;
-                height: 221px;
-                text-align: right;
-                border-collapse: collapse;
-            }
-
-            table.blueTable td,
-            table.blueTable th {
-                border: 1px solid #4C4C4C;
-                padding: 3px 7px;
-            }
-
-            table.blueTable tbody td {
-                font-size: 13px;
-            }
-
-            table.blueTable tr:nth-child(even) {
-                background: #E3EFF5;
-            }
-
-            table.blueTable thead {
-                background: #D9EEFF;
-                border-bottom: 2px solid #000000;
-            }
-
-            table.blueTable thead th {
-                font-size: 15px;
-                font-weight: bold;
-                color: #000000;
-                text-align: center;
-                border-left: 1px solid #24282A;
-            }
-
-            table.blueTable thead th:first-child {
-                border-left: none;
-            }
-
-            table.blueTable tfoot {
-                font-size: 11px;
-                font-weight: bold;
-                color: #FFFFFF;
-                background: #D0E4F5;
-                background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-                background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-                background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-            }
-
-            table.blueTable tfoot td {
-                font-size: 11px;
-            }
-
-            table.blueTable tfoot .links {
-                text-align: right;
-            }
-
-            table.blueTable tfoot .links a {
-                display: inline-block;
-                background: #1C6EA4;
-                color: #FFFFFF;
-                padding: 2px 8px;
-                border-radius: 5px;
-            }
-        </style>
-    @endpush
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="row align-items-center mb-2">
@@ -83,10 +15,9 @@
                     <button class="btn btn-warning" id="filter-btn" title="التصفية">
                         <i class="fe fe-filter"></i>
                     </button>
-
                     @can('export', 'App\\Models\Employee')
                         <a class="btn btn-info" href="{{ route('employees.exportExcel') }}" title="تحميل excel">
-                            <i class="fe fe-download"></i>
+                            <i class="fe fe-download"></i>Excel
                         </a>
                     @endcan
                     @can('export', 'App\\Models\Employee')
@@ -94,7 +25,7 @@
                             target="_blank">
                             @csrf
                             <button onclick="sendData()" type="button" class="btn btn-primary" title="تحميل pdf">
-                                <i class="fe fe-printer"></i>
+                                <i class="fe fe-printer"></i>PDF
                             </button>
                         </form>
                         <script>
@@ -287,7 +218,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table blueTable">
+                            <table class="table table-bordered  table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>

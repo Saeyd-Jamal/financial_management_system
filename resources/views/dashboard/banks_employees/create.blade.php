@@ -56,7 +56,7 @@
             @csrf
             @include("dashboard.banks_employees._form")
         </form>
-        @can('import','App\\Models\Employee')
+        @can('import','App\\Models\BanksEmployees')
         <div class="col-md-6">
             <div class="card shadow mb-4">
                 <div class="card-header">

@@ -12,16 +12,7 @@ class BankRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if($this->method() == 'GET'){
-            return Gate::allows('banks.view');
-        }
-        if($this->route('bank') && ($this->method() == 'PUT' || $this->method() == 'GET' )){
-            return Gate::allows('banks.edit');
-        }
-        if($this->method() == 'delete' && $this->route('bank')){
-            return Gate::allows('banks.delete');
-        }
-        return Gate::allows('banks.create');
+        return true;
     }
 
     /**

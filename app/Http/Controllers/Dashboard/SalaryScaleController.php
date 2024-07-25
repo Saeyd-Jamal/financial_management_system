@@ -3,18 +3,22 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SalaryScaleRequest;
 use App\Models\SalaryScale;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class SalaryScaleController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('view', SalaryScale::class);
         $salary_scales = SalaryScale::get();
         $salary_scales_basic = SalaryScale::find(0);
         if($salary_scales_basic == null){
@@ -28,8 +32,9 @@ class SalaryScaleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SalaryScaleRequest $request)
     {
+        $this->authorize('create', SalaryScale::class);
 
         DB::beginTransaction();
         try{
@@ -85,8 +90,10 @@ class SalaryScaleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SalaryScale $salaryScale)
+    public function update(SalaryScaleRequest $request, SalaryScale $salaryScale)
     {
+        $this->authorize('edit', SalaryScale::class);
+
         DB::beginTransaction();
         try{
             $salaryScale = SalaryScale::findOrFail(0);

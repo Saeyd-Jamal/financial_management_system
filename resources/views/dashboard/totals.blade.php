@@ -1,4 +1,4 @@
-<x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
+<x-front-layout classC="shadow p-3 mb-5 bg-white rounded">
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="row align-items-center mb-2">
@@ -7,9 +7,11 @@
                     <p class="card-text">هنا يتم عرض جدول الإجماليات</p>
                 </div>
                 <div class="col-auto">
+                    @can('create', 'App\\Models\ReceivablesLoans')
                     <a type="button" class="btn btn-success" data-toggle="modal" data-target="#createItem">
                         <i class="fe fe-plus"></i>
                     </a>
+                    @endcan
                     <button style="display: none;" id="openModalShow" data-toggle="modal" data-target="#editItem">
                         Launch demo modal
                     </button>
@@ -21,7 +23,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table table-hover">
+                            <table class="table table-bordered  table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -57,6 +59,7 @@
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
     {{-- create model --}}
+    @can('create', 'App\\Models\ReceivablesLoans')
     <div class="modal fade" id="createItem" tabindex="-2" role="dialog" aria-labelledby="createItemLabel" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -107,7 +110,7 @@
                             </div>
                         </div>
                     </form>
-                    @can('import','App\\Models\Employee')
+                    @can('import','App\\\Models\Employee')
                     <div class="col-md-6">
                         <div class="card shadow mb-4">
                             <div class="card-header">
@@ -134,6 +137,8 @@
             </div>
         </div>
     </div>
+    @endcan
+    @can('edit','App\\Models\ReceivablesLoans')
     <div class="modal fade" id="editItem" tabindex="-3" role="dialog" aria-labelledby="editItemLabel" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered  modal-lg" role="document">
             <div class="modal-content">
@@ -152,6 +157,7 @@
             </div>
         </div>
     </div>
+    @endcan
     <div class="modal fade" id="searchEmployee" tabindex="-5" role="dialog" aria-labelledby="searchEmployeeLabel" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -196,12 +202,16 @@
         </div>
     </div>
     @push('scripts')
-    <script src="{{asset('assets/js/ajax.min.js')}}"></script>
-    <script>
-        const csrf_token = "{{csrf_token()}}";
-        const app_link = "{{config('app.url')}}";
-    </script>
-    <script src="{{ asset('js/getEmployee.js') }}"></script>
-    <script src="{{asset('js/getShowTotals.js')}}"></script>
-@endpush
+        <script src="{{asset('assets/js/ajax.min.js')}}"></script>
+        <script>
+            const csrf_token = "{{csrf_token()}}";
+            const app_link = "{{config('app.url')}}";
+        </script>
+        @can('create', 'App\\Models\ReceivablesLoans')
+            <script src="{{ asset('js/getEmployee.js') }}"></script>
+        @endcan
+        @can('edit','App\\Models\ReceivablesLoans')
+            <script src="{{asset('js/getShowTotals.js')}}"></script>
+        @endcan
+    @endpush
 </x-front-layout>

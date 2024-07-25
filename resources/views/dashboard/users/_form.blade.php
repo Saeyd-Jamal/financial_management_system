@@ -1,3 +1,13 @@
+@push('styles')
+<style>
+    #user-roles{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: minmax(auto, auto);
+        gap: 10px 15px;
+    }
+</style>
+@endpush
 <div class="row">
     <div class="form-group p-3 col-4">
         <x-form.input label="الاسم" :value="$user->name"  name="name" placeholder="محمد ...." required autofocus/>
@@ -24,7 +34,7 @@
 
 </div>
 <div class="row ml-3">
-    <fieldset>
+    <fieldset id="user-roles">
         <legend>الصلاحيات</legend>
         @foreach (app('abilities') as $ability_name => $ability)
             <div class="form-check">

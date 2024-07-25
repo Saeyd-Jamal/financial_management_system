@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FixedEntryRequest;
 use App\Models\Employee;
 use App\Models\FixedEntries;
 use App\Models\Salary;
-use App\Models\Total;
+use App\Models\ReceivablesLoans;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class FixedEntriesController extends Controller
 {
+
+    use AuthorizesRequests;
     protected $thisYear;
     protected $thisMonth;
 
@@ -71,6 +75,7 @@ class FixedEntriesController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('view', FixedEntries::class);
         if($request->monthChange == true){
             $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->paginate(10);
             return $fixed_entries;
@@ -83,8 +88,9 @@ class FixedEntriesController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(FixedEntryRequest $request)
     {
+        $this->authorize('create', FixedEntries::class);
         $fixed_entrie = new FixedEntries();
         $fixed_entrie->employee = new Employee();
         $month = $this->thisMonth;
@@ -108,8 +114,9 @@ class FixedEntriesController extends Controller
     //         }),],
     //     'month' =>"required|date_format:Y-m",
     // ]);
-    public function store(Request $request)
+    public function store(FixedEntryRequest $request)
     {
+        $this->authorize('create', FixedEntries::class);
         $fields = [
             'administrative_allowance',
             'scientific_qualification_allowance',
@@ -142,14 +149,8 @@ class FixedEntriesController extends Controller
         foreach ($fieldsLoan as $field) {
             if($request->{$field."_create"} == true) {
                 $this->updateEntries($request, $field, $field.'_months');
-                Total::updateOrCreate([
-                    'employee_id' => $request->employee_id,
-                ],[
-                    'total_'.$field => $request->post('total_'.$field),
-                ]);
             }
         }
-
         $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
             $employee = Employee::findOrFail($request->employee_id);
@@ -182,13 +183,14 @@ class FixedEntriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(FixedEntryRequest $request, $id)
     {
+        $this->authorize('edit', FixedEntries::class);
         $fixed_entrie = FixedEntries::with(['employee'])->where('employee_id',$id)->get();
         $fixed_entrie['employee'] = FixedEntries::with(['employee'])->where('employee_id',$id)->first()->employee;
-        $total_association_loan_old = (Total::where('employee_id',$id)->first() == null) ? 0 : Total::where('employee_id',$id)->first()['total_association_loan'];
-        $total_shekel_loan_old = (Total::where('employee_id',$id)->first() == null) ? 0 : Total::where('employee_id',$id)->first()['total_shekel_loan'];
-        $total_savings_loan_old = (Total::where('employee_id',$id)->first() == null) ? 0 : Total::where('employee_id',$id)->first()['total_savings_loan'];
+        $total_association_loan_old = (ReceivablesLoans::where('employee_id',$id)->first() == null) ? 0 : ReceivablesLoans::where('employee_id',$id)->first()['total_association_loan'];
+        $total_shekel_loan_old = (ReceivablesLoans::where('employee_id',$id)->first() == null) ? 0 : ReceivablesLoans::where('employee_id',$id)->first()['total_shekel_loan'];
+        $total_savings_loan_old = (ReceivablesLoans::where('employee_id',$id)->first() == null) ? 0 : ReceivablesLoans::where('employee_id',$id)->first()['total_savings_loan'];
         $btn_label = "تعديل";
         $month = $this->thisMonth;
         $year = $this->thisYear;
@@ -198,8 +200,9 @@ class FixedEntriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(FixedEntryRequest $request, $id)
     {
+        $this->authorize('edit', FixedEntries::class);
         $employee = Employee::findOrFail($id);
         $salary = Salary::where('employee_id',$id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
@@ -211,8 +214,9 @@ class FixedEntriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(FixedEntryRequest $request ,$id)
     {
+        $this->authorize('delete', FixedEntries::class);
         $fixedEntries = FixedEntries::findOrFail($id);
         $fixedEntries->delete();
         return redirect()->route('fixed_entries.index')->with('danger','تم حذف الثوابت للموضف بنجاح');
@@ -221,14 +225,23 @@ class FixedEntriesController extends Controller
 
     // others Functions
     public function getFixedEntriesData(Request $request){
-        $totals = Total::where('employee_id',$request->employee_id)->first();
+        $fixed_entrie = FixedEntries::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
+        if($fixed_entrie != null){
+            return [
+                'link_edit_fixed_entries' => route('fixed_entries.edit',$request->employee_id),
+            ];
+        }
+        $employee_name = Employee::findOrFail($request->employee_id)->name;
+        $totals = ReceivablesLoans::where('employee_id',$request->employee_id)->first();
         if($totals == null){
             return  0.00;
         }
         return [
+            'employee_name' => $employee_name,
             'total_association_loan' => $totals->total_association_loan,
             'total_shekel_loan' => $totals->total_shekel_loan,
-            'total_savings_loan' => $totals->total_savings_loan
+            'total_savings_loan' => $totals->total_savings_loan,
+            'link_edit_fixed_entries' => false
         ];
     }
     public function getFixedEntriesFialds($fixed_entrie,$year,$month,$filedName){

@@ -4,35 +4,41 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ReceivablesLoansRequest;
+use App\Http\Requests\TotalFundsRequest;
 use App\Imports\TotalsImport;
 use App\Models\Employee;
 use App\Models\Salary;
-use App\Models\Total;
+use App\Models\ReceivablesLoans;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TotalController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $totals = Total::with(['employee'])->paginate(15);
-        $total = new Total();
+        $this->authorize('view', ReceivablesLoans::class);
+        $totals = ReceivablesLoans::with(['employee'])->paginate(15);
+        $total = new ReceivablesLoans();
         return view('dashboard.totals', compact('totals','total'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ReceivablesLoansRequest $request)
     {
+        $this->authorize('create', ReceivablesLoans::class);
         $request->validate([
             'employee_id' => 'required|exists:employees,id|unique:totals,employee_id',
         ]);
-        Total::create($request->all());
+        ReceivablesLoans::create($request->all());
         $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
             $employee = Employee::findOrFail($request->employee_id);
@@ -45,7 +51,7 @@ class TotalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Total $total)
+    public function show(ReceivablesLoans $total)
     {
         return redirect()->route('totals.index');
     }
@@ -53,7 +59,7 @@ class TotalController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Total $total)
+    public function edit(ReceivablesLoansRequest $request, ReceivablesLoans $total)
     {
         return $total;
     }
@@ -61,8 +67,9 @@ class TotalController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Total $total)
+    public function update(ReceivablesLoansRequest $request, ReceivablesLoans $total)
     {
+        $this->authorize('edit', ReceivablesLoans::class);
         $request->validate([
             'employee_id' => 'required|exists:employees,id',
         ]);
@@ -78,8 +85,9 @@ class TotalController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Total $total)
+    public function destroy(ReceivablesLoansRequest $request, ReceivablesLoans $total)
     {
+        $this->authorize('delete', ReceivablesLoans::class);
         $total->delete();
         return redirect()->route('totals.index')->with('danger', 'تم حذف الإجماليات لموظف');
     }
@@ -87,16 +95,14 @@ class TotalController extends Controller
     // Execl
     public function import(Request $request)
     {
-        // $this->authorize('import', Employee::class);
+        $this->authorize('import', ReceivablesLoans::class);
         $file = $request->file('fileUplode');
         if($file == null){
             return redirect()->back()->with('error', 'لم يتم رفع الملف بشكل صحيح');
         }
-
-        // dd($request->all());
         Excel::import(new TotalsImport, $file);
 
-        return redirect()->route('banks_employees.index')->with('success', 'تم رفع الملف');
+        return redirect()->route('totals.index')->with('success', 'تم رفع الملف');
     }
     public function export(Request $request)
     {

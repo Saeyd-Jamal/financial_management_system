@@ -32,7 +32,7 @@ class FixedEntries extends Model
         'paradise_discount',
         'other_discounts',
         'proportion_voluntary',
-        'savings_5%',
+        'savings_rate',
     ];
 
     // Relationship

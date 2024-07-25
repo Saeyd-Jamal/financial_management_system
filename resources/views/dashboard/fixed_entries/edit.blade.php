@@ -1,7 +1,7 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
     <div class="row align-items-center mb-2">
         <div class="col">
-            <h2 class="mb-2 page-title">تعديل  الإدخالات الثابتة للموظف : {{$fixed_entrie['employee']->name}} لسنة : {{$year}}</h2>
+            <h2 class="mb-2 page-title">تعديل  الإدخالات للموظف : {{$fixed_entrie['employee']->name}} لسنة : {{$year}}</h2>
         </div>
     </div>
     <div class="row">

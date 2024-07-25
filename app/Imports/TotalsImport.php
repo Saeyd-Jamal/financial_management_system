@@ -2,15 +2,15 @@
 
 namespace App\Imports;
 
-use App\Models\Total;
+use App\Models\ReceivablesLoans;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class TotalsImport implements ToModel,WithHeadingRow//,SkipsOnError
+class TotalsImport implements ToModel,WithHeadingRow,SkipsOnError
 {
-    // use SkipsErrors;
+    use SkipsErrors;
     /**
     * @param array $row
     *
@@ -18,8 +18,7 @@ class TotalsImport implements ToModel,WithHeadingRow//,SkipsOnError
     */
     public function model(array $row)
     {
-        dd($row);
-        return new Total([
+        return new ReceivablesLoans([
             'employee_id' => $row['rkm_almothf'],
             'total_receivables' => $row['agmaly_almsthkat'],
             'total_savings' => $row['agmaly_aladkharat'],

@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Jobs\CreateSalary;
+use App\Models\BanksEmployees;
+use App\Models\FixedEntries;
+use App\Models\ReceivablesLoans;
+use App\Models\TotalFunds;
+use App\Policies\BankEmployeePolicy;
+use App\Policies\FixedEntriesPolicy;
+use App\Policies\ReceivablesLoansPolicy;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -39,5 +47,18 @@ class AppServiceProvider extends ServiceProvider
                 return true;
             }
         });
+        // the Authorization for Report Page
+        Gate::define('report', function ($user) {
+            if($user->roles->contains('role_name', 'report')) {
+                return true;
+            }
+            return false;
+        });
+
+        Gate::policy(FixedEntries::class, FixedEntriesPolicy::class);
+        Gate::policy(BanksEmployees::class, BankEmployeePolicy::class);
+        Gate::policy(ReceivablesLoans::class, ReceivablesLoansPolicy::class);
+
+
     }
 }

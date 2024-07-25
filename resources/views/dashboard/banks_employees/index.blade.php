@@ -7,9 +7,11 @@
                     <p class="card-text">هنا يتم عرض بيانات حسابات الموظفين في البنوك.</p>
                 </div>
                 <div class="col-auto">
+                    @can('create', 'App\\Models\BankEmployee')
                     <a class="btn btn-success" href="{{route('banks_employees.create')}}">
                         <i class="fe fe-plus"></i>
                     </a>
+                    @endcan
                 </div>
             </div>
             <div class="row my-4">
@@ -18,7 +20,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table">
+                            <table class="table  table-bordered  table-hover">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -46,14 +48,18 @@
                                                 <span class="text-muted sr-only">Action</span>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
+                                                @can('edit', 'App\\Models\BankEmployee')
                                                 <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="{{route('banks_employees.edit',$bank_employee->id)}}">تعديل</a>
+                                                @endcan
+                                                @can('delete', 'App\\Models\BankEmployee')
                                                 <form action="{{route('banks_employees.destroy',$bank_employee->id)}}" method="post">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="#">حذف</button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

@@ -7,6 +7,7 @@ use App\Models\Bank;
 use App\Models\Constant;
 use App\Models\Currency;
 use App\Models\NatureWorkIncrease;
+use App\Models\ReceivablesLoans;
 use App\Models\Salary;
 use App\Models\SalaryScale;
 use App\Models\Total;
@@ -184,9 +185,12 @@ class AddSalaryEmployee{
                 'exemptions' => $exemptions,
                 'amount_tax' => $amount_tax,
             ]);
-            Total::updateOrCreate([
+            ReceivablesLoans::updateOrCreate([
                 'employee_id' => $employee->id,
             ],[
+                'total_savings_loan' => DB::raw('total_savings_loan - '.($savings_loan)),
+                'total_shekel_loan' => DB::raw('total_shekel_loan - '.($shekel_loan)),
+                'total_association_loan' => DB::raw('total_association_loan - '.($association_loan)),
                 'total_receivables' => DB::raw('total_receivables + '.($late_receivables)),
                 'total_savings' => DB::raw('total_savings + '.($savings_loan + (($savings_rate + $termination_service) / $USD ))),
             ]);

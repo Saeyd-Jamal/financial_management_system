@@ -95,7 +95,7 @@
         </select>
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="10.."/>
+        <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="0.55"/>
     </div>
     <div class="form-group p-3 col-3">
         <x-form.input type="number" label="نسبة علاوة طبيعة العمل" :value="$workData->percentage_allowance" name="percentage_allowance" placeholder="10.."/>
@@ -220,7 +220,7 @@
         </datalist>
     </div>
     <div class="form-group p-3 col-md-3">
-        <x-form.input name="payroll_statement" placeholder="أدخل بيان الراتب" :value="$employee->payroll_statement" label="بيان الراتب" list="payroll_statement_list" required />
+        <x-form.input name="payroll_statement" placeholder="أدخل بيان الراتب" :value="$workData->payroll_statement" label="بيان الراتب" list="payroll_statement_list" required />
         <datalist id="payroll_statement_list">
             @foreach ($payroll_statement as $payroll_statement)
                 <option value="{{ $payroll_statement }}">

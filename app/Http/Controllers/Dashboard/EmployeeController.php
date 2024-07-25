@@ -60,8 +60,9 @@ class EmployeeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(EmployeeRequset $request)
+    public function create()
     {
+        $this->authorize('create', Employee::class);
         $advance_payment_rate = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
         $advance_payment_permanent = Constant::where('type_constant','advance_payment_permanent')->first('value')->value;
         $advance_payment_non_permanent = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
@@ -93,6 +94,7 @@ class EmployeeController extends Controller
      */
     public function store(EmployeeRequset $request)
     {
+        $this->authorize('create', Employee::class);
         $employee = Employee::create($request->all());
         $request->merge([
             'employee_id' => $employee->id
@@ -118,6 +120,7 @@ class EmployeeController extends Controller
      */
     public function edit(EmployeeRequset $request,Employee $employee)
     {
+        $this->authorize('edit', Employee::class);
         $advance_payment_rate = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
         $advance_payment_permanent = Constant::where('type_constant','advance_payment_permanent')->first('value')->value;
         $advance_payment_non_permanent = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
@@ -152,6 +155,7 @@ class EmployeeController extends Controller
      */
     public function update(EmployeeRequset $request, Employee $employee)
     {
+        $this->authorize('edit', Employee::class);
         $request->validate([
             'employee_id' => [
                 'required',
@@ -182,6 +186,7 @@ class EmployeeController extends Controller
      */
     public function destroy(EmployeeRequset $request,Employee $employee)
     {
+        $this->authorize('delete', Employee::class);
         $employee->delete();
         return redirect()->route('employees.index')->with('danger', 'تم حذف بيانات الموظف المحدد');
     }
@@ -190,8 +195,8 @@ class EmployeeController extends Controller
     // getEmployeeId for tables related to employees
     public function getEmployee(Request $request)
     {
-        $employee_search_id = $request->post('employeeId');
-        $employee_search_name = $request->post('employeeName');
+        $employee_search_id = $request->get('employeeId');
+        $employee_search_name = $request->get('employeeName');
         $employees = new Employee();
         if($employee_search_id != ""){
             $employees = $employees->where('employee_id','LIKE',"{$employee_search_id}%");
@@ -207,7 +212,6 @@ class EmployeeController extends Controller
     // filterEmployee function
     public function filterEmployee(Request $request)
     {
-        $valInput = $request->post('val');
         $filedsEmpolyees = [
             'name',
             'employee_id',
@@ -252,7 +256,7 @@ class EmployeeController extends Controller
     // Execl
     public function import(Request $request)
     {
-        // $this->authorize('import', Employee::class);
+        $this->authorize('import', Employee::class);
         $file = $request->file('fileUplode');
         if($file == null){
             return redirect()->back()->with('error', 'لم يتم رفع الملف بشكل صحيح');

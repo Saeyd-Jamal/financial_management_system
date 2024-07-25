@@ -10,6 +10,7 @@ use App\Models\Employee;
 use App\Models\Salary;
 use App\Models\WorkData;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
@@ -17,8 +18,10 @@ use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 class ReportController extends Controller
 {
 
-    public function __construct(){
+    use AuthorizesRequests;
 
+    public function __construct(){
+        
     }
 
     public function filterEmployees($data){
@@ -101,6 +104,7 @@ class ReportController extends Controller
     }
 
     public function index(){
+        $this->authorize('report');
         $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
         $working_status = WorkData::select('working_status')->distinct()->pluck('working_status')->toArray();
         $nature_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();
@@ -141,8 +145,6 @@ class ReportController extends Controller
             $salaries = $employees->map(function ($employee) use ($month) {
                 return $employee->salaries->where('month',$month)->first();
             });
-            dd($salaries->first());
-
             $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
                 $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
                 return [
@@ -221,13 +223,13 @@ class ReportController extends Controller
             }
         }
         if($request->report_type == 'accounts'){
-
+            //
         }
         if($request->report_type == 'employees_totals'){
-
+            //
         }
         if($request->report_type == 'employees_fixed'){
-
+            //
         }
     }
 

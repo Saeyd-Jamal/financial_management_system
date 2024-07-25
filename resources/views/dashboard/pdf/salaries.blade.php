@@ -404,11 +404,14 @@
         <p>
             <span>قسم الرواتب والموظفين</span> /
             <span>الرواتب الشهرية</span>
-            @foreach ($filedsEmpolyees as $name)
-                @if ($filter["$name"] != null)
-                / <span>{{ $filter["$name"] }}</span>
-                @endif
-            @endforeach
+            @if (isset($filter))
+                @foreach ($filedsEmpolyees as $name)
+                    @if ($filter["$name"] != null)
+                    / <span>{{ $filter["$name"] }}</span>
+                    @endif
+                @endforeach
+            @endif
+
         </p>
     </htmlpageheader>
 
@@ -472,7 +475,8 @@
                         <td>{{$fixedEntries->ex_addition ?? ''}}</td>
                         <td>{{$fixedEntries->mobile_allowance ?? ''}}</td>
                         <td>{{$salary->termination_service ?? ''}}</td>
-                        <td>{{$salary->grade_Allowance + $salary->total_discounts ?? ''}}</td>
+                        {{-- <td>{{$salary->grade_Allowance + ($salary->total_discounts - $salary->late_receivables)}}</td> --}}
+                        <td>{{ $salary->secondary_salary +($salary->allowance_boys ?? 0) + ($salary->nature_work_increase ?? 0) + ($fixedEntries->administrative_allowance ?? 0) + ($fixedEntries->scientific_qualification_allowance ?? 0) + ($fixedEntries->transport ?? 0) + ($fixedEntries->extra_allowance ?? 0) + ($fixedEntries->salary_allowance ?? 0) + ($fixedEntries->ex_addition ?? 0) + ($fixedEntries->mobile_allowance ?? 0) + ($salary->termination_service ?? 0) }}</td>
                         <td>{{$fixedEntries->health_insurance ?? ''}}</td>
                         <td>{{$salary->z_Income ?? ''}}</td>
                         <td>{{$fixedEntries->savings_rate ?? ''}}</td>

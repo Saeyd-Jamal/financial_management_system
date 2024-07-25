@@ -464,11 +464,13 @@
         <p>
             <span>قسم الرواتب والموظفين</span> /
             <span>جدول الموظفين</span>
-            @foreach ($filedsEmpolyees as $name)
-                @if ($filter["$name"] != null)
-                / <span>{{ $filter["$name"] }}</span>
-                @endif
-            @endforeach
+            @if (isset($filter))
+                @foreach ($filedsEmpolyees as $name)
+                    @if ($filter["$name"] != null)
+                    / <span>{{ $filter["$name"] }}</span>
+                    @endif
+                @endforeach
+            @endif
         </p>
     </htmlpageheader>
 

@@ -45,6 +45,7 @@
                             </div>
                         @endif
                     </div>
+                    <label id="employee_name"></label>
                 </div>
                 @foreach ($fields as $name => $label)
                     <div class="form-group p-3 col-3">
@@ -347,7 +348,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" data-status="create" id="associationLoanSubmit"
+                                        <button type="button" data-status="create" id="{{ $name }}_form"
                                             class="btn btn-primary"  >إنشاء</button>
                                     </div>
                                 </form>

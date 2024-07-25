@@ -26,8 +26,9 @@ class BankController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(BankRequest $request)
+    public function create()
     {
+        $this->authorize('create', Bank::class);
         $bank = new Bank();
         return view('dashboard.banks.create', compact('bank'));
     }
@@ -37,6 +38,7 @@ class BankController extends Controller
      */
     public function store(BankRequest $request)
     {
+        $this->authorize('create', Bank::class);
         Bank::create($request->all());
         return redirect()->route('banks.index')->with('success', 'تم إضافة بنك جديد');
     }
@@ -46,6 +48,7 @@ class BankController extends Controller
      */
     public function show(Bank $bank)
     {
+        $this->authorize('view', Bank::class);
         return redirect()->route('banks.edit',$bank->id);
     }
 
@@ -54,6 +57,7 @@ class BankController extends Controller
      */
     public function edit(BankRequest $request,Bank $bank)
     {
+        $this->authorize('edit', Bank::class);
         $btn_label = "تعديل";
         return view('dashboard.banks.edit', compact('bank','btn_label'));
     }
@@ -63,6 +67,7 @@ class BankController extends Controller
      */
     public function update(BankRequest $request, Bank $bank)
     {
+        $this->authorize('edit', Bank::class);
         $bank->update($request->all());
         return redirect()->route('banks.index')->with('success', 'تم تعديل بيانات البنك');
     }
@@ -72,6 +77,7 @@ class BankController extends Controller
      */
     public function destroy(BankRequest $request,Bank $bank)
     {
+        $this->authorize('delete', Bank::class);
         $bank->delete();
         return redirect()->route('banks.index')->with('success', 'تم حذف البنك');
     }

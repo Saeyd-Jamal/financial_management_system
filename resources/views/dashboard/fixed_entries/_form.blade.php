@@ -47,7 +47,7 @@
                     <i class="fe fe-maximize"></i>
                 </button>
             </div>
-            <input type="text" class="form-control"  placeholder="" aria-label="" aria-describedby="basic-addon1">
+            <input type="text" class="form-control"  name="{{ $name }}_month-{{$month}}" aria-label="" aria-describedby="basic-addon1" value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,$month,$name)}}">
         </div>
     </div>
     @endforeach
@@ -61,8 +61,7 @@
                     <i class="fe fe-maximize"></i>
                 </button>
             </div>
-            <input value="0" type="text" class="form-control" placeholder="" aria-label=""
-                aria-describedby="basic-addon1">
+            <input type="text" class="form-control" placeholder=""  name="{{ $name }}_month-{{$month}}" aria-label="" aria-describedby="basic-addon1" value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,$month,$name)}}">
         </div>
     </div>
     @endforeach
@@ -72,15 +71,13 @@
     <div class="col">
     </div>
     <div class="col-auto">
-        <a href="{{route('fixed_entries.index')}}" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary">
             {{$btn_label ?? "أضف"}}
-        </a>
+        </button>
     </div>
 </div>
 
 {{-- Models --}}
-
-
 @foreach ($fields as $name => $label)
     <div class="modal fade" id="open_{{ $name }}" tabindex="-1" role="dialog" aria-labelledby="open_{{ $name }}Label" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered" role="document" style="max-width: 75%;">

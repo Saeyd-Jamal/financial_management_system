@@ -28,7 +28,7 @@
     for (let field of fields) {
         $('#' + field + '_form').on('click', function (event) {
             $.ajax({
-                url: "/fixed_entries/",
+                url: "/fixed_entries",
                 method: "post",
                 data: {
                     employee_id: $('#employee_id').val(),
@@ -73,6 +73,10 @@
                 _token: csrf_token,
             },
             success: function (response) {
+                if(response['link_edit_fixed_entries'] != false){
+                    window.location.href = response['link_edit_fixed_entries'];
+                }
+                $('#employee_name').text(response['employee_name']);
                 // قرض الجمعية
                 $("#total_association_loan").val(response['total_association_loan']);
                 $("#total_association_loan_old").text(response['total_association_loan']);

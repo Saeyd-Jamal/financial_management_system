@@ -7,7 +7,7 @@
                     <p class="card-text">هنا يتم عرض بيانات المستخدمين ويمكنك التحكم في صلاحياتهم كاملة</p>
                 </div>
                 <div class="col-auto">
-                    @can('create', 'App\Models\User')
+                    @can('create', 'App\\Models\User')
                     <a class="btn btn-success" href="{{route('users.create')}}">
                         <i class="fe fe-plus"></i>
                     </a>
@@ -31,9 +31,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <style>
+                                        #user-1{
+                                            display: none;
+                                        }
+                                    </style>
                                     @foreach($users as $user)
-                                    <tr>
-                                        <td>{{$user->id}}</td>
+                                    <tr  id="user-{{$user->id}}">
+                                        <td>{{ $loop->iteration - 1 }}</td>
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
@@ -42,16 +47,22 @@
                                                 <span class="text-muted sr-only">Action</span>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
+                                                @can('view', 'App\\Models\User')
                                                 <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                    href="{{route('users.show',$user->id)}}">عرض</a>
+                                                href="{{route('users.show',$user->id)}}">عرض</a>
+                                                @endcan
+                                                @can('edit', 'App\\Models\User')
                                                 <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="{{route('users.edit',$user->id)}}">تعديل</a>
+                                                @endcan
+                                                @can('delete', 'App\\Models\User')
                                                 <form action="{{route('users.destroy',$user->id)}}" method="post">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="#">حذف</button>
                                                 </form>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

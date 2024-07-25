@@ -6,9 +6,11 @@
 
         </div>
         <div class="col-auto">
+            @can('create', 'App\\Models\Currency')
             <a class="btn btn-success" data-toggle="modal" data-target="#create">
                 <i class="fe fe-plus"></i>
             </a>
+            @endcan
         </div>
     </div>
     <div class="row">
@@ -17,7 +19,7 @@
             <div class="card shadow">
                 <div class="card-body">
                     <!-- table -->
-                    <table class="table table-borderless table-hover">
+                    <table class="table table-bordered  table-hover">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -39,13 +41,17 @@
                                         <span class="text-muted sr-only">Action</span>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right">
+                                        @can('edit', 'App\\\Models\Currency')
                                         <a class="dropdown-item" data-toggle="modal"
                                             data-target="#edit_{{$currency->id}}">تعديل</a>
+                                        @endcan
+                                        @can('delete', 'App\\\Models\Currency')
                                         <form action="{{route('currencies.destroy',$currency->id)}}" method="post">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="dropdown-item">حذف</button>
                                         </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
@@ -56,6 +62,7 @@
             </div>
         </div> <!-- customized table -->
     </div> <!-- end section -->
+    @can('edit', 'App\\\Models\Currency')
     @foreach ($currencies as $currency)
     <div class="modal fade" id="edit_{{$currency->id}}" tabindex="-1" role="dialog" aria-labelledby="edit{{$currency->id}}Label"
         aria-hidden="true">
@@ -89,6 +96,8 @@
         </div>
     </div>
     @endforeach
+    @endcan
+    @can('create', 'App\\\Models\Currency')
     <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="createLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -120,4 +129,6 @@
             </div>
         </div>
     </div>
+    @endcan
+
 </x-front-layout>

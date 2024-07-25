@@ -58,32 +58,89 @@
                 _token: csrf_token, // Include the CSRF token
             },
             success: function (response) {
-                $("#ulShowFixed").remove();
+                $("#tableShowFixed").remove();
                 $("div.modal-footer a").remove();
                 $("div.modal-footer form").remove();
                 $("#monthModalSearch").val(monthNow);
                 let modalDiv =`
-                                <ul id="ulShowFixed">
-                                    <li> اسم الموظف: `+ response['employee']['name'] +` </li>
-                                    <li>علاوة إدارية : `+ response['administrative_allowance'] +` </li>
-                                    <li>علاوة مؤهل علمي : `+ response['scientific_qualification_allowance'] +` </li>
-                                    <li>مواصلات : `+ response['transport'] +` </li>
-                                    <li>بدل إضافي : `+ response['extra_allowance'] +` </li>
-                                    <li>علاوة أغراض راتب : `+ response['salary_allowance'] +` </li>
-                                    <li>علاوة إضافة بأثر رجعي : `+ response['ex_addition'] +` </li>
-                                    <li>علاوة جوال : `+ response['mobile_allowance'] +` </li>
-                                    <li>تأمين صحي : `+ response['health_insurance'] +` </li>
-                                    <li>ف. أوريدو : `+ response['f_Oredo'] +` </li>
-                                    <li>قرض جمعية : `+ response['association_loan'] +` </li>
-                                    <li>رسوم دراسية : `+ response['tuition_fees'] +` </li>
-                                    <li>تبرعات : `+ response['voluntary_contributions'] +` </li>
-                                    <li>قرض إدخار : `+ response['savings_loan'] +` </li>
-                                    <li>قرض شيكل : `+ response['shekel_loan'] +` </li>
-                                    <li>خصم اللجنة : `+ response['paradise_discount'] +` </li>
-                                    <li>خصومات أخرى : `+ response['other_discounts'] +` </li>
-                                    <li>تبرعات للحركة : `+ response['proportion_voluntary'] +` </li>
-                                    <li>إدخار 5% : `+ response['savings_rate'] +` </li>
-                                </ul>
+                                <table  class="table table-striped table-bordered" id="tableShowFixed">
+                                <tr>
+                                    <th scope="row">اسم الموظف</th>
+                                    <th  scope="row">`+ response['employee']['name'] +`</th>
+                                </tr>
+                                <tr>
+                                    <td>علاوة إدارية</td>
+                                    <td>`+ response['administrative_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة مؤهل علمي</td>
+                                    <td>`+ response['scientific_qualification_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>مواصلات</td>
+                                    <td>`+ response['transport'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>بدل إضافي</td>
+                                    <td>`+ response['extra_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة أغراض راتب</td>
+                                    <td>`+ response['salary_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة إضافة بأثر رجعي</td>
+                                    <td>`+ response['ex_addition'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة جوال</td>
+                                    <td>`+ response['mobile_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>تأمين صحي</td>
+                                    <td>`+ response['health_insurance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>ف. أوريدو</td>
+                                    <td>`+ response['f_Oredo'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>قرض جمعية</td>
+                                    <td>`+ response['association_loan'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>رسوم دراسية</td>
+                                    <td>`+ response['tuition_fees'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>تبرعات</td>
+                                    <td>`+ response['voluntary_contributions'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>قرض إدخار</td>
+                                    <td>`+ response['savings_loan'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>قرض شيكل</td>
+                                    <td>`+ response['shekel_loan'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>خصم اللجنة</td>
+                                    <td>`+ response['paradise_discount'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>خصومات أخرى</td>
+                                    <td>`+ response['other_discounts'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>تبرعات للحركة</td>
+                                    <td>`+ response['proportion_voluntary'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>إدخار 5%</td>
+                                    <td>`+ response['savings_rate'] +`</td>
+                                </tr>
+                                </table>
                             `;
                 $("div#showFixed").append(modalDiv);
                 $("div.modal-footer").append(`
@@ -114,31 +171,89 @@
                 _token: csrf_token, // Include the CSRF token
             },
             success: function (response) {
-                $("#ulShowFixed").remove();
+                $("#tableShowFixed").remove();
                 $("div.modal-footer a").remove();
                 $("div.modal-footer form").remove();
-                let modalDiv =`
-                                <ul id="ulShowFixed">
-                                    <li> اسم الموظف: `+ response['employee']['name'] +` </li>
-                                    <li>علاوة إدارية : `+ response['administrative_allowance'] +` </li>
-                                    <li>علاوة مؤهل علمي : `+ response['scientific_qualification_allowance'] +` </li>
-                                    <li>مواصلات : `+ response['transport'] +` </li>
-                                    <li>بدل إضافي : `+ response['extra_allowance'] +` </li>
-                                    <li>علاوة أغراض راتب : `+ response['salary_allowance'] +` </li>
-                                    <li>علاوة إضافة بأثر رجعي : `+ response['ex_addition'] +` </li>
-                                    <li>علاوة جوال : `+ response['mobile_allowance'] +` </li>
-                                    <li>تأمين صحي : `+ response['health_insurance'] +` </li>
-                                    <li>ف. أوريدو : `+ response['f_Oredo'] +` </li>
-                                    <li>قرض جمعية : `+ response['association_loan'] +` </li>
-                                    <li>رسوم دراسية : `+ response['tuition_fees'] +` </li>
-                                    <li>تبرعات : `+ response['voluntary_contributions'] +` </li>
-                                    <li>قرض إدخار : `+ response['savings_loan'] +` </li>
-                                    <li>قرض شيكل : `+ response['shekel_loan'] +` </li>
-                                    <li>خصم اللجنة : `+ response['paradise_discount'] +` </li>
-                                    <li>خصومات أخرى : `+ response['other_discounts'] +` </li>
-                                    <li>تبرعات للحركة : `+ response['proportion_voluntary'] +` </li>
-                                    <li>إدخار 5% : `+ response['savings_rate'] +` </li>
-                                </ul>
+                if(response != '') {
+                    let modalDiv =`
+                                <table class="table table-striped table-bordered" id="tableShowFixed">
+                                <tr>
+                                    <th scope="row">اسم الموظف</th>
+                                    <th  scope="row">`+ response['employee']['name'] +`</th>
+                                </tr>
+                                <tr>
+                                    <td>علاوة إدارية</td>
+                                    <td>`+ response['administrative_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة مؤهل علمي</td>
+                                    <td>`+ response['scientific_qualification_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>مواصلات</td>
+                                    <td>`+ response['transport'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>بدل إضافي</td>
+                                    <td>`+ response['extra_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة أغراض راتب</td>
+                                    <td>`+ response['salary_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة إضافة بأثر رجعي</td>
+                                    <td>`+ response['ex_addition'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>علاوة جوال</td>
+                                    <td>`+ response['mobile_allowance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>تأمين صحي</td>
+                                    <td>`+ response['health_insurance'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>ف. أوريدو</td>
+                                    <td>`+ response['f_Oredo'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>قرض جمعية</td>
+                                    <td>`+ response['association_loan'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>رسوم دراسية</td>
+                                    <td>`+ response['tuition_fees'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>تبرعات</td>
+                                    <td>`+ response['voluntary_contributions'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>قرض إدخار</td>
+                                    <td>`+ response['savings_loan'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>قرض شيكل</td>
+                                    <td>`+ response['shekel_loan'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>خصم اللجنة</td>
+                                    <td>`+ response['paradise_discount'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>خصومات أخرى</td>
+                                    <td>`+ response['other_discounts'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>تبرعات للحركة</td>
+                                    <td>`+ response['proportion_voluntary'] +`</td>
+                                </tr>
+                                <tr>
+                                    <td>إدخار 5%</td>
+                                    <td>`+ response['savings_rate'] +`</td>
+                                </tr>
+                                </table>
                             `;
                 $("div#showFixed").append(modalDiv);
                 $("div.modal-footer").append(`
@@ -150,6 +265,11 @@
                     </form>
                 `);
                 $("div.modal-footer").append(`<a href="`+app_link+`fixed_entries/`+ response['employee_id'] +`/edit" target="_blank" class="btn btn-primary mr-3">تعديل</a>`);
+                }else{
+                    $("#tableShowFixed").remove();
+                    $("div#showFixed").append('<h3 class="text-center" id="tableShowFixed">لا يوجد بيانات للموظف في هذاالشهر</h3>');
+                }
+
             },
             error: function (error) {
                 console.error("Error :", error);

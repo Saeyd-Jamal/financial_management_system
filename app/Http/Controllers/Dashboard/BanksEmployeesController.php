@@ -3,21 +3,25 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BankEmployeeRequest;
 use App\Imports\BanksEmployeesImport;
 use App\Models\Bank;
 use App\Models\BanksEmployees;
 use App\Models\Employee;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BanksEmployeesController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('view', BanksEmployees::class);
         $banks_employees = BanksEmployees::with(['employee','bank'])->paginate(10);
         return view('dashboard.banks_employees.index', compact('banks_employees'));
     }
@@ -27,6 +31,7 @@ class BanksEmployeesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', BanksEmployees::class);
         $bank_employee = new BanksEmployees();
         $banks = Bank::get();
         $employees = Employee::get();
@@ -36,8 +41,9 @@ class BanksEmployeesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BankEmployeeRequest $request)
     {
+        $this->authorize('create', BanksEmployees::class);
         $request->validate([
             'employee_id' =>'required|exists:employees,id',
             'bank_id' =>'required|exists:banks,id',
@@ -58,8 +64,9 @@ class BanksEmployeesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(BankEmployeeRequest $request, $id)
     {
+        $this->authorize('edit', BanksEmployees::class);
         $bank_employee = BanksEmployees::with(['employee','bank'])->find($id);
         $banks = Bank::get();
         $employees = Employee::get();
@@ -69,8 +76,9 @@ class BanksEmployeesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(BankEmployeeRequest $request, $id)
     {
+        $this->authorize('edit', BanksEmployees::class);
         $request->validate([
             'employee_id' =>'required|exists:employees,id',
             'bank_id' =>'required|exists:banks,id',
@@ -84,8 +92,9 @@ class BanksEmployeesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(BankEmployeeRequest $request, $id)
     {
+        $this->authorize('delete', BanksEmployees::class);
         $banksEmployees = BanksEmployees::findOrFail($id);
         $banksEmployees->delete();
 
@@ -95,13 +104,11 @@ class BanksEmployeesController extends Controller
     // Execl
     public function import(Request $request)
     {
-        // $this->authorize('import', Employee::class);
+        $this->authorize('import', Employee::class);
         $file = $request->file('fileUplode');
         if($file == null){
             return redirect()->back()->with('error', 'لم يتم رفع الملف بشكل صحيح');
         }
-
-        // dd($request->all());
         Excel::import(new BanksEmployeesImport, $file);
 
         return redirect()->route('banks_employees.index')->with('success', 'تم رفع الملف');

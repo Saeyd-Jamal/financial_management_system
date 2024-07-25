@@ -4,23 +4,28 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SalaryRequest;
 use App\Models\BanksEmployees;
 use App\Models\Currency;
 use App\Models\Employee;
+use App\Models\ReceivablesLoans;
 use App\Models\Salary;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
 
 class SalaryController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('view', Salary::class);
         $salaries = Salary::paginate(10);
         $USD = Currency::where('code', 'USD')->first()->value;
         $btn_download_salary = null;
@@ -37,7 +42,7 @@ class SalaryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(SalaryRequest $request)
     {
         // $salary = new Salary();
         // $salary->employee = new Employee();
@@ -47,7 +52,7 @@ class SalaryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SalaryRequest $request)
     {
         //
     }
@@ -65,7 +70,7 @@ class SalaryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Salary $salary)
+    public function edit(SalaryRequest $request, Salary $salary)
     {
         //
     }
@@ -73,7 +78,7 @@ class SalaryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Salary $salary)
+    public function update(SalaryRequest $request, Salary $salary)
     {
         //
     }
@@ -81,8 +86,19 @@ class SalaryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Salary $salary)
+    public function destroy(SalaryRequest $request, Salary $salary)
     {
+        $USD = Currency::where('code', 'USD')->first()->value;
+        $fixedEntries = $salary->employee->fixedEntries->where('month', $salary->month)->first();
+        ReceivablesLoans::updateOrCreate([
+            'employee_id' => $salary->employee_id,
+        ],[
+            'total_savings_loan' => DB::raw('total_savings_loan + '.($fixedEntries->savings_loan)),
+            'total_shekel_loan' => DB::raw('total_shekel_loan + '.($fixedEntries->shekel_loan)),
+            'total_association_loan' => DB::raw('total_association_loan + '.($fixedEntries->association_loan)),
+            'total_receivables' => DB::raw('total_receivables - '.($salary->late_receivables)),
+            'total_savings' => DB::raw('total_savings - '.($fixedEntries->savings_loan + (($fixedEntries->savings_rate + $salary->termination_service) / $USD ))),
+        ]);
         $salary->forceDelete();
         // $salary->delete();
         return redirect()->route('salaries.index')->with('success', 'تم الحذف بنجاح');
@@ -112,6 +128,7 @@ class SalaryController extends Controller
 
     // Create All Salaries
     public function createAllSalaries(){
+        $this->authorize('createAll', Salary::class);
         DB::beginTransaction();
         try {
             $employees = Employee::get();
@@ -128,6 +145,7 @@ class SalaryController extends Controller
     // PDF Export
     public function viewPDF()
     {
+
         $salaries = Salary::get();
         $month = Carbon::now()->format('Y-m');
         $USD = Currency::where('code', 'USD')->first() != null ? Currency::where('code', 'USD')->first()->value : 3.5;
@@ -145,7 +163,7 @@ class SalaryController extends Controller
                 'ex_addition' => $fixedEntries->ex_addition ?? '0',
                 'mobile_allowance' => $fixedEntries->mobile_allowance ?? '0',
                 'termination_service' => $salary->termination_service ?? '0',
-                'gross_salary' => $salary->gross_salary + $salary->total_discounts ?? '0',
+                'gross_salary' => ($salary->grade_Allowance + ($salary->total_discounts - $salary->late_receivables)) ?? '0',
                 'health_insurance' => $fixedEntries->health_insurance ?? '0',
                 'z_Income' => $salary->z_Income ?? '0',
                 'savings_rate' => $fixedEntries->savings_rate ?? '0',
@@ -193,7 +211,7 @@ class SalaryController extends Controller
 
         $mpdf = new Mpdf($mpdfConfig);
         $mpdf->WriteHTML($html);
-        
+
         $mpdf->Output();
     }
 

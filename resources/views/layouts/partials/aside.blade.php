@@ -49,19 +49,11 @@
         </p>
         @endcan
         <ul class="navbar-nav flex-fill w-100 mb-2">
-            @can('view','App\\Models\SalaryScale')
-            <li class="nav-item w-100">
-                <a class="nav-link" href="{{route('salary_scales.index')}}">
-                    <i class="fe fe-bar-chart-2 fe-16"></i>
-                    <span class="ml-3 item-text">سلم الرواتب</span>
-                </a>
-            </li>
-            @endcan
-            @can('view','App\\Models\Total')
+            @can('view','App\\Models\ReceivablesLoans')
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{route('totals.index')}}">
                     <i class="fe fe-trello fe-16"></i>
-                    <span class="ml-3 item-text">الاجماليات</span>
+                    <span class="ml-3 item-text">المستحقات والقروض</span>
                 </a>
             </li>
             @endcan
@@ -69,7 +61,7 @@
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{route('fixed_entries.index')}}">
                     <i class="fe fe-lock fe-16"></i>
-                    <span class="ml-3 item-text">الإدخالات الثابتة</span>
+                    <span class="ml-3 item-text">التعديلات</span>
                 </a>
             </li>
             @endcan
@@ -101,6 +93,14 @@
                 <a class="nav-link" href="{{route('banks_employees.index')}}">
                     <i class="fe fe-credit-card fe-16"></i>
                     <span class="ml-3 item-text">حسابات الموظفين</span>
+                </a>
+            </li>
+            @endcan
+            @can('view','App\\Models\SalaryScale')
+            <li class="nav-item w-100">
+                <a class="nav-link" href="{{route('salary_scales.index')}}">
+                    <i class="fe fe-bar-chart-2 fe-16"></i>
+                    <span class="ml-3 item-text">سلم الرواتب</span>
                 </a>
             </li>
             @endcan

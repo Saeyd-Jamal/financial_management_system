@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\User;
@@ -26,8 +27,9 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(UserRequest $request)
     {
+        $this->authorize('create', User::class);
         $user = new User();
         return view('dashboard.users.create', compact('user'));
     }
@@ -35,8 +37,10 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
+        $this->authorize('create', User::class);
+
         $request->validate([
             'name' => 'required',
             'username' => 'required|string|unique:users,username',
@@ -75,8 +79,9 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(UserRequest $request, User $user)
     {
+        $this->authorize('edit', User::class);
         $btn_label = "تعديل";
         return view('dashboard.users.edit', compact('user', 'btn_label'));
     }
@@ -84,8 +89,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
+        $this->authorize('edit', User::class);
         $request->validate([
             'name' => 'required',
             'username' => 'required|string|unique:users,username,'.$user->id,
@@ -134,8 +140,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(UserRequest $request, User $user)
     {
-        //
+        $this->authorize('delete', User::class);
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'تم حذف المستخدم');
     }
 }

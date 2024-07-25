@@ -33,11 +33,11 @@ class WorkData extends Model
         'branch',
         'establishment',
         'foundation_E',
-        'payroll_statement',
         'allowance',
         'grade',
         'grade_allowance_ratio',
         'salary_category',
+        'payroll_statement'
     ];
 
     // Relationships

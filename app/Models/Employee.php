@@ -49,11 +49,11 @@ class Employee extends Model
     }
     public function workData() :HasOne
     {
-        return $this->hasOne(workData::class);
+        return $this->hasOne(WorkData::class);
     }
     public function totals() :HasOne
     {
-        return $this->hasOne(Total::class);
+        return $this->hasOne(ReceivablesLoans::class);
     }
     public function fixedEntries() :HasMany
     {
