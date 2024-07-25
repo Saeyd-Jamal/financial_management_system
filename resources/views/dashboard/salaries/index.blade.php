@@ -34,6 +34,17 @@
                         </form>
                     @endif
                     @endcan
+                    @can('deleteAll', 'App\\Models\Salary')
+                    @if ($btn_delete_salary == "active")
+                    <form action="{{route('salaries.deleteAllSalaries')}}" method="post" class="mt-2">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fe fe-activity"></i>
+                            <span>حذف جميع الرواتب</span>
+                        </button>
+                    </form>
+                    @endif
+                    @endcan
                 </div>
             </div>
             <div class="row my-4">

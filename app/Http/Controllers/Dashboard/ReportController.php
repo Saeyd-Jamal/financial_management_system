@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Dashboard;
 use App\Exports\EmployeesDataExport;
 use App\Exports\ModelExport;
 use App\Http\Controllers\Controller;
+use App\Models\BanksEmployees;
 use App\Models\Currency;
 use App\Models\Employee;
+use App\Models\FixedEntries;
+use App\Models\ReceivablesLoans;
 use App\Models\Salary;
 use App\Models\WorkData;
 use Carbon\Carbon;
@@ -21,7 +24,7 @@ class ReportController extends Controller
     use AuthorizesRequests;
 
     public function __construct(){
-        
+
     }
 
     public function filterEmployees($data){
@@ -119,12 +122,13 @@ class ReportController extends Controller
         $dependence = WorkData::select('dependence')->distinct()->pluck('dependence')->toArray();
         $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
         $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
-        return view('dashboard.report',compact("areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement"));
+        $month = Carbon::now()->format('Y-m');
+
+        return view('dashboard.report',compact("areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement",'month'));
     }
     public function export(Request $request){
         $time = Carbon::now();
         $employees = $this->filterEmployees($request->all())->get();
-
         if($request->report_type == 'employees'){
             if($request->export_type == 'view'){
                 $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()]);
@@ -134,17 +138,21 @@ class ReportController extends Controller
                 $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()]);
                 return $pdf->download('سجلات الموظفين' . $time .'.pdf');
             }
-            if($request->export_type == 'export_excel'){
-                $filename = 'سجلات الموظفين' . $time .'.xlsx';
-                return Excel::download(new EmployeesDataExport, $filename);
-            }
+            // if($request->export_type == 'export_excel'){
+            //     $filename = 'سجلات الموظفين' . $time .'.xlsx';
+            //     return Excel::download(new EmployeesDataExport, $filename);
+            // }
         }
+        // الرواتب
         if($request->report_type == 'salaries'){
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');
-            $salaries = $employees->map(function ($employee) use ($month) {
-                return $employee->salaries->where('month',$month)->first();
-            });
+
+            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                ->where('month', $month)
+                ->get();
+
+            // دوال الموجوع اخر سطر في التقرير
             $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
                 $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
                 return [
@@ -159,7 +167,19 @@ class ReportController extends Controller
                     'ex_addition' => $fixedEntries->ex_addition ?? '0',
                     'mobile_allowance' => $fixedEntries->mobile_allowance ?? '0',
                     'termination_service' => $salary->termination_service ?? '0',
-                    'gross_salary' => $salary->gross_salary + $salary->total_discounts ?? '0',
+                    "gross_salary" => collect([
+                        $salary->secondary_salary ?? 0,
+                        $salary->allowance_boys ?? 0,
+                        $salary->nature_work_increase ?? 0,
+                        $fixedEntries->administrative_allowance ?? 0,
+                        $fixedEntries->scientific_qualification_allowance ?? 0,
+                        $fixedEntries->transport ?? 0,
+                        $fixedEntries->extra_allowance ?? 0,
+                        $fixedEntries->salary_allowance ?? 0,
+                        $fixedEntries->ex_addition ?? 0,
+                        $fixedEntries->mobile_allowance ?? 0,
+                        $salary->termination_service ?? 0,
+                    ])->sum() ?? 0,
                     'health_insurance' => $fixedEntries->health_insurance ?? '0',
                     'z_Income' => $salary->z_Income ?? '0',
                     'savings_rate' => $fixedEntries->savings_rate ?? '0',
@@ -216,20 +236,82 @@ class ReportController extends Controller
                 return $pdf->download('سجلات رواتب الموظفين' . $time .'.pdf');
             }
             if($request->export_type == 'export_excel'){
-                $filename = 'سجلات رواتب الموظفين' . $time .'.xlsx';
-                $salaries = $salaries->with('employee')->select('*','employees.name as employee_id')->get();
-                $headings = [];
-                return Excel::download(new ModelExport($salaries,$headings), $filename);
+                // $filename = 'سجلات رواتب الموظفين' . $time .'.xlsx';
+                // $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                // ->where('month', $month)
+                // ->select('employees.name', 'salaries.month','workData.workplace', 'salaries.secondary_salary', 'salaries.allowance_boys', 'salaries.nature_work_increase','fixedEntries.administrative_allowance', 'fixedEntries.	scientific_qualification_allowance', 'fixedEntries.transport', 'fixedEntries.extra_allowance', 'fixedEntries.salary_allowance', 'fixedEntries.ex_addition', 'fixedEntries.mobile_allowance', 'salaries.termination_service', 'salaries.gross_salary', 'fixedEntries.health_insurance', 'salaries.z_Income' , 'fixedEntries.savings_rate', 'fixedEntries.association_loan', 'fixedEntries.savings_loan', 'fixedEntries.shekel_loan', 'salaries.late_receivables', 'salaries.total_discounts', 'salaries.net_salary')
+                // ->join('employees', 'salaries.employee_id', '=', 'employees.id')
+                // ->join('work_data as workData', 'employees.id', '=', 'workData.employee_id')
+                // ->join('fixed_entries as fixedEntries', function ($join) use ($month) {
+                //     $join->on('employees.id', '=', 'fixedEntries.employee_id')
+                //         ->where('fixed_entries.month', $month);
+                // })
+                // ->get();
+                // $headings = ['الاسم', 'مكان العمل', 'الراتب الاساسي', 'علاوة الأولاد', 'علاوة طبيعة العمل', 'علاوة إدارية', 'علاوة مؤهل علمي', 'المواصلات', 'بدل إضافي +-', 'علاوة أغراض راتب', 'إضافة بأثر رجعي', 'علاوة جوال', 'نهاية الخدمة', 'إجمالي الراتب', 'تأمين صحي', 'ض.دخل', 'إدخار 5%', 'قرض الجمعية', 'قرض الإدخار', 'قرض شيكل', 'مستحقات متأخرة', 'إجمالي الخصومات', 'صافي الراتب'];
+                // return Excel::download(new ModelExport($salaries,$headings), $filename);
             }
         }
+
+        // حسابات الموظفين في البنوك
         if($request->report_type == 'accounts'){
-            //
+            $accounts = BanksEmployees::whereIn('employee_id', $employees->pluck('id'))->get();
+            // معاينة pdf
+            if($request->export_type == 'view'){
+                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()]);
+                return $pdf->stream();
+            }
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()]);
+                return $pdf->download('سجلات حسابات الموظفين في البنوك' . $time .'.pdf');
+            }
         }
+
+        // سجلات لمستحقات وقروض الموظفين
         if($request->report_type == 'employees_totals'){
-            //
+            $totals = ReceivablesLoans::whereIn('employee_id', $employees->pluck('id'))->get();
+
+            // معاينة pdf
+            if($request->export_type == 'view'){
+                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()]);
+                return $pdf->stream();
+            }
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()]);
+                return $pdf->download('سجلات لمستحقات وقروض الموظفين' . $time .'.pdf');
+            }
         }
+
+        // التعديلات للموظفين
         if($request->report_type == 'employees_fixed'){
-            //
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+
+            $fixed_entries = FixedEntries::whereIn('employee_id', $employees->pluck('id'))
+                ->where('month', $month)
+                ->get();
+
+            // معاينة pdf
+            if($request->export_type == 'view'){
+                $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month],[],[
+                    'mode' => 'utf-8',
+                    'format' => 'A4-L',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->stream();
+            }
+
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month],[],[
+                    'mode' => 'utf-8',
+                    'format' => 'A4-L',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->download('سجلات للإدخالات الثابتة' . $time .'.pdf');
+            }
         }
     }
 

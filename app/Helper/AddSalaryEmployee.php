@@ -6,11 +6,9 @@ use Alkoumi\LaravelArabicNumbers\Numbers;
 use App\Models\Bank;
 use App\Models\Constant;
 use App\Models\Currency;
-use App\Models\NatureWorkIncrease;
 use App\Models\ReceivablesLoans;
 use App\Models\Salary;
 use App\Models\SalaryScale;
-use App\Models\Total;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +28,7 @@ class AddSalaryEmployee{
         $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
         // مزدوج الوظيفة
         $dual_function = $employee->dual_function;
-
+        
         if($dual_function == "غير موظف"){
             $dual_function = null;
         }
@@ -50,9 +48,9 @@ class AddSalaryEmployee{
 
         //  البنك المتعامل معه
         foreach ($employee->banks as $bank) {
-            $account_default = $bank->bank_employee->where('employee_id',$employee->id)->where('default',1)->first();
+            $account_default = $bank->accounts->where('employee_id',$employee->id)->where('default',1)->first();
             if($account_default == null){
-                $account_default = $bank->bank_employee->where('employee_id',$employee->id)->first();
+                $account_default = $bank->accounts->where('employee_id',$employee->id)->first();
             }
         }
 

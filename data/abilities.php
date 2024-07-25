@@ -45,6 +45,7 @@
 
         'salaries.view' => 'عرض الرواتب',
         'salaries.createAll' => 'إنشاء كل الرواتب',
+        'salaries.deleteAll' => 'حذف كل الرواتب',
         'salaries.create' => 'اضافة راتب',
         'salaries.edit' => 'تعديل راتب',
         'salaries.delete' => 'حذف راتب',

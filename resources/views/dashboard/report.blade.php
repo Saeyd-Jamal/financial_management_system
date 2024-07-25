@@ -156,7 +156,7 @@
                 </div>
                 {{-- إضافات --}}
                 <div class="form-group col-md-3">
-                    <x-form.input type="month"  name="month" label="الشهر المطلوب" maxlength="9" />
+                    <x-form.input type="month" :value="$month" name="month" label="الشهر المطلوب" maxlength="9" />
                 </div>
                 <div class="form-group col-md-3">
                     <label for="report_type">نوع الكشف</label>
@@ -174,7 +174,7 @@
                     <select class="custom-select" name="export_type" id="export_type">
                         <option selected="" value="view">معاينة</option>
                         <option value="export_pdf">PDF</option>
-                        <option value="export_excel">Excel</option>
+                        {{-- <option value="export_excel">Excel</option> --}}
                     </select>
                 </div>
             </div>

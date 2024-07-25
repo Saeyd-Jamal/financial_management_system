@@ -6,7 +6,6 @@ use App\Jobs\CreateSalary;
 use App\Models\BanksEmployees;
 use App\Models\FixedEntries;
 use App\Models\ReceivablesLoans;
-use App\Models\TotalFunds;
 use App\Policies\BankEmployeePolicy;
 use App\Policies\FixedEntriesPolicy;
 use App\Policies\ReceivablesLoansPolicy;

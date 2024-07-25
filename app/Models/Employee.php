@@ -45,7 +45,7 @@ class Employee extends Model
         return $this->belongsToMany(
             Bank::class,     // Related Model
             'banks_employees',  // Pivot table name
-        )->as('bank_employee')->withPivot(['account_number','default']);
+        )->as('accounts')->withPivot(['account_number','default']);
     }
     public function workData() :HasOne
     {

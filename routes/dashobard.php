@@ -32,6 +32,7 @@ Route::group([
     Route::post('/bakcups/getDataAll', [SystemOperationsController::class,'bakcupsData'])->name('bakcups.bakcupsData');
 
     Route::post('/salaries/createAllSalaries', [SalaryController::class,'createAllSalaries'])->name('salaries.createAllSalaries');
+    Route::post('/salaries/deleteAllSalaries', [SalaryController::class,'deleteAllSalaries'])->name('salaries.deleteAllSalaries');
 
 
     // soft delete for salaries
