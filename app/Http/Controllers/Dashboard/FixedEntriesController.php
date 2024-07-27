@@ -48,14 +48,14 @@ class FixedEntriesController extends Controller
                 }
             }
         }
-        if($request->{$fieldNameMonth} == ""  || $request->{$fieldNameMonth} == 0  || $request->{$fieldNameMonth} == null){
+        if($request->{$fieldNameMonth} == ""  || $request->{$fieldNameMonth} == null){
             for($i=1;$i<=12;$i++){
                 if($i<10){
                     $month = '0'.$i;
                 }else{
                     $month = $i;
                 }
-                if($request[$month] >= $this->thisMonth){
+                if($month >= $this->thisMonth){
                     FixedEntries::updateOrCreate([
                         'employee_id' => $request->employee_id,
                         'month' => $this->thisYear.'-'.$month,
@@ -76,13 +76,32 @@ class FixedEntriesController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view', FixedEntries::class);
+        // تغير الشهر
         if($request->monthChange == true){
             $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->paginate(10);
             return $fixed_entries;
         }
         $monthNow = Carbon::now()->format('Y-m');
+
         $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->paginate(10);
-        return view('dashboard.fixed_entries.index', compact('fixed_entries','monthNow'));
+        $employees = Employee::paginate(10);
+
+        return view('dashboard.fixed_entries.index', compact('fixed_entries','monthNow','employees'));
+    }
+
+    public function viewForm(Request $request)
+    {
+        $this->authorize('edit', FixedEntries::class);
+        // تغير الشهر
+        if($request->monthChange == true){
+            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->paginate(10);
+            return $fixed_entries;
+        }
+        $monthNow = Carbon::now()->format('Y-m');
+
+        $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->paginate(10);
+        $employees = Employee::paginate(10);
+        return view('dashboard.fixed_entries.viewForm', compact('employees','fixed_entries','monthNow'));
     }
 
     /**
@@ -244,11 +263,86 @@ class FixedEntriesController extends Controller
             'link_edit_fixed_entries' => false
         ];
     }
-    public function getFixedEntriesFialds($fixed_entrie,$year,$month,$filedName){
-        $reslut = $fixed_entrie->where('month',($year . '-' . $month))->first();
+    public function getFixedEntriesFialds($employee_id,$year,$month,$filedName){
+        $month = $year . '-' . $month;
+        $reslut = FixedEntries::where('employee_id',$employee_id)->where('month',$month)->first();
         if($reslut == null){
-            return $reslut = 0.00;
+            return $reslut = 0;
         }
         return $reslut[$filedName];
+    }
+
+    public function getModalForm(Request $request){
+        $year = Carbon::now()->format('Y');
+        $type =  $request->post('type');
+        $employee_id =  $request->post('employee_id');
+
+        $fixed_entrie = FixedEntries::where('employee_id',$employee_id)->first();
+        if($fixed_entrie == null){
+            $reslut = [];
+            for($i=1;$i<=12;$i++){
+                if($i<10){
+                    $month = '0'.$i;
+                }else{
+                    $month = $i;
+                }
+                $reslut[$type . '_month-' . $i] = 0;
+            }
+            return $reslut;
+        }
+
+        $reslut = [];
+        for($i=1;$i<=12;$i++){
+            if($i<10){
+                $month = '0'.$i;
+            }else{
+                $month = $i;
+            }
+
+            $reslut[$type . '_month-' . $i] = $this->getFixedEntriesFialds($employee_id,$year,$month,$type);
+        }
+
+        return $reslut;
+    }
+
+    public function getModalFormLoan(Request $request){
+        $year = Carbon::now()->format('Y');
+        $type =  $request->post('type');
+        $employee_id =  $request->post('employee_id');
+
+        $fixed_entrie = FixedEntries::where('employee_id',$employee_id)->first();
+        $reslut = [];
+        if($type == 'association_loan'){
+            $reslut['total_association_loan_old'] = (ReceivablesLoans::where('employee_id',$employee_id)->first() == null) ? 0 : ReceivablesLoans::where('employee_id',$employee_id)->first()['total_association_loan'];
+        }
+        if($type == 'shekel_loan'){
+            $reslut['total_shekel_loan_old'] = (ReceivablesLoans::where('employee_id',$employee_id)->first() == null) ? 0 : ReceivablesLoans::where('employee_id',$employee_id)->first()['total_shekel_loan'];
+        }
+        if($type == 'savings_loan'){
+            $reslut['total_savings_loan_old'] = (ReceivablesLoans::where('employee_id',$employee_id)->first() == null) ? 0 : ReceivablesLoans::where('employee_id',$employee_id)->first()['total_savings_loan'];
+        }
+
+        if($fixed_entrie == null){
+            for($i=1;$i<=12;$i++){
+                if($i<10){
+                    $month = '0'.$i;
+                }else{
+                    $month = $i;
+                }
+                $reslut[$type . '_month-' . $i] = 0;
+            }
+            return $reslut;
+        }
+
+        for($i=1;$i<=12;$i++){
+            if($i<10){
+                $month = '0'.$i;
+            }else{
+                $month = $i;
+            }
+            $reslut[$type . '_month-' . $i] = $this->getFixedEntriesFialds($employee_id,$year,$month,$type);
+        }
+
+        return $reslut;
     }
 }

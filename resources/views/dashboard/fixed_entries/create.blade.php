@@ -109,7 +109,7 @@
                                         <div class="form-group col-md-3">
                                             <h3 class="ml-2">تحديد ثابت لكل شهر</h3>
                                             <x-form.input name="{{ $name }}_months" type="number"
-                                                placeholder="400" />
+                                                placeholder="0" />
                                         </div>
                                     </div>
                                     <hr>
@@ -129,22 +129,22 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-1" name="{{ $name }}_month-1" class="form-control" placeholder="400."  @disabled($month > 1)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-1" name="{{ $name }}_month-1" class="form-control" placeholder="0."  @disabled($month > 1)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-2" name="{{ $name }}_month-2" class="form-control" placeholder="400." @disabled($month > 2)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-2" name="{{ $name }}_month-2" class="form-control" placeholder="0." @disabled($month > 2)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-3" name="{{ $name }}_month-3" class="form-control" placeholder="400." @disabled($month > 3)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-3" name="{{ $name }}_month-3" class="form-control" placeholder="0." @disabled($month > 3)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-4" name="{{ $name }}_month-4" class="form-control" placeholder="400." @disabled($month > 4)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-4" name="{{ $name }}_month-4" class="form-control" placeholder="0." @disabled($month > 4)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-5" name="{{ $name }}_month-5" class="form-control" placeholder="400." @disabled($month > 5)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-5" name="{{ $name }}_month-5" class="form-control" placeholder="0." @disabled($month > 5)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-6" name="{{ $name }}_month-6" class="form-control" placeholder="400." @disabled($month > 6)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-6" name="{{ $name }}_month-6" class="form-control" placeholder="0." @disabled($month > 6)>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -163,22 +163,22 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-7" name="{{ $name }}_month-7" class="form-control" placeholder="400."   @disabled($month > 7)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-7" name="{{ $name }}_month-7" class="form-control" placeholder="0."   @disabled($month > 7)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-8" name="{{ $name }}_month-8" class="form-control" placeholder="400."  @disabled($month > 8)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-8" name="{{ $name }}_month-8" class="form-control" placeholder="0."  @disabled($month > 8)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-9" name="{{ $name }}_month-9" class="form-control" placeholder="400." @disabled($month > 9)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-9" name="{{ $name }}_month-9" class="form-control" placeholder="0." @disabled($month > 9)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-10" name="{{ $name }}_month-10" class="form-control" placeholder="400."  @disabled($month > 10)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-10" name="{{ $name }}_month-10" class="form-control" placeholder="0."  @disabled($month > 10)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-11" name="{{ $name }}_month-11" class="form-control" placeholder="400." @disabled($month > 11)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-11" name="{{ $name }}_month-11" class="form-control" placeholder="0." @disabled($month > 11)>
                                                     </td>
                                                     <td>
-                                                        <input value="0" type="number" id="{{ $name }}_month-12" name="{{ $name }}_month-12" class="form-control" placeholder="400."  @disabled($month > 12)>
+                                                        <input value="0" type="number" id="{{ $name }}_month-12" name="{{ $name }}_month-12" class="form-control" placeholder="0."  @disabled($month > 12)>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -210,12 +210,7 @@
                                 <form action="{{ route('fixed_entries.store') }}" method="post">
                                     @csrf
                                     <div class="row mt-3 align-items-center">
-                                        <span>مبلغ القرض هو</span>
-                                        <div class="form-group col-md-3 m-0">
-                                            <x-form.input name="{{$name}}_basic" type="number"
-                                                class="d-inline {{$name}}_fields" placeholder="4000...." />
-                                        </div>
-                                        <span>ويصرف على كل شهر</span>
+                                        <span>يصرف الإجمالي على كل شهر </span>
                                         <div class="form-group col-md-3 m-0">
                                             <x-form.input name="{{$name}}_months" type="number"
                                                 class="d-inline {{$name}}_fields" placeholder="200..." />
@@ -241,37 +236,37 @@
                                                         <input value="0" type="number" id="{{ $name }}_month-1"
                                                             name="{{ $name }}_month-1"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 1)>
+                                                            placeholder="0." @disabled($month > 1)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-2"
                                                             name="{{ $name }}_month-2"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 2)>
+                                                            placeholder="0." @disabled($month > 2)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-3"
                                                             name="{{ $name }}_month-3"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 3)>
+                                                            placeholder="0." @disabled($month > 3)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-4"
                                                             name="{{ $name }}_month-4"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 4)>
+                                                            placeholder="0." @disabled($month > 4)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-5"
                                                             name="{{ $name }}_month-5"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 5)>
+                                                            placeholder="0." @disabled($month > 5)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-6"
                                                             name="{{ $name }}_month-6"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 6)>
+                                                            placeholder="0." @disabled($month > 6)>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -293,37 +288,37 @@
                                                         <input value="0" type="number" id="{{ $name }}_month-7"
                                                             name="{{ $name }}_month-7"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 7)>
+                                                            placeholder="0." @disabled($month > 7)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-8"
                                                             name="{{ $name }}_month-8"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 8)>
+                                                            placeholder="0." @disabled($month > 8)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-9"
                                                             name="{{ $name }}_month-9"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 9)>
+                                                            placeholder="0." @disabled($month > 9)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-10"
                                                             name="{{ $name }}_month-10"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 10)>
+                                                            placeholder="0." @disabled($month > 10)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-11"
                                                             name="{{ $name }}_month-11"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 11)>
+                                                            placeholder="0." @disabled($month > 11)>
                                                     </td>
                                                     <td>
                                                         <input value="0" type="number" id="{{ $name }}_month-12"
                                                             name="{{ $name }}_month-12"
                                                             class="form-control {{$name}}_fields_month"
-                                                            placeholder="400." @disabled($month > 12)>
+                                                            placeholder="0." @disabled($month > 12)>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -344,7 +339,7 @@
                                         <span>المبلغ الإجمالي المتبقي</span>
                                         <div class="form-group col-md-3 m-0">
                                             <x-form.input name="total_{{$name}}" type="number" class="d-inline"
-                                                placeholder="4000...." />
+                                                placeholder="00...." />
                                         </div>
                                     </div>
                                     <div class="modal-footer">

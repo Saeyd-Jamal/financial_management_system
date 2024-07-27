@@ -20,4 +20,36 @@ class ReceivablesLoans extends Model
     {
         return $this->belongsTo(Employee::class,'employee_id');
     }
+
+    // Accessors
+    // add , in number form the table
+    public function getTotalReceivablesViewAttribute()
+    {
+        return number_format($this->total_receivables, 2, '.', ',');
+    }
+
+    //total_savings
+    public function getTotalSavingsViewAttribute()
+    {
+        return number_format($this->total_savings, 2, '.', ',');
+    }
+
+    //total_AssociationLoan
+    public function getTotalAssociationLoanViewAttribute()
+    {
+        return number_format($this->total_association_loan, 2, '.', ',');
+    }
+
+    // total_ShekelLoan
+    public function getTotalShekelLoanViewAttribute()
+    {
+        return number_format($this->total_shekel_loan, 2, '.', ',');
+    }
+
+    //	total_SavingsLoan
+    public function getTotalSavingsLoanViewAttribute()
+    {
+        return number_format($this->total_savings_loan, 2, '.', ',');
+    }
 }
+

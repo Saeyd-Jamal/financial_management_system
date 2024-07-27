@@ -47,7 +47,7 @@
                     <i class="fe fe-maximize"></i>
                 </button>
             </div>
-            <input type="text" class="form-control"  name="{{ $name }}_month-{{$month}}" aria-label="" aria-describedby="basic-addon1" value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,$month,$name)}}">
+            <input type="text" class="form-control"  name="{{ $name }}_month-{{$month}}" aria-label="" aria-describedby="basic-addon1" value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,$month,$name)}}">
         </div>
     </div>
     @endforeach
@@ -61,7 +61,7 @@
                     <i class="fe fe-maximize"></i>
                 </button>
             </div>
-            <input type="text" class="form-control" placeholder=""  name="{{ $name }}_month-{{$month}}" aria-label="" aria-describedby="basic-addon1" value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,$month,$name)}}">
+            <input type="text" class="form-control" placeholder=""  name="{{ $name }}_month-{{$month}}" aria-label="" aria-describedby="basic-addon1" value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,$month,$name)}}">
         </div>
     </div>
     @endforeach
@@ -94,7 +94,7 @@
                         <div class="row mt-3">
                             <div class="form-group col-md-3">
                                 <h3 class="ml-2">تحديد ثابت لكل شهر</h3>
-                                <x-form.input name="{{ $name }}_months" type="number" placeholder="400"  />
+                                <x-form.input name="{{ $name }}_months" type="number" placeholder="0"  />
                             </div>
                         </div>
                         <hr>
@@ -125,11 +125,7 @@
                 <form action="{{route('fixed_entries.store')}}" method="post">
                     @csrf
                     <div class="row mt-3 align-items-center">
-                            <span>مبلغ القرض هو</span>
-                            <div class="form-group col-md-3 m-0">
-                                <x-form.input name="{{$name}}_basic" type="number" class="d-inline {{$name}}_fields" placeholder="4000...."  />
-                            </div>
-                            <span>ويصرف على كل شهر</span>
+                            <span>ويصرف الإجمالي على كل شهر : </span>
                             <div class="form-group col-md-3 m-0">
                                 <x-form.input name="{{$name}}_months" type="number" class="d-inline {{$name}}_fields" placeholder="200..."  />
                             </div>
@@ -151,22 +147,22 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-1" name="{{ $name }}_month-1" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 1) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'01',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-1" name="{{ $name }}_month-1" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 1) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'01',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-2" name="{{ $name }}_month-2" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 2) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'02',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-2" name="{{ $name }}_month-2" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 2) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'02',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-3" name="{{ $name }}_month-3" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 3) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'03',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-3" name="{{ $name }}_month-3" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 3) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'03',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-4" name="{{ $name }}_month-4" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 4) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'04',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-4" name="{{ $name }}_month-4" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 4) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'04',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-5" name="{{ $name }}_month-5" class="form-control {{$name}}_fields_month" placeholder="400."  @disabled($month > 5) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'05',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-5" name="{{ $name }}_month-5" class="form-control {{$name}}_fields_month" placeholder="0."  @disabled($month > 5) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'05',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-6" name="{{ $name }}_month-6" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 6) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'06',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-6" name="{{ $name }}_month-6" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 6) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'06',$name)}}">
                                     </td>
                                 </tr>
                             </tbody>
@@ -185,22 +181,22 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-7" name="{{ $name }}_month-7" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 7) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'07',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-7" name="{{ $name }}_month-7" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 7) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'07',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-8" name="{{ $name }}_month-8" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 8) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'08',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-8" name="{{ $name }}_month-8" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 8) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'08',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-9" name="{{ $name }}_month-9" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 9) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'09',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-9" name="{{ $name }}_month-9" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 9) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'09',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-10" name="{{ $name }}_month-10" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 10) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'10',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-10" name="{{ $name }}_month-10" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 10) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'10',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-11" name="{{ $name }}_month-11" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 11) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'11',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-11" name="{{ $name }}_month-11" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 11) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'11',$name)}}">
                                     </td>
                                     <td>
-                                        <input type="number" id="{{ $name }}_month-12" name="{{ $name }}_month-12" class="form-control {{$name}}_fields_month" placeholder="400." @disabled($month > 12) value="{{$controller->getFixedEntriesFialds($fixed_entrie,$year,'12',$name)}}">
+                                        <input type="number" id="{{ $name }}_month-12" name="{{ $name }}_month-12" class="form-control {{$name}}_fields_month" placeholder="0." @disabled($month > 12) value="{{$controller->getFixedEntriesFialds($fixed_entrie['employee']->id,$year,'12',$name)}}">
                                     </td>
                                 </tr>
                             </tbody>
@@ -220,7 +216,7 @@
                         </span>
                         <span>المبلغ الإجمالي المتبقي</span>
                         <div class="form-group col-md-3 m-0">
-                            <x-form.input name="total_{{$name}}" type="number" class="d-inline" placeholder="4000...."  />
+                            <x-form.input name="total_{{$name}}" type="number" class="d-inline" placeholder="00...."  />
                         </div>
                 </div>
                     <div class="modal-footer">

@@ -8,8 +8,13 @@
                 </div>
                 <div class="col-auto">
                     @can('create', 'App\\Models\FixedEntries')
-                    <a class="btn btn-success" href="{{ route('fixed_entries.create') }}">
+                    <a class="btn btn-success  mb-2" href="{{ route('fixed_entries.create') }}">
                         <i class="fe fe-plus"></i>
+                    </a>
+                    @endcan
+                    @can('edit', 'App\\Models\FixedEntries')
+                    <a class="btn btn-info mb-2" href="{{ route('fixed_entries.viewForm') }}">
+                        <i class="fe fe-edit-3"></i> واجهة التعديلات
                     </a>
                     @endcan
                     <div class="form-group col-6 d-inline">

@@ -50,7 +50,6 @@
                     _token: csrf_token,
                 },
                 success: function (response) {
-                    console.log(response);
                     $('#open_' + field).modal('toggle')
                 },
                 error: function (response) {
@@ -100,12 +99,10 @@
 
     // حقل قرض الجمعية
     let association_loan_months_total = 0;
-    let association_loan_basic;
     let association_loan_months;
     let total_association_loan_new_val;
 
     $('.association_loan_fields').on('input',function(e){
-        association_loan_basic = $('#association_loan_basic').val();
         association_loan_months = $('#association_loan_months').val();
         for(let i = 1;i <= 12;i++){
             if(i >= currentMonth){
@@ -116,7 +113,7 @@
         for(let i = 1;i <= 12;i++){
             association_loan_months_total = Number(association_loan_months_total) + Number($("#association_loan_month-" + i).val());
         }
-        total_association_loan_new_val = Number(total_association_loan) +  (association_loan_basic - (association_loan_months_total))
+        total_association_loan_new_val = Number(total_association_loan) - (association_loan_months_total);
         $("#total_association_loan").val(total_association_loan_new_val);
     })
     $('.association_loan_fields_month').on('input',function(e){
@@ -127,18 +124,16 @@
                 association_loan_months_total += Number($("#association_loan_month-" + i).val());
             }
         }
-        total_association_loan_new_val = Number(total_association_loan) + (association_loan_basic - (association_loan_months_total))
+        total_association_loan_new_val = Number(total_association_loan)  - (association_loan_months_total)
         $("#total_association_loan").val(total_association_loan_new_val);
     })
 
     // حقل قرض الإدخار
     let savings_loan_months_total = 0;
-    let savings_loan_basic;
     let savings_loan_months;
     let total_savings_loan_new_val;
 
     $('.savings_loan_fields').on('input',function(e){
-        savings_loan_basic = $('#savings_loan_basic').val();
         savings_loan_months = $('#savings_loan_months').val();
         for(let i = 1;i <= 12;i++){
             if(i >= currentMonth){
@@ -149,7 +144,7 @@
         for(let i = 1;i <= 12;i++){
             savings_loan_months_total = Number(savings_loan_months_total) + Number($("#savings_loan_month-" + i).val());
         }
-        total_savings_loan_new_val = Number(total_savings_loan) +  (savings_loan_basic - (savings_loan_months_total))
+        total_savings_loan_new_val = Number(total_savings_loan) - (savings_loan_months_total);
         $("#total_savings_loan").val(total_savings_loan_new_val);
     })
     $('.savings_loan_fields_month').on('input',function(e){
@@ -160,18 +155,16 @@
                 savings_loan_months_total += Number($("#savings_loan_month-" + i).val());
             }
         }
-        total_savings_loan_new_val = Number(total_savings_loan) + (savings_loan_basic - (savings_loan_months_total))
+        total_savings_loan_new_val = Number(total_savings_loan) - (savings_loan_months_total);
         $("#total_savings_loan").val(total_savings_loan_new_val);
     })
 
     // حقل قرض اللجنة
     let shekel_loan_months_total = 0;
-    let shekel_loan_basic;
     let shekel_loan_months;
     let total_shekel_loan_new_val;
 
     $('.shekel_loan_fields').on('input',function(e){
-        shekel_loan_basic = $('#shekel_loan_basic').val();
         shekel_loan_months = $('#shekel_loan_months').val();
         for(let i = 1;i <= 12;i++){
             if(i >= currentMonth){
@@ -182,7 +175,7 @@
         for(let i = 1;i <= 12;i++){
             shekel_loan_months_total = Number(shekel_loan_months_total) + Number($("#shekel_loan_month-" + i).val());
         }
-        total_shekel_loan_new_val = Number(total_shekel_loan) +  (shekel_loan_basic - (shekel_loan_months_total))
+        total_shekel_loan_new_val = Number(total_shekel_loan) - (shekel_loan_months_total);
         $("#total_shekel_loan").val(total_shekel_loan_new_val);
     })
     $('.shekel_loan_fields_month').on('input',function(e){
@@ -193,7 +186,7 @@
                 shekel_loan_months_total += Number($("#shekel_loan_month-" + i).val());
             }
         }
-        total_shekel_loan_new_val = Number(total_shekel_loan) + (shekel_loan_basic - (shekel_loan_months_total))
+        total_shekel_loan_new_val = Number(total_shekel_loan) - (shekel_loan_months_total);
         $("#total_shekel_loan").val(total_shekel_loan_new_val);
     })
 

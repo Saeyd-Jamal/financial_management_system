@@ -40,11 +40,11 @@
                                     <tr class="total_select" data-id="{{$total->id}}">
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$total->employee->name}}</td>
-                                        <td>{{$total->total_receivables}}</td>
-                                        <td>{{$total->total_savings}}</td>
-                                        <td>{{$total->total_association_loan}}</td>
-                                        <td>{{$total->total_savings_loan}}</td>
-                                        <td>{{$total->total_shekel_loan}}</td>
+                                        <td>{{$total->total_receivables_view}}</td>
+                                        <td>{{$total->total_savings_view}}</td>
+                                        <td>{{$total->total_association_loan_view}}</td>
+                                        <td>{{$total->total_savings_loan_view}}</td>
+                                        <td>{{$total->total_shekel_loan_view}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

@@ -15,4 +15,4 @@ Route::match(['get','post'],'/pdf', function () {
 });
 
 
-require __DIR__ . "/dashobard.php";
+require __DIR__ . "/dashboard.php";

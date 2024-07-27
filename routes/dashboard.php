@@ -25,14 +25,21 @@ Route::group([
     // 'as' => 'dashboard.'
 ], function () {
     // outhers fields
+    Route::post('/bakcups/getDataAll', [SystemOperationsController::class,'bakcupsData'])->name('bakcups.bakcupsData');
+
+
     Route::get('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
     Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
-    Route::post('/fixed_entries/getFixedEntriesData', [FixedEntriesController::class,'getFixedEntriesData'])->name('fixed_entries.getFixedEntriesData');
+    Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
 
-    Route::post('/bakcups/getDataAll', [SystemOperationsController::class,'bakcupsData'])->name('bakcups.bakcupsData');
+    Route::post('/fixed_entries/getFixedEntriesData', [FixedEntriesController::class,'getFixedEntriesData'])->name('fixed_entries.getFixedEntriesData');
+    Route::post('/fixed_entries/getModalForm', [FixedEntriesController::class,'getModalForm'])->name('fixed_entries.getModalForm');
+    Route::post('/fixed_entries/getModalFormLoan', [FixedEntriesController::class,'getModalFormLoan'])->name('fixed_entries.getModalFormLoan');
+    Route::get('/fixed_entries/viewForm', [FixedEntriesController::class,'viewForm'])->name('fixed_entries.viewForm');
 
     Route::post('/salaries/createAllSalaries', [SalaryController::class,'createAllSalaries'])->name('salaries.createAllSalaries');
     Route::post('/salaries/deleteAllSalaries', [SalaryController::class,'deleteAllSalaries'])->name('salaries.deleteAllSalaries');
+
 
 
     // soft delete for salaries
@@ -62,6 +69,8 @@ Route::group([
     // Report
     Route::get('/report', [ReportController::class,'index'])->name('report.index');
     Route::post('/report/export', [ReportController::class,'export'])->name('report.export');
+
+
     Route::resources([
         'currencies' => CurrencyController::class,
         'employees' => EmployeeController::class,
