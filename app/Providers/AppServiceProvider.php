@@ -47,8 +47,8 @@ class AppServiceProvider extends ServiceProvider
             }
         });
         // the Authorization for Report Page
-        Gate::define('report', function ($user) {
-            if($user->roles->contains('role_name', 'report')) {
+        Gate::define('report.view', function ($user) {
+            if($user->roles->contains('role_name', 'report.view')) {
                 return true;
             }
             return false;

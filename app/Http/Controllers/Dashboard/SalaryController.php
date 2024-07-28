@@ -155,11 +155,11 @@ class SalaryController extends Controller
                 ReceivablesLoans::updateOrCreate([
                     'employee_id' => $salary->employee_id,
                 ],[
-                    'total_savings_loan' => DB::raw('total_savings_loan + '.($fixedEntries->savings_loan)),
-                    'total_shekel_loan' => DB::raw('total_shekel_loan + '.($fixedEntries->shekel_loan)),
-                    'total_association_loan' => DB::raw('total_association_loan + '.($fixedEntries->association_loan)),
-                    'total_receivables' => DB::raw('total_receivables - '.($salary->late_receivables)),
-                    'total_savings' => DB::raw('total_savings - '.($fixedEntries->savings_loan + (($fixedEntries->savings_rate + $salary->termination_service) / $USD ))),
+                    'total_savings_loan' => DB::raw('total_savings_loan + '.($fixedEntries->savings_loan ?? 0)),
+                    'total_shekel_loan' => DB::raw('total_shekel_loan + '.($fixedEntries->shekel_loan ?? 0)),
+                    'total_association_loan' => DB::raw('total_association_loan + '.($fixedEntries->association_loan ?? 0)),
+                    'total_receivables' => DB::raw('total_receivables - '.($salary->late_receivables )),
+                    'total_savings' => DB::raw('total_savings - '.($fixedEntries->savings_loan ?? 0 + (($fixedEntries->savings_rate ?? 0 + $salary->termination_service ?? 0) / $USD ))),
                 ]);
                 $salary->forceDelete();
             }
@@ -168,7 +168,7 @@ class SalaryController extends Controller
             DB::rollBack();
             throw $exception;
         }
-        return redirect()->route('salaries.index')->with('success', 'تم اضافة الراتب لجميع الموظفين للشهر الحالي');
+        return redirect()->route('salaries.index')->with('danger', 'تم حذف الراتب لجميع الموظفين للشهر الحالي');
     }
 
 

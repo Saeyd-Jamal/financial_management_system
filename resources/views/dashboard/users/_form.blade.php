@@ -4,7 +4,7 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-auto-rows: minmax(auto, auto);
-        gap: 10px 15px;
+        gap: 10px 45px;
     }
 </style>
 @endpush
@@ -34,15 +34,29 @@
 
 </div>
 <div class="row ml-3">
-    <fieldset id="user-roles">
+    <fieldset id="user-roles" class="col-12">
         <legend>الصلاحيات</legend>
-        @foreach (app('abilities') as $ability_name => $ability)
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="abilities[]" id="ability-{{$ability_name}}" value="{{$ability_name}}" @checked(in_array($ability_name, $user->roles()->pluck('role_name')->toArray())) >
-                <label class="form-check-label" for="ability-{{$ability_name}}">
-                    {{$ability}}
-                </label>
+        @foreach (app('abilities') as $abilities_name => $ability_array)
+            <div class="mb-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="row flex-column align-items-start pl-2 pr-2">
+                            <legend>{{$ability_array['name']}}</legend>
+                            @foreach ($ability_array as $ability_name => $ability)
+                                @if ($ability_name != 'name')
+                                <div class="custom-control custom-checkbox" style="margin-right: 0;">
+                                    <input class="custom-control-input" type="checkbox" name="abilities[]" id="ability-{{$abilities_name . '.' . $ability_name}}" value="{{$abilities_name . '.' . $ability_name}}" @checked(in_array($abilities_name . '.' . $ability_name, $user->roles()->pluck('role_name')->toArray())) >
+                                    <label class="custom-control-label" for="ability-{{$abilities_name . '.' . $ability_name}}">
+                                        {{$ability}}
+                                    </label>
+                                </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
+
         @endforeach
     </fieldset>
 </div>

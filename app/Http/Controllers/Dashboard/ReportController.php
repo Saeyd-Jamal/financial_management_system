@@ -107,7 +107,7 @@ class ReportController extends Controller
     }
 
     public function index(){
-        $this->authorize('report');
+        $this->authorize('report.view');
         $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
         $working_status = WorkData::select('working_status')->distinct()->pluck('working_status')->toArray();
         $nature_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();

@@ -2,7 +2,6 @@
     aside{
         font-size: 15px;
         font-weight: 500;
-
     }
 </style>
 <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar style="background-color: rgb(153 252 255 / 23%) !important; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.3) !important;">
@@ -34,7 +33,7 @@
                 </a>
             </li>
             @endcan
-            @can('report')
+            @can('report.view')
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{route('report.index')}}">
                     <i class="fe fe-file fe-16"></i>

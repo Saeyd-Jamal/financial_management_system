@@ -80,8 +80,8 @@
             </div> <!-- end section -->
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
-    <div class="modal fade" id="getShowFixed" tabindex="-1" role="dialog" aria-labelledby="getShowFixedTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal fade modal-right modal-slide" id="getShowFixed" tabindex="-1" role="dialog" aria-labelledby="getShowFixedTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="height: auto; min-width: 35%;" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="getShowFixedLongTitle"> عرض الإدخالات الثابتة </h5>
