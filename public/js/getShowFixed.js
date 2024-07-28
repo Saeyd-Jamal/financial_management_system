@@ -2,7 +2,7 @@
     $("#monthInputSearch").on("input", function () {
         let month = $(this).val();
         $.ajax({
-            url: app_link + "fixed_entries/", // Replace with your Laravel route URL
+            url: app_link + "fixed_entries", // Replace with your Laravel route URL
             method: "GET",
             data: {
                 monthChange: true,

@@ -25,7 +25,7 @@
 
         // get modal body
         $.ajax({
-            url: "/fixed_entries/getModalForm/",
+            url: "/fixed_entries/getModalForm",
             method: "post",
             data: {
                 type: type,

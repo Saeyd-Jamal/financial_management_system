@@ -184,12 +184,12 @@ class FixedEntriesController extends Controller
     public function show(Request $request, FixedEntries $fixedEntries)
     {
         if ($request->showModel == true) {
-            if($request->month){
+            if($request->has('month')){
                 $monthNow = $request->month;
                 $fixed_entrie = FixedEntries::with('employee')->where('month',$monthNow)->find($request->fixed_entrie);
                 return  $fixed_entrie;
             }
-            if($request->monthT){
+            if($request->has('monthT')){
                 $fixed_entrie = FixedEntries::with('employee')->find($request->fixed_entrie);
                 $fixed_entrie = FixedEntries::with('employee')->where('employee_id',$fixed_entrie->employee_id)->where('month',$request->monthT)->first();
                 return  $fixed_entrie;
