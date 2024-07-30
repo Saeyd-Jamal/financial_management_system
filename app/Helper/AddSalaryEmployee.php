@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Models\ReceivablesLoans;
 use App\Models\Salary;
 use App\Models\SalaryScale;
+use App\Models\SpecificSalary;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +29,7 @@ class AddSalaryEmployee{
         $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
         // مزدوج الوظيفة
         $dual_function = $employee->dual_function;
-        
+
         if($dual_function == "غير موظف"){
             $dual_function = null;
         }
@@ -47,46 +48,51 @@ class AddSalaryEmployee{
         }
 
         //  البنك المتعامل معه
-        foreach ($employee->banks as $bank) {
-            $account_default = $bank->accounts->where('employee_id',$employee->id)->where('default',1)->first();
-            if($account_default == null){
-                $account_default = $bank->accounts->where('employee_id',$employee->id)->first();
+        try {
+            foreach ($employee->banks as $bank) {
+                $account_default = $bank->accounts->where('employee_id',$employee->id)->where('default',1)->first();
+                if($account_default == null){
+                    $account_default = $bank->accounts->where('employee_id',$employee->id)->first();
+                }
             }
+
+            $bank = Bank::find($account_default->bank_id)->first()->name;
+            $branch_number = Bank::find($account_default->bank_id)->first()->id;
+            $account_number = $account_default->id;
+        }catch (\Exception $e) {
+            return redirect()->back()->with('danger', 'حذث هنالك خطأ في تحديد حساب البنك يرجى التأكد من أن جميع الموظفين لديهم حساب واحد');
         }
+        if($employee->workData->type_appointment == 'مثبت'){
+            // مثبتين
+            // الحسابات
+            $percentage_allowance = ($employee->workData->percentage_allowance != null) ? $employee->workData->percentage_allowance : 100; //نسبة علاوة من طبيعة العمل
+            $initial_salary = SalaryScale::where('id',$employee->workData->allowance)->first()->{$employee->workData->grade}; // الراتب الأولي
 
-        $bank = Bank::find($account_default->bank_id)->first()->name;
-        $branch_number = Bank::find($account_default->bank_id)->first()->id;
-        $account_number = $account_default->id;
+            $grade_allowance_ratio = $employee->workData->grade_allowance_ratio; // نسبة علاوة درجة
+            if($grade_allowance_ratio != null || $grade_allowance_ratio != 0){
+                $grade_Allowance = number_format($initial_salary * $grade_allowance_ratio,0); // علاوة درجة
+            }else{
+                $grade_Allowance = $employee->workData->allowance * 10;
+            }
 
-        // الحسابات
-        $percentage_allowance = ($employee->workData->percentage_allowance != null) ? $employee->workData->percentage_allowance : 100; //نسبة علاوة من طبيعة العمل
-        $initial_salary = SalaryScale::where('id',$employee->workData->allowance)->first()->{$employee->workData->grade}; // الراتب الأولي
+            $secondary_salary = $initial_salary + $grade_Allowance; // الراتب الثانوي
 
-        $grade_allowance_ratio = $employee->workData->grade_allowance_ratio; // نسبة علاوة درجة
-        if($grade_allowance_ratio != null || $grade_allowance_ratio != 0){
-            $grade_Allowance = number_format($initial_salary * $grade_allowance_ratio,0); // علاوة درجة
+            // الإضافات الثابتة
+            if($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج"){
+                $allowance_boys = (($employee->number_children * 20) + 60);
+            }elseif($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج - موظفة حكومة"){
+                $allowance_boys = ($employee->number_children * 20);
+            }else{
+                $allowance_boys = 0;
+            }
+
+            $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
         }else{
-            $grade_Allowance = $employee->workData->allowance * 10;
+            $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$thisYear.'-'.$thisMonth)->first()->salary ?? 0;
         }
-
-        $secondary_salary = $initial_salary + $grade_Allowance; // الراتب الثانوي
-
-        // الإضافات الثابتة
-        if($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج"){
-            $allowance_boys = (($employee->number_children * 20) + 60);
-        }elseif($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج - موظفة حكومة"){
-            $allowance_boys = ($employee->number_children * 20);
-        }else{
-            $allowance_boys = 0;
-        }
-
-        $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
 
         // المدخلات الثابتة
         $fixedEntries = $employee->fixedEntries->where('month',$thisYear.'-'.$thisMonth)->first();
-        if($fixedEntries != null){
-
-        }
 
         $administrative_allowance = ($fixedEntries != null) ? $fixedEntries->administrative_allowance : 0;
         $scientific_qualification_allowance = ($fixedEntries != null) ? $fixedEntries->scientific_qualification_allowance : 0;
@@ -195,6 +201,7 @@ class AddSalaryEmployee{
             DB::commit();
         }catch(\Exception $e){
             DB::rollBack();
+            return redirect()->back()->with('danger', 'حذث هنالك خطأ بالإدخال يرجى مراجعة المهندس');
         }
     }
 }

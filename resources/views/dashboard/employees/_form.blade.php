@@ -1,3 +1,4 @@
+
 <h2 class="h3">البيانات الشخصية</h2>
 <div class="row">
     <div class="form-group p-3 col-3">
@@ -72,45 +73,63 @@
 
 <h2 class="h3">بيانات العمل</h2>
 <div class="row">
-    <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" required />
-    </div>
-    <div class="form-group p-3 col-3">
-        <label for="grade">الدرجة في سلم الرواتب</label>
-        <select class="custom-select" id="grade" name="grade" required>
-            <option value="null">عرض القيم المتوفرة</option>
-            <option value="10" @selected($workData->grade == 10)>10</option>
-            <option value="9" @selected($workData->grade == 9)>9</option>
-            <option value="8" @selected($workData->grade == 8)>8</option>
-            <option value="7" @selected($workData->grade == 7)>7</option>
-            <option value="6" @selected($workData->grade == 6)>6</option>
-            <option value="5" @selected($workData->grade == 5)>5</option>
-            <option value="4" @selected($workData->grade == 4)>4</option>
-            <option value="3" @selected($workData->grade == 3)>3</option>
-            <option value="2" @selected($workData->grade == 2)>2</option>
-            <option value="1" @selected($workData->grade == 1)>1</option>
-            <option value="C" @selected($workData->grade == "C")>C</option>
-            <option value="B" @selected($workData->grade == "B")>B</option>
-            <option value="A" @selected($workData->grade == "A")>A</option>
+    <div class="form-group p-3 col-md-3">
+        <label for="type_appointment">أدخل نوع التعين (العقد)</label>
+        <select class="custom-select" id="type_appointment" name="type_appointment" required>
+            <option value="" disabled @selected($workData->type_appointment == null)>عرض القيم المتوفرة</option>
+            <option value="مثبت" @selected($workData->type_appointment == 'مثبت')>مثبت</option>
+            <option value="نسبة" @selected($workData->type_appointment == 'نسبة')>نسبة</option>
+            <option value="خاص" @selected($workData->type_appointment == 'خاص')>خاص</option>
+            <option value="رياض" @selected($workData->type_appointment == 'رياض')>رياض</option>
+            <option value="فصلي" @selected($workData->type_appointment == 'فصلي')>فصلي</option>
+            <option value="يومي" @selected($workData->type_appointment == 'يومي')>يومي</option>
+            <option value="مؤقت" @selected($workData->type_appointment == 'مؤقت')>مؤقت</option>
         </select>
     </div>
-    <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="0.55"/>
+
+    {{-- حقول خاصة بالموظف الثابت --}}
+    <div class="row" id="proven" @if ($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
+        <div class="form-group p-3 col-3">
+            <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" required />
+        </div>
+        <div class="form-group p-3 col-3">
+            <label for="grade">الدرجة في سلم الرواتب</label>
+            <select class="custom-select" id="grade" name="grade" required>
+                <option value="" disabled>عرض القيم المتوفرة</option>
+                <option value="10" @selected($workData->grade == 10)>10</option>
+                <option value="9" @selected($workData->grade == 9)>9</option>
+                <option value="8" @selected($workData->grade == 8)>8</option>
+                <option value="7" @selected($workData->grade == 7)>7</option>
+                <option value="6" @selected($workData->grade == 6)>6</option>
+                <option value="5" @selected($workData->grade == 5)>5</option>
+                <option value="4" @selected($workData->grade == 4)>4</option>
+                <option value="3" @selected($workData->grade == 3)>3</option>
+                <option value="2" @selected($workData->grade == 2)>2</option>
+                <option value="1" @selected($workData->grade == 1)>1</option>
+                <option value="C" @selected($workData->grade == "C")>C</option>
+                <option value="B" @selected($workData->grade == "B")>B</option>
+                <option value="A" @selected($workData->grade == "A")>A</option>
+            </select>
+        </div>
+        <div class="form-group p-3 col-3">
+            <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="0.55" required/>
+        </div>
+        <div class="form-group p-3 col-3">
+            <x-form.input type="number" label="نسبة علاوة طبيعة العمل" :value="$workData->percentage_allowance" name="percentage_allowance" placeholder="10.."/>
+        </div>
+        <div class="form-group p-3 col-3">
+            <label for="salary_category">فئة الراتب</label>
+            <select class="custom-select" id="salary_category" name="salary_category" required>
+                <option >عرض القيم المتوفرة</option>
+                <option value="1"  @selected($workData->salary_category == 1)>الأولى</option>
+                <option value="2"  @selected($workData->salary_category == 2)>الثانية</option>
+                <option value="3"  @selected($workData->salary_category == 3)>الثالثة</option>
+                <option value="4"  @selected($workData->salary_category == 4)>الرابعة</option>
+                <option value="5"  @selected($workData->salary_category == 5)>الخامسة</option>
+            </select>
+        </div>
     </div>
-    <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="نسبة علاوة طبيعة العمل" :value="$workData->percentage_allowance" name="percentage_allowance" placeholder="10.."/>
-    </div>
-    <div class="form-group p-3 col-3">
-        <label for="salary_category">فئة الراتب</label>
-        <select class="custom-select" id="salary_category" name="salary_category" required>
-            <option >عرض القيم المتوفرة</option>
-            <option value="1"  @selected($workData->salary_category == 1)>الأولى</option>
-            <option value="2"  @selected($workData->salary_category == 2)>الثانية</option>
-            <option value="3"  @selected($workData->salary_category == 3)>الثالثة</option>
-            <option value="4"  @selected($workData->salary_category == 4)>الرابعة</option>
-            <option value="5"  @selected($workData->salary_category == 5)>الخامسة</option>
-        </select>
-    </div>
+
     <div class="form-group p-3 col-3">
         <x-form.input type="date" label="تاريخ العمل" :value="$workData->working_date"  name="working_date" required />
     </div>
@@ -129,14 +148,6 @@
         <datalist id="working_status_list">
             @foreach ($working_status as $working_status)
                 <option value="{{ $working_status }}">
-            @endforeach
-        </datalist>
-    </div>
-    <div class="form-group p-3 col-md-3">
-        <x-form.input name="type_appointment" placeholder="أدخل نوع التعين" :value="$workData->type_appointment" label="نوع التعين" list="type_appointment_list" required />
-        <datalist id="type_appointment_list">
-            @foreach ($type_appointment as $type_appointment)
-                <option value="{{ $type_appointment }}">
             @endforeach
         </datalist>
     </div>
@@ -256,4 +267,5 @@
             $("input[name='years_service']").val(thisYear - date_installation)
         });
     </script>
+    <script src="{{asset('js/formEmployee.js')}}"></script>
 @endpush

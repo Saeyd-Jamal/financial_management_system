@@ -12,6 +12,7 @@ use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SalaryController;
 use App\Http\Controllers\Dashboard\SalaryScaleController;
+use App\Http\Controllers\Dashboard\SpecificSalaryController;
 use App\Http\Controllers\Dashboard\TotalController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\WorkDataController;
@@ -70,6 +71,8 @@ Route::group([
     Route::get('/report', [ReportController::class,'index'])->name('report.index');
     Route::post('/report/export', [ReportController::class,'export'])->name('report.export');
 
+    // specific_salaries
+    require __DIR__ . "/specific_salaries.php";
 
     Route::resources([
         'currencies' => CurrencyController::class,

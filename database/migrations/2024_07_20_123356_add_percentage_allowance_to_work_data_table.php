@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('work_data', function (Blueprint $table) {
-            $table->smallInteger('percentage_allowance')->default(0)->comment('نسبة العلاوة من طبيعة العمل')->after('field_action');
+            $table->smallInteger('percentage_allowance')->nullable()->default(0)->comment('نسبة العلاوة من طبيعة العمل')->after('field_action');
         });
     }
 

@@ -78,4 +78,8 @@ class EmployeesImport implements ToModel, WithHeadingRow//, SkipsOnError
         }
 
     }
+    public function chunkSize(): int
+    {
+        return 100; // حجم القطعة الواحدة
+    }
 }

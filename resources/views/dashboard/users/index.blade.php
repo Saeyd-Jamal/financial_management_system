@@ -47,10 +47,10 @@
                                                 <span class="text-muted sr-only">Action</span>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                @can('view', 'App\\Models\User')
+                                                {{-- @can('view', 'App\\Models\User')
                                                 <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                 href="{{route('users.show',$user->id)}}">عرض</a>
-                                                @endcan
+                                                @endcan --}}
                                                 @can('edit', 'App\\Models\User')
                                                 <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="{{route('users.edit',$user->id)}}">تعديل</a>

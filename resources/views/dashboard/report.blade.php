@@ -156,7 +156,7 @@
                 </div>
                 {{-- إضافات --}}
                 <div class="form-group col-md-3">
-                    <x-form.input type="month" :value="$month" name="month" label="الشهر المطلوب" maxlength="9" />
+                    <x-form.input type="month" :value="$month" name="month" label="الشهر المطلوب" />
                 </div>
                 <div class="form-group col-md-3">
                     <label for="report_type">نوع الكشف</label>

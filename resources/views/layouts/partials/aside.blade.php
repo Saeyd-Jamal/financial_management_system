@@ -57,11 +57,54 @@
             </li>
             @endcan
             @can('view','App\\Models\FixedEntries')
-            <li class="nav-item w-100">
-                <a class="nav-link" href="{{route('fixed_entries.index')}}">
+            <li class="nav-item dropdown">
+                <a href="#fixed_entries" data-toggle="collapse" aria-expanded="false"
+                    class="dropdown-toggle nav-link">
                     <i class="fe fe-lock fe-16"></i>
                     <span class="ml-3 item-text">التعديلات</span>
                 </a>
+                <ul class="collapse list-unstyled pl-4 w-100" id="fixed_entries">
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{route('fixed_entries.index')}}">
+                            <i class="fe fe-users fe-16"></i>
+                            <span class="ml-1 item-text">الموظفين</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{route('specific_salaries.ratio')}}">
+                            <i class="fe fe-percent fe-16"></i>
+                            <span class="ml-1 item-text">النسبة</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{route('specific_salaries.private')}}">
+                            <i class="fe fe-box fe-16"></i>
+                            <span
+                                class="ml-1 item-text">خاص</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{route('specific_salaries.riyadh')}}">
+                            <i class="fe fe-list fe-16"></i>
+                            <span
+                                class="ml-1 item-text">رياض</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{route('specific_salaries.fasle')}}">
+                            <i class="fe fe-calendar fe-16"></i>
+                            <span
+                                class="ml-1 item-text">فصلي</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{route('specific_salaries.daily')}}">
+                            <i class="fe fe-inbox fe-16"></i>
+                            <span
+                                class="ml-1 item-text">يومي</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pl-3" href="{{route('specific_salaries.interim')}}">
+                            <i class="fe fe-watch fe-16"></i>
+                            <span class="ml-1 item-text">مؤقت</span></a>
+                    </li>
+                </ul>
             </li>
             @endcan
         </ul>

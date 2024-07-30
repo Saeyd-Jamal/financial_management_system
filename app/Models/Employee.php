@@ -63,6 +63,10 @@ class Employee extends Model
     {
         return $this->hasMany(Salary::class,'employee_id');
     }
+    public function specificSalaries() :HasMany
+    {
+        return $this->hasMany(SpecificSalary::class,'employee_id');
+    }
 
     // rolue
     public static function rules($id = 0){

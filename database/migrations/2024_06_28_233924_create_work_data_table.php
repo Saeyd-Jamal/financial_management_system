@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('working_status')->comment('حالة الدوام');
             $table->string('type_appointment')->comment('نوع التعين');
             $table->string('field_action')->comment('مجال العمل');
-            $table->smallInteger('allowance')->default(0)->comment('العلاوة في سلم الرواتب');
-            $table->string('grade',3)->default(10)->comment('الدرجة في سلم الرواتب');
-            $table->smallInteger('grade_allowance_ratio')->default(0)->comment('نسبة علاوة درجة');
+            $table->smallInteger('allowance')->nullable()->default(0)->comment('العلاوة في سلم الرواتب');
+            $table->string('grade',3)->nullable()->default(10)->comment('الدرجة في سلم الرواتب');
+            $table->smallInteger('grade_allowance_ratio')->nullable()->default(0)->comment('نسبة علاوة درجة');
             $table->string('dual_function')->comment('مزدوج الوظيفة')->nullable();
             $table->integer('years_service')->nullable()->comment('سنوات الخدمة');
             $table->string('nature_work')->comment('طبيعة العمل');
