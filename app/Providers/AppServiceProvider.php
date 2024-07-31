@@ -53,6 +53,12 @@ class AppServiceProvider extends ServiceProvider
             }
             return false;
         });
+        Gate::define('admins.backup', function ($user) {
+            if($user->roles->contains('role_name', 'admins.backup')) {
+                return true;
+            }
+            return false;
+        });
 
         Gate::policy(FixedEntries::class, FixedEntriesPolicy::class);
         Gate::policy(BanksEmployees::class, BankEmployeePolicy::class);

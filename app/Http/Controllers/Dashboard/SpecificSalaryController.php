@@ -203,6 +203,6 @@ class SpecificSalaryController extends Controller
         }catch (\Exception $e) {
             return redirect()->back()->with('danger', 'حذث هنالك خطأ بالإدخال يرجى مراجعة المهندس');
         }
-        return redirect()->route('specific_salaries.daily')->with('success', 'تم إعداد الراتب لموظفين اليومي');
+        return redirect()->route('specific_salaries.daily')->with('success', 'تم إعداد الراتب للموظفين اليوميين');
     }
 }

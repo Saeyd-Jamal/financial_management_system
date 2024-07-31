@@ -26,7 +26,6 @@ Route::group([
     // 'as' => 'dashboard.'
 ], function () {
     // outhers fields
-    Route::post('/bakcups/getDataAll', [SystemOperationsController::class,'bakcupsData'])->name('bakcups.bakcupsData');
 
 
     Route::get('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');

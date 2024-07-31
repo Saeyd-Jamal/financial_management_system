@@ -89,22 +89,21 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
+                            <h5 class="modal-title" id="defaultModalLabel">ميزات أخرى</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body px-5">
                             <div class="row align-items-center">
-                                <form action="{{route('bakcups.bakcupsData')}}" method="post">
-                                    @csrf
-                                    <button class="nav-link"  type="submit" class="col-6 text-center">
-                                        <div class="squircle bg-success justify-content-center">
-                                            <i class="fe fe-download fe-32 align-self-center text-whit"></i>
-                                        </div>
-                                        <p>نسخ إحتياطي</p>
-                                    </button>
-                                </form>
+                                @can('admins.backup')
+                                <a href="{{route('backup')}}" class="text-center nav-link">
+                                    <div class="squircle bg-success justify-content-center">
+                                        <i class="fe fe-download fe-32 align-self-center text-white"></i>
+                                    </div>
+                                    <p class="text-secondary">أخذ نسخة إحتياطية من القاعدة</p>
+                                </a>
+                                @endcan
                             </div>
                             {{-- <div class="row align-items-center">
                                 <div class="col-6 text-center">

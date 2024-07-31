@@ -3,16 +3,22 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\CreateBackup;
 use App\Jobs\CreateSalary;
 use App\Models\Employee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
+use Illuminate\Support\Facades\Storage;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
+use Spatie\Backup\Config\Config;
+use Spatie\Backup\Tasks\Backup\BackupJobFactory;
 
 class HomeController extends Controller
 {
     public function index(){
         $employees = Employee::get();
-
         // تصنيف الموظفين حسب المناطق
         $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
         $employeesPerArea = collect($areas)->map(function ($areas) {
@@ -68,5 +74,6 @@ class HomeController extends Controller
         $countEmployees = Employee::count();
         return view('dashboard.index', compact('chartEmployeesArea','chartEmployeesScientificQualification','countEmployees'));
     }
+
 }
 

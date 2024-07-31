@@ -25,6 +25,25 @@
             </form>
         </div>
     </div>
+    <h2>أدوات البرنامج</h2>
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card shadow  text-white">
+            <div class="card-body">
+                @can('admins.backup')
+                <a href="{{route('backup')}}" class="text-center nav-link">
+                    <div class="squircle bg-success justify-content-center">
+                        <i class="fe fe-download fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p class="text-secondary">أخذ نسخة إحتياطية من القاعدة</p>
+                </a>
+                @endcan
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>تقارير</h2>
     <div class="row justify-content-between">
         <div class="shadow p-3 mb-5 bg-white rounded col-md-6">
             <h3 class="h5">تصنيف الموظفين حسب المناطق</h3>
@@ -34,8 +53,6 @@
             <h3 class="h5">تصنيف الموظفين حسب المؤهلات العلمية</h3>
             {!! $chartEmployeesScientificQualification->render() !!}
         </div>
-    </div>
-    <div class="row">
         <div class="col-md-3">
             <div class="card shadow">
                 <div class="card-body">
