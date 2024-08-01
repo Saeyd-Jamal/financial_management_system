@@ -24,7 +24,7 @@ class TotalController extends Controller
     public function index()
     {
         $this->authorize('view', ReceivablesLoans::class);
-        $totals = ReceivablesLoans::with(['employee'])->paginate(15);
+        $totals = ReceivablesLoans::with(['employee'])->get();
         $total = new ReceivablesLoans();
         return view('dashboard.totals', compact('totals','total'));
     }

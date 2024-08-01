@@ -1,4 +1,7 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
+    @push('styles')
+    <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    @endpush
     @php
         $fields = [
             'administrative_allowance' => 'العلاوة الإدارية',
@@ -53,7 +56,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table table-bordered  table-hover" style="display: block; overflow-x: auto;" >
+                            <table class="table table-bordered  table-hover datatables"  id="dataTable-1" style="display: block; overflow-x: auto;" >
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -105,9 +108,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div>
-                                {{ $employees->links() }}
-                            </div>
                         </div>
                     </div>
                 </div> <!-- simple table -->
@@ -164,5 +164,17 @@
         </script>
         <script src="{{ asset('js/getShowFixed.js') }}"></script>
         <script src="{{ asset('js/getModalForm.js') }}"></script>
+        <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
+        <script>
+            $('#dataTable-1').DataTable(
+            {
+                autoWidth: true,
+                "lengthMenu": [
+                [10, 20, 100, -1],
+                [10, 20, 100, "جميع"]
+                ]
+            });
+        </script>
     @endpush
 </x-front-layout>

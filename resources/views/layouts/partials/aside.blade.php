@@ -13,7 +13,8 @@
         <!-- nav bar -->
         <div class="w-100 mb-4 d-flex">
             <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{{ route('home') }}">
-                <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 100%">
+                <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 50%">
+                <h1 class="h3 mt-2">{{ config('app.name') }}</h1>
             </a>
         </div>
 

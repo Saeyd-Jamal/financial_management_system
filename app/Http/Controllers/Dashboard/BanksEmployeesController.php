@@ -22,7 +22,7 @@ class BanksEmployeesController extends Controller
     public function index()
     {
         $this->authorize('view', BanksEmployees::class);
-        $banks_employees = BanksEmployees::with(['employee','bank'])->paginate(10);
+        $banks_employees = BanksEmployees::with(['employee','bank'])->get();
         return view('dashboard.banks_employees.index', compact('banks_employees'));
     }
 

@@ -1,4 +1,7 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded">
+    @push('styles')
+    <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    @endpush
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="row align-items-center mb-2">
@@ -23,7 +26,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table table-bordered  table-hover">
+                            <table class="table table-bordered  table-hover datatables"  id="dataTable-1">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -49,9 +52,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div>
-                                {{$totals->links()}}
-                            </div>
                         </div>
                     </div>
                 </div> <!-- simple table -->
@@ -213,5 +213,17 @@
         @can('edit','App\\Models\ReceivablesLoans')
             <script src="{{asset('js/getShowTotals.js')}}"></script>
         @endcan
+        <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
+        <script>
+            $('#dataTable-1').DataTable(
+            {
+                autoWidth: true,
+                "lengthMenu": [
+                [10, 20, 100, -1],
+                [10, 20, 100, "جميع"]
+                ]
+            });
+        </script>
     @endpush
 </x-front-layout>

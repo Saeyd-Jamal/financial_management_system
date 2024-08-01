@@ -1,4 +1,7 @@
 <x-front-layout>
+    @push('styles')
+    <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    @endpush
     <div class="row align-items-center mb-2">
         <!-- Bordered table -->
         <div class="col-md-12 my-4">
@@ -7,11 +10,15 @@
                     <h2 class="mb-2 page-title">جدول رواتب الموظفين اليومين</h2>
                     <p class="card-text">يمكنك تعديل الرواتب الموظفين اليومين من هنا</p>
                 </div>
-
             </div>
             <div class="card shadow">
                 <div class="card-body">
-                    <table class="table table-bordered table-hover mb-0">
+                    <style>
+                        td{
+                            box-sizing: border-box !important;
+                        }
+                    </style>
+                    <table class="datatables table table-bordered table-hover mb-0 " style="box-sizing: border-box" id="dataTable-1">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -73,5 +80,17 @@
     </div>
     @push('scripts')
     <script src="{{ asset('js/dailyEmployee.js') }}"></script>
+    <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
+    <script>
+        $('#dataTable-1').DataTable(
+        {
+            autoWidth: true,
+            "lengthMenu": [
+            [10, 20, 100, -1],
+            [10, 20, 100, "جميع"]
+            ]
+        });
+    </script>
     @endpush
 </x-front-layout>

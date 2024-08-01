@@ -78,13 +78,13 @@ class FixedEntriesController extends Controller
         $this->authorize('view', FixedEntries::class);
         // تغير الشهر
         if($request->monthChange == true){
-            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->paginate(10);
+            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->get();
             return $fixed_entries;
         }
         $monthNow = Carbon::now()->format('Y-m');
 
-        $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->paginate(10);
-        $employees = Employee::paginate(10);
+        $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->get();
+        $employees = Employee::get();
 
         return view('dashboard.fixed_entries.index', compact('fixed_entries','monthNow','employees'));
     }
@@ -94,13 +94,13 @@ class FixedEntriesController extends Controller
         $this->authorize('edit', FixedEntries::class);
         // تغير الشهر
         if($request->monthChange == true){
-            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->paginate(10);
+            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->get();
             return $fixed_entries;
         }
         $monthNow = Carbon::now()->format('Y-m');
 
-        $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->paginate(10);
-        $employees = Employee::paginate(10);
+        $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->get();
+        $employees = Employee::get();
         return view('dashboard.fixed_entries.viewForm', compact('employees','fixed_entries','monthNow'));
     }
 
