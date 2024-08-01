@@ -109,31 +109,44 @@
         ];
     @endphp
     <htmlpageheader name="page-header">
-        <p>
-            <span>قسم الرواتب والموظفين</span> /
-            <span>جدول حسابات الموظفين</span>
-            @if (isset($filter))
-                @foreach ($filedsEmpolyees as $name)
-                    @if ($filter["$name"] != null)
-                    / <span>{{ $filter["$name"] }}</span>
-                    @endif
-                @endforeach
+        <div style="padding: 5px 0">
+            @if ($filter["association"] == "المدينة")
+            <img src="{{ public_path('assets/images/headers/city_architecture.jpg') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "حطين")
+            <img src="{{ public_path('assets/images/headers/hetten.png') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "الكويتي")
+            <img src="{{ public_path('assets/images/headers/Kuwaiti.jpg') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "يتيم")
+            <img src="{{ public_path('assets/images/headers/orphan.jpg') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "صلاح")
+            <img src="{{ public_path('assets/images/headers/salah.png') }}" style="max-width: 100%;" alt="">
             @endif
-        </p>
+        </div>
     </htmlpageheader>
 
     <div lang="ar">
         <table class="table blueTable" style="margin-top: 20px">
             <thead>
                 <tr style="background: #ffffff; border:0;">
-                    <td colspan="1" style="border:0;">
-                        <img src="{{ public_path('assets/images/logo.png') }}" style="max-width: 80px;" alt="">
+                    <td colspan="6" style="border:0;">
+                        <p>
+                            <span>قسم الرواتب والموظفين</span> /
+                            <span>جدول حسابات الموظفين</span>
+                            @if (isset($filter))
+                                @foreach ($filedsEmpolyees as $name)
+                                    @if ($filter["$name"] != null)
+                                    / <span>{{ $filter["$name"] }}</span>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </p>
                     </td>
-                    <td colspan="4" align="center" style="color: #000;border:0;">
+                </tr>
+                <tr style="background: #ffffff; border:0;">
+                    <td colspan="6" align="center" style="color: #000;border:0;">
                         <p>بسم الله الرحمن الرحيم</p>
                         <h1>جدول حسابات الموظفين</h1>
                     </td>
-                    <td colspan="1" style="border:0;"></td>
                 </tr>
                 <tr class="table-bordered">
                     <th>#</th>

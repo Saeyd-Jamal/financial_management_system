@@ -126,22 +126,49 @@ class ReportController extends Controller
 
         return view('dashboard.report',compact("areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement",'month'));
     }
+
+
+
     public function export(Request $request){
         $time = Carbon::now();
         $employees = $this->filterEmployees($request->all())->get();
         if($request->report_type == 'employees'){
             if($request->export_type == 'view'){
-                $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()]);
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
                 return $pdf->stream();
             }
             if($request->export_type == 'export_pdf'){
-                $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()]);
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
                 return $pdf->download('سجلات الموظفين' . $time .'.pdf');
             }
-            // if($request->export_type == 'export_excel'){
-            //     $filename = 'سجلات الموظفين' . $time .'.xlsx';
-            //     return Excel::download(new EmployeesDataExport, $filename);
-            // }
+            if($request->export_type == 'export_excel'){
+                $filename = 'سجلات الموظفين' . $time .'.xlsx';
+                return Excel::download(new EmployeesDataExport, $filename);
+            }
         }
         // الرواتب
         if($request->report_type == 'salaries'){
@@ -215,7 +242,7 @@ class ReportController extends Controller
                 'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
             ];
 
-            if($request->export_type == 'view'){
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
                 $pdf = PDF::loadView('dashboard.pdf.salaries',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
                 [
                     'mode' => 'utf-8',
@@ -235,7 +262,7 @@ class ReportController extends Controller
                 ]);
                 return $pdf->download('سجلات رواتب الموظفين' . $time .'.pdf');
             }
-            if($request->export_type == 'export_excel'){
+            // if($request->export_type == 'export_excel'){
                 // $filename = 'سجلات رواتب الموظفين' . $time .'.xlsx';
                 // $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
                 // ->where('month', $month)
@@ -249,20 +276,44 @@ class ReportController extends Controller
                 // ->get();
                 // $headings = ['الاسم', 'مكان العمل', 'الراتب الاساسي', 'علاوة الأولاد', 'علاوة طبيعة العمل', 'علاوة إدارية', 'علاوة مؤهل علمي', 'المواصلات', 'بدل إضافي +-', 'علاوة أغراض راتب', 'إضافة بأثر رجعي', 'علاوة جوال', 'نهاية الخدمة', 'إجمالي الراتب', 'تأمين صحي', 'ض.دخل', 'إدخار 5%', 'قرض الجمعية', 'قرض الإدخار', 'قرض شيكل', 'مستحقات متأخرة', 'إجمالي الخصومات', 'صافي الراتب'];
                 // return Excel::download(new ModelExport($salaries,$headings), $filename);
-            }
+            // }
         }
 
         // حسابات الموظفين في البنوك
         if($request->report_type == 'accounts'){
             $accounts = BanksEmployees::whereIn('employee_id', $employees->pluck('id'))->get();
             // معاينة pdf
-            if($request->export_type == 'view'){
-                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()]);
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
                 return $pdf->stream();
             }
             // تحميل الملف المصدر
             if($request->export_type == 'export_pdf'){
-                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()]);
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
                 return $pdf->download('سجلات حسابات الموظفين في البنوك' . $time .'.pdf');
             }
         }
@@ -272,13 +323,37 @@ class ReportController extends Controller
             $totals = ReceivablesLoans::whereIn('employee_id', $employees->pluck('id'))->get();
 
             // معاينة pdf
-            if($request->export_type == 'view'){
-                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()]);
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
                 return $pdf->stream();
             }
             // تحميل الملف المصدر
             if($request->export_type == 'export_pdf'){
-                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()]);
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
                 return $pdf->download('سجلات لمستحقات وقروض الموظفين' . $time .'.pdf');
             }
         }
@@ -292,7 +367,7 @@ class ReportController extends Controller
                 ->get();
 
             // معاينة pdf
-            if($request->export_type == 'view'){
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
                 $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month],[],[
                     'mode' => 'utf-8',
                     'format' => 'A4-L',

@@ -420,7 +420,17 @@
             <thead>
                 <tr>
                     <td colspan="7">
-                        <img src="{{ public_path('assets/images/logo.png') }}" style="max-width: 80px;" alt="">
+                        @if ($filter["association"] == "المدينة")
+                        {{-- <img src="{{ public_path('assets/images/logos/city_architecture.jpg') }}" style="max-width: 80px%;" alt=""> --}}
+                        @elseif ($filter["association"] == "حطين")
+                        <img src="{{ public_path('assets/images/logos/hetten.jpg') }}" style="max-width: 80px%;" alt="">
+                        @elseif ($filter["association"] == "الكويتي")
+                        <img src="{{ public_path('assets/images/logos/Kuwaiti.jpg') }}" style="max-width: 80px%;" alt="">
+                        @elseif ($filter["association"] == "يتيم")
+                        <img src="{{ public_path('assets/images/logos/orphan.png') }}" style="max-width: 80px%;" alt="">
+                        @elseif ($filter["association"] == "صلاح")
+                        <img src="{{ public_path('assets/images/logos/salah.png') }}" style="max-width: 80px%;" alt="">
+                        @endif
                     </td>
                     <td colspan="8" align="center" style="color: #000;">
                         <p>بسم الله الرحمن الرحيم</p>
