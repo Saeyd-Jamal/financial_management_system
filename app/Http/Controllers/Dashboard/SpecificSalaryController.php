@@ -16,7 +16,7 @@ class SpecificSalaryController extends Controller
     protected $thisMonth;
 
     public function __construct(){
-        $this->thisMonth = Carbon::now()->format('Y-m');
+        $this->thisMonth = '2024-07' ; //Carbon::now()->format('Y-m')
     }
     /**
      * Display a listing of the resource.

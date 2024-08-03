@@ -26,18 +26,18 @@ class SalaryController extends Controller
     public function index()
     {
         $this->authorize('view', Salary::class);
+        $month  = "2024-07"; //Carbon::now()->format('Y-m')
         $salaries = Salary::paginate(10);
         $USD = Currency::where('code', 'USD')->first()->value;
         $btn_download_salary = null;
         $employess = Employee::all();
         foreach ($employess as $employee) {
-            $salary = Salary::where('employee_id', $employee->id)->where('month', Carbon::now()->format('Y-m'))->first();
+            $salary = Salary::where('employee_id', $employee->id)->where('month', $month)->first();
             if($salary == null){
                 $btn_download_salary = "active";
             }
         }
         $btn_delete_salary = $salaries->isNotEmpty() ? "active" : null;
-        $month = Carbon::now()->format('m');
         return view('dashboard.salaries.index', compact('salaries','btn_download_salary','btn_delete_salary','USD','month'));
     }
 
@@ -135,7 +135,7 @@ class SalaryController extends Controller
         try {
             $employees = Employee::get();
             foreach ($employees as $employee) {
-                AddSalaryEmployee::addSalary($employee);
+                AddSalaryEmployee::addSalary($employee,'2024-07');
             }
             DB::commit();
         }catch (\Exception $exception){
