@@ -21,6 +21,8 @@ class FixedEntriesController extends Controller
     use AuthorizesRequests;
     protected $thisYear;
     protected $thisMonth;
+    protected $monthNow;
+
 
     public function updateEntries($request,$fieldName,$fieldNameMonth) {
         if($request->{$fieldNameMonth} != ""){
@@ -69,6 +71,7 @@ class FixedEntriesController extends Controller
     public function __construct(){
         $this->thisYear = Carbon::now()->format('Y');
         $this->thisMonth = Carbon::now()->format('m');
+        $this->monthNow = Carbon::now()->format('Y-m');
     }
     /**
      * Display a listing of the resource.
@@ -81,11 +84,11 @@ class FixedEntriesController extends Controller
             $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->get();
             return $fixed_entries;
         }
-        $monthNow = Carbon::now()->format('Y-m');
-        $year = Carbon::now()->format('Y');
-        $month = Carbon::now()->format('m');
+        $year = $this->thisYear;
+        $month = $this->thisMonth;
+        $monthNow = $this->monthNow;
 
-        $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->get();
+        $fixed_entries = FixedEntries::with(['employee'])->where('month',$this->monthNow)->get();
         $employees = Employee::get();
         return view('dashboard.fixed_entries.viewForm', compact('fixed_entries','monthNow','employees','year','month'));
     }
@@ -173,10 +176,10 @@ class FixedEntriesController extends Controller
                 $this->updateEntries($request, $field, $field.'_months');
             }
         }
-        $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month',$this->monthNow)->first();
         if($salary != null){
             $employee = Employee::findOrFail($request->employee_id);
-            AddSalaryEmployee::addSalary($employee);
+            AddSalaryEmployee::addSalary($employee,$this->monthNow);
         }
     }
     // public Function
@@ -226,9 +229,9 @@ class FixedEntriesController extends Controller
     {
         $this->authorize('edit', FixedEntries::class);
         $employee = Employee::findOrFail($id);
-        $salary = Salary::where('employee_id',$id)->where('month',Carbon::now()->format('Y-m'))->first();
+        $salary = Salary::where('employee_id',$id)->where('month',$this->monthNow)->first();
         if($salary != null){
-            AddSalaryEmployee::addSalary($employee);
+            AddSalaryEmployee::addSalary($employee,$this->monthNow);
         }
         return redirect()->route('fixed_entries.index')->with('success','تم تحديث الثوابت بنجاح');
     }
@@ -247,7 +250,7 @@ class FixedEntriesController extends Controller
 
     // others Functions
     public function getFixedEntriesData(Request $request){
-        $fixed_entrie = FixedEntries::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
+        $fixed_entrie = FixedEntries::where('employee_id',$request->employee_id)->where('month',$this->monthNow)->first();
         if($fixed_entrie != null){
             return [
                 'link_edit_fixed_entries' => route('fixed_entries.edit',$request->employee_id),
@@ -276,7 +279,7 @@ class FixedEntriesController extends Controller
     }
 
     public function getModalForm(Request $request){
-        $year = Carbon::now()->format('Y');
+        $year = $this->thisYear;
         $type =  $request->post('type');
         $employee_id =  $request->post('employee_id');
 
@@ -309,7 +312,7 @@ class FixedEntriesController extends Controller
     }
 
     public function getModalFormLoan(Request $request){
-        $year = Carbon::now()->format('Y');
+        $year = $this->thisYear;
         $type =  $request->post('type');
         $employee_id =  $request->post('employee_id');
 

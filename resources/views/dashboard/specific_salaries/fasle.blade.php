@@ -18,6 +18,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>اسم الموظف</th>
+                                <th>مكان العمل</th>
                                 <th>الراتب</th>
                             </tr>
                         </thead>
@@ -43,6 +44,7 @@
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$employee->name}}</td>
+                                    <td>{{$employee->workData->workplace}}</td>
                                     <td>
                                         <div class="input-group">
                                             <x-form.input type="number" name="salaries[{{$employee->id}}]" value="{{$employee->specificSalaries()->where('month', $month)->first()->salary ?? 0}}" min="0" class="d-inline" placeholder="0."/>

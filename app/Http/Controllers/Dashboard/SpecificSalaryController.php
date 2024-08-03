@@ -13,13 +13,17 @@ use Illuminate\Support\Facades\DB;
 
 class SpecificSalaryController extends Controller
 {
+    protected $thisMonth;
+
+    public function __construct(){
+        $this->thisMonth = Carbon::now()->format('Y-m');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $employees = Employee::paginate();
-
         return view('dashboard.specific_salaries.index', compact('employees'));
     }
 
@@ -28,13 +32,13 @@ class SpecificSalaryController extends Controller
         $employees = Employee::whereHas('workData', function ($query) {
             $query->where('type_appointment', 'نسبة');
         })->get();
-        $month = Carbon::now()->format('Y-m');
+        $month = $this->thisMonth;
         return view('dashboard.specific_salaries.ratio', compact('employees','month'));
     }
     public function ratioCreate(Request $request){
         DB::beginTransaction();
         try {
-            if(Carbon::parse($request->month)->format('m') < Carbon::now()->format('m')){
+            if(Carbon::parse($request->month)->format('m') < Carbon::parse($this->thisMonth)->format('m')){
                 return redirect()->back()->with('danger', 'لا يمكن اضافة الراتب الخاص للشهر السابق');
             }
             $salaries = $request->post('salaries');
@@ -58,13 +62,13 @@ class SpecificSalaryController extends Controller
         $employees = Employee::whereHas('workData', function ($query) {
             $query->where('type_appointment', 'خاص');
         })->get();
-        $month = Carbon::now()->format('Y-m');
+        $month = $this->thisMonth;
         return view('dashboard.specific_salaries.private', compact('employees','month'));
     }
     public function privateCreate(Request $request){
         DB::beginTransaction();
         try {
-            if(Carbon::parse($request->month)->format('m') < Carbon::now()->format('m')){
+            if(Carbon::parse($request->month)->format('m') < Carbon::parse($this->thisMonth)->format('m')){
                 return redirect()->back()->with('danger', 'لا يمكن اضافة الراتب الخاص للشهر السابق');
             }
             $salaries = $request->post('salaries');
@@ -88,13 +92,13 @@ class SpecificSalaryController extends Controller
         $employees = Employee::whereHas('workData', function ($query) {
             $query->where('type_appointment', 'رياض');
         })->get();
-        $month = Carbon::now()->format('Y-m');
+        $month = $this->thisMonth;
         return view('dashboard.specific_salaries.riyadh', compact('employees','month'));
     }
     public function riyadhCreate(Request $request){
         DB::beginTransaction();
         try {
-            if(Carbon::parse($request->month)->format('m') < Carbon::now()->format('m')){
+            if(Carbon::parse($request->month)->format('m') < Carbon::parse($this->thisMonth)->format('m')){
                 return redirect()->back()->with('danger', 'لا يمكن اضافة الراتب المحدد للشهر السابق');
             }
             $salaries = $request->post('salaries');
@@ -118,13 +122,13 @@ class SpecificSalaryController extends Controller
         $employees = Employee::whereHas('workData', function ($query) {
             $query->where('type_appointment', 'فصلي');
         })->get();
-        $month = Carbon::now()->format('Y-m');
+        $month = $this->thisMonth;
         return view('dashboard.specific_salaries.fasle', compact('employees','month'));
     }
     public function fasleCreate(Request $request){
         DB::beginTransaction();
         try {
-            if(Carbon::parse($request->month)->format('m') < Carbon::now()->format('m')){
+            if(Carbon::parse($request->month)->format('m') < Carbon::parse($this->thisMonth)->format('m')){
                 return redirect()->back()->with('danger', 'لا يمكن اضافة الراتب المحدد للشهر السابق');
             }
             $salaries = $request->post('salaries');
@@ -148,13 +152,13 @@ class SpecificSalaryController extends Controller
         $employees = Employee::whereHas('workData', function ($query) {
             $query->where('type_appointment', 'مؤقت');
         })->get();
-        $month = Carbon::now()->format('Y-m');
+        $month = $this->thisMonth;
         return view('dashboard.specific_salaries.interim', compact('employees','month'));
     }
     public function interimCreate(Request $request){
         DB::beginTransaction();
         try {
-            if(Carbon::parse($request->month)->format('m') < Carbon::now()->format('m')){
+            if(Carbon::parse($request->month)->format('m') < Carbon::parse($this->thisMonth)->format('m')){
                 return redirect()->back()->with('danger', 'لا يمكن اضافة الراتب المحدد للشهر السابق');
             }
             $salaries = $request->post('salaries');
@@ -179,13 +183,13 @@ class SpecificSalaryController extends Controller
         $employees = Employee::whereHas('workData', function ($query) {
             $query->where('type_appointment', 'يومي');
         })->get();
-        $month = Carbon::now()->format('Y-m');
+        $month = $this->thisMonth;
         return view('dashboard.specific_salaries.daily', compact('employees','month'));
     }
     public function dailyCreate(Request $request){
         DB::beginTransaction();
         try {
-            if(Carbon::parse($request->month)->format('m') < Carbon::now()->format('m')){
+            if(Carbon::parse($request->month)->format('m') < Carbon::parse($this->thisMonth)->format('m')){
                 return redirect()->back()->with('danger', 'لا يمكن اضافة الراتب المحدد للشهر السابق');
             }
             $salaries = $request->post('salaries');

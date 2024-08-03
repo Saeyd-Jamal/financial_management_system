@@ -15,21 +15,13 @@
                     <a class="btn btn-danger" href="{{route('salaries.trashed')}}">
                         <i class="fe fe-trash"></i>
                     </a> --}}
-                    @can('export', 'App\\Models\Salary')
-                    <form action="{{route('salaries.view_pdf')}}" method="post" class="d-inline" target="_blank">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fe fe-printer"></i>
-                        </button>
-                    </form>
-                    @endcan
                     @can('createAll', 'App\\Models\Salary')
                     @if ($btn_download_salary == "active")
                         <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
                             @csrf
                             <button type="submit" class="btn btn-warning">
                                 <i class="fe fe-activity"></i>
-                                <span>تحميل جميع الرواتب</span>
+                                <span>تحميل جميع الرواتب لشهر {{$month}}</span>
                             </button>
                         </form>
                     @endif

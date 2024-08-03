@@ -20,12 +20,8 @@ class AddSalaryEmployee{
         //
     }
 
-    public static function addSalary($employee)
+    public static function addSalary($employee,$month = Carbon::now()->format('Y-m'))
     {
-        // الشهر الحالي
-        $thisMonth = Carbon::now()->format('m');
-        // السنة الحالية
-        $thisYear = Carbon::now()->format('Y');
         $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
         // مزدوج الوظيفة
         $dual_function = $employee->dual_function;
@@ -60,7 +56,7 @@ class AddSalaryEmployee{
             $branch_number = Bank::find($account_default->bank_id)->first()->id;
             $account_number = $account_default->id;
         }catch (\Exception $e) {
-            return redirect()->back()->with('danger', 'حذث هنالك خطأ في تحديد حساب البنك يرجى التأكد من أن جميع الموظفين لديهم حساب واحد');
+            return redirect()->back()->with('danger', 'حذث هنالك خطأ في تحديد حساب البنك يرجى التأكد من أن جميع الموظفين لديهم حساب واحد على الاقل');
         }
         if($employee->workData->type_appointment == 'مثبت'){
             // مثبتين
@@ -88,11 +84,16 @@ class AddSalaryEmployee{
 
             $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
         }else{
-            $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$thisYear.'-'.$thisMonth)->first()->salary ?? 0;
+            $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
+            if($secondary_salary == null || $secondary_salary == 0){
+                return redirect()->back()->with('danger', 'حذث هنالك خطأ في تنزيل الراتب لأحد الموظفين  ويكون السبب في عدم تحديد الراتب لهذا الشهر');
+            }else{
+                $secondary_salary = $secondary_salary->salary;
+            }
         }
 
         // المدخلات الثابتة
-        $fixedEntries = $employee->fixedEntries->where('month',$thisYear.'-'.$thisMonth)->first();
+        $fixedEntries = $employee->fixedEntries->where('month',$month)->first();
 
         $administrative_allowance = ($fixedEntries != null) ? $fixedEntries->administrative_allowance : 0;
         $scientific_qualification_allowance = ($fixedEntries != null) ? $fixedEntries->scientific_qualification_allowance : 0;
@@ -165,7 +166,7 @@ class AddSalaryEmployee{
         try{
             Salary::updateOrCreate([
                 'employee_id' => $employee->id,
-                'month' => ($thisYear.'-'.$thisMonth),
+                'month' => ($month),
             ],[
                 'percentage_allowance' => $percentage_allowance,
                 'initial_salary' => $initial_salary,

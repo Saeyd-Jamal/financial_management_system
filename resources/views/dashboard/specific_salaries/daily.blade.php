@@ -23,6 +23,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>اسم الموظف</th>
+                                <th>مكان العمل</th>
                                 <th>عدد الأيام</th>
                                 <th>تكلفة اليوم</th>
                                 <th>الراتب</th>
@@ -50,6 +51,7 @@
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$employee->name}}</td>
+                                    <td>{{$employee->workData->workplace}}</td>
                                     <td>
                                         <x-form.input type="number" class="d-inline daily_fields" data-id="{{$employee->id}}" name="number_of_days[{{$employee->id}}]"  data-name="number_of_days" value="{{$employee->specificSalaries()->where('month', $month)->first()->number_of_days ?? 0}}" min="0" placeholder="0."/>
                                     </td>
