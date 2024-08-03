@@ -56,7 +56,7 @@
                                 <tbody id="fixed_entries_table">
                                     @foreach ($fixed_entries as $fixed_entrie)
                                     <tr class="fixed_select" data-id="{{$fixed_entrie->id}}">
-                                        <td>{{$fixed_entrie->employee->id}}</td>
+                                        <td>{{$loop->iteration}}</td>
                                         <td>{{$fixed_entrie->employee->name}}</td>
                                         <td>{{$fixed_entrie->administrative_allowance}}</td>
                                         <td>{{$fixed_entrie->scientific_qualification_allowance}}</td>

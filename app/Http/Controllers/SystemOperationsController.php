@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 
 class SystemOperationsController extends Controller
 {
-
-
     public function createBackup()
     {
         $database = env('DB_DATABASE');
@@ -16,11 +14,15 @@ class SystemOperationsController extends Controller
         $password = env('DB_PASSWORD');
         $host = env('DB_HOST');
         $backupFileName = $database . '_' . Carbon::now()->format('Y-m-d_H-i-s') . '.sql';
-        $backupFilePath = storage_path('app/' . $backupFileName);
+        $backupFilePath = storage_path('app/backups/' . $backupFileName);
 
         $command = "mysqldump --user={$username} --password={$password} --host={$host} {$database} > {$backupFilePath}";
 
-        $output = null;
+        // code in the win server
+        // $backupFilePath = storage_path('app\backups\financial_management_system_' . $backupFileName);
+        // $command = 'D:\xampp\mysql\bin\mysqldump.exe --user='. $username .' --password='. $password .' --host=' . $host .' '. $database .' >'. $backupFilePath;
+
+        $output = array();
         $result = null;
         exec($command, $output, $result);
 

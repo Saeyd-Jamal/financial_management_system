@@ -11,7 +11,6 @@
             },
             success: function (response) {
                 $("#fixed_entries_table").empty();
-                response = response['data'];
                 if (response.length != 0) {
                     for (let index = 0; index < response.length; index++) {
                         $("#fixed_entries_table").append(`

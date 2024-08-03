@@ -53,6 +53,10 @@
             <h3 class="h5">تصنيف الموظفين حسب المؤهلات العلمية</h3>
             {!! $chartEmployeesScientificQualification->render() !!}
         </div>
+        <div class="shadow p-3 mb-5 bg-white rounded col-md-6">
+            <h3 class="h5">تصنيف الموظفين حسب التعين</h3>
+            {!! $chartLineTypeAppointment->render() !!}
+        </div>
         <div class="col-md-3">
             <div class="card shadow">
                 <div class="card-body">

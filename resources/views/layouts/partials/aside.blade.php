@@ -11,13 +11,12 @@
     </a>
     <nav class="vertnav navbar navbar-light">
         <!-- nav bar -->
-        <div class="w-100 mb-4 d-flex">
+        <div class="w-100 mb-4 d-flex  flex-wrap justify-content-center ">
             <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{{ route('home') }}">
                 <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 50%">
-                <h1 class="h3 mt-2">{{ config('app.name') }}</h1>
             </a>
+            <h1 class="h3 mt-2 nav-heading">{{ config('app.name') }}</h1>
         </div>
-
         @can('view','App\\Models\Salary')
         <p class="text-muted nav-heading mt-4 mb-1">
             <span>المالية</span>

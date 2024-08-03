@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\CreateBackup;
 use App\Jobs\CreateSalary;
 use App\Models\Employee;
+use App\Models\WorkData;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -71,8 +72,37 @@ class HomeController extends Controller
             ])
             ->options([]);
 
+        // تصنيف الموظفين حسب المؤهل العلمي
+        $typeAppointment = WorkData::select('type_appointment')->distinct()->pluck('type_appointment')->toArray();
+        $employeesPerTypeAppointment = collect($typeAppointment)->map(function ($typeAppointment) {
+            return [
+                "count" => WorkData::where("type_appointment", "=", $typeAppointment)->count(),
+                'name' => $typeAppointment
+            ];
+        });
+        $employeesPerTypeAppointment = $employeesPerTypeAppointment->pluck('count')->toArray();
+        $chartLineTypeAppointment = app()->chartjs
+                    ->name('lineChartTest')
+                    ->type('line')
+                    ->size(['width' => 400, 'height' => 200])
+                    ->labels($typeAppointment)
+                    ->datasets([
+                        [
+                            "label" => "عدد الموظفين حسب التعين",
+                            'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                            'borderColor' => "rgba(38, 185, 154, 0.7)",
+                            "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                            "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                            "pointHoverBackgroundColor" => "#fff",
+                            "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                            "data" => $employeesPerTypeAppointment,
+                            "fill" => false,
+                        ],
+                    ])
+                    ->options([]);
+
         $countEmployees = Employee::count();
-        return view('dashboard.index', compact('chartEmployeesArea','chartEmployeesScientificQualification','countEmployees'));
+        return view('dashboard.index', compact('chartEmployeesArea','chartEmployeesScientificQualification','chartLineTypeAppointment','countEmployees'));
     }
 
 }

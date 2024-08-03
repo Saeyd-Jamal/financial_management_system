@@ -82,27 +82,30 @@ class FixedEntriesController extends Controller
             return $fixed_entries;
         }
         $monthNow = Carbon::now()->format('Y-m');
+        $year = Carbon::now()->format('Y');
+        $month = Carbon::now()->format('m');
 
         $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->get();
         $employees = Employee::get();
-
-        return view('dashboard.fixed_entries.index', compact('fixed_entries','monthNow','employees'));
+        return view('dashboard.fixed_entries.viewForm', compact('fixed_entries','monthNow','employees','year','month'));
     }
 
-    public function viewForm(Request $request)
-    {
-        $this->authorize('edit', FixedEntries::class);
-        // تغير الشهر
-        if($request->monthChange == true){
-            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->get();
-            return $fixed_entries;
-        }
-        $monthNow = Carbon::now()->format('Y-m');
+    // public function viewForm(Request $request)
+    // {
+    //     $this->authorize('edit', FixedEntries::class);
+    //     // تغير الشهر
+    //     if($request->monthChange == true){
+    //         $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->get();
+    //         return $fixed_entries;
+    //     }
+    //     $monthNow = Carbon::now()->format('Y-m');
+    //     $year = Carbon::now()->format('Y');
+    //     $month = Carbon::now()->format('m');
 
-        $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->get();
-        $employees = Employee::get();
-        return view('dashboard.fixed_entries.viewForm', compact('employees','fixed_entries','monthNow'));
-    }
+    //     $fixed_entries = FixedEntries::with(['employee'])->where('month',$monthNow)->get();
+    //     $employees = Employee::get();
+    //     return view('dashboard.fixed_entries.viewForm', compact('employees','fixed_entries','monthNow','year','month'));
+    // }
 
     /**
      * Show the form for creating a new resource.
