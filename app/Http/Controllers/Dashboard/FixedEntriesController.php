@@ -24,6 +24,12 @@ class FixedEntriesController extends Controller
     protected $monthNow;
 
 
+
+    public function __construct(){
+        $this->thisYear = Carbon::now()->format('Y');
+        $this->thisMonth = Carbon::now()->format('m');
+        $this->monthNow = Carbon::now()->format('Y-m');
+    }
     public function updateEntries($request,$fieldName,$fieldNameMonth) {
         if($request->{$fieldNameMonth} != ""){
             for($i=1;$i<=12;$i++){
@@ -67,11 +73,6 @@ class FixedEntriesController extends Controller
                 }
             }
         }
-    }
-    public function __construct(){
-        $this->thisYear = Carbon::now()->format('Y');
-        $this->thisMonth = Carbon::now()->format('m');
-        $this->monthNow = Carbon::now()->format('Y-m');
     }
     /**
      * Display a listing of the resource.
