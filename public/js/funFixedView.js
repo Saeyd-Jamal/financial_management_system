@@ -2,8 +2,8 @@
 // استخدم كائن Date للحصول على التاريخ الحالي
 let currentDate = new Date();
 // احصل على الشهر (بالتنسيق من 0 إلى 11، حيث يكون يناير هو الشهر 0)
-var currentMonth = currentDate.getMonth() +1;
-
+var currentMonth = currentDate.getMonth() + 1;
+var currentMonth = 7;
 // حقل قرض الجمعية
 let association_loan_months_total = 0;
 let association_loan_months;
