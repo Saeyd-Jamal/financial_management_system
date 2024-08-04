@@ -112,4 +112,33 @@
             </div> <!-- end section -->
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
+    <!-- Modal -->'
+    @if (session()->has('danger'))
+    <div class="modal fade" id="logModal" tabindex="-1" role="dialog" aria-labelledby="logModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logModalLongTitle">أخطاء حدتث في معالجة الراتب</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if(is_array(session('danger')))
+                <ul class="list-group">
+                    @foreach(session('danger') as $error)
+                        <li class="list-group-item">{{ $error }}</li>
+                    @endforeach
+                </ul>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    @endif
+
 </x-front-layout>

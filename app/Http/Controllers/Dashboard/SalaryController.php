@@ -8,14 +8,17 @@ use App\Http\Requests\SalaryRequest;
 use App\Models\BanksEmployees;
 use App\Models\Currency;
 use App\Models\Employee;
+use App\Models\LogRecord;
 use App\Models\ReceivablesLoans;
 use App\Models\Salary;
+use Exception;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
+use Illuminate\Support\Facades\Log;
 
 class SalaryController extends Controller
 {
@@ -134,16 +137,37 @@ class SalaryController extends Controller
         DB::beginTransaction();
         try {
             $employees = Employee::get();
+            $logRecords = [];
             foreach ($employees as $employee) {
-                AddSalaryEmployee::addSalary($employee,'2024-07');
+                try{
+                    LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$employee->id")->delete();
+                    AddSalaryEmployee::addSalary($employee,'2024-07');
+                }catch(Exception $e){
+                    // LogRecord::create([
+                    //     'type' => 'errorSalary',
+                    //     'related_id' => "employee_$employee->id",
+                    //     'description' => 'خطأ في معالجة راتب الموظف : ' . $employee->name . '. الخطأ: ' . $e->getMessage(),
+                    // ]);
+                }
             }
+            $logRecords = LogRecord::where('type', 'errorSalary')->get()->pluck('description')->toArray();
+            // الحصول على بداية ونهاية الشهر السابق
+            $startOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
+            $endOfPreviousMonth = Carbon::now()->subMonth()->endOfMonth();
+
+            // العثور على جميع السجلات التي تم إنشاؤها في الشهر السابق
+            DB::table('log_records')
+                        ->where('type', 'errorSalary')
+                        ->whereBetween('created_at', [$startOfPreviousMonth, $endOfPreviousMonth])
+                        ->delete();
+
             DB::commit();
-        }catch (\Exception $exception){
+        }catch (Exception $exception){
             DB::rollBack();
             throw $exception;
         }
         return redirect()->route('salaries.index')->with('success', 'تم اضافة الراتب لجميع الموظفين للشهر الحالي')
-        ->with('danger', 'تم حذف الراتب لجميع الموظفين للشهر الحالي');
+                ->with('danger', $logRecords);
     }
     // Create All Salaries
     public function deleteAllSalaries(){
@@ -164,12 +188,13 @@ class SalaryController extends Controller
                     'total_savings' => DB::raw('total_savings - '.($fixedEntries->savings_loan ?? 0 + (($fixedEntries->savings_rate ?? 0 + $salary->termination_service ?? 0) / $USD ))),
                 ]);
                 $salary->forceDelete();
+                LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$salary->employee_id")->delete();
             }
             DB::commit();
         }catch (\Exception $exception){
             DB::rollBack();
             throw $exception;
         }
-        return redirect()->route('salaries.index')->with('danger', 'تم حذف الراتب لجميع الموظفين للشهر الحالي');
+        return redirect()->route('home')->with('danger', 'تم حذف الراتب لجميع الموظفين للشهر الحالي');
     }
 }

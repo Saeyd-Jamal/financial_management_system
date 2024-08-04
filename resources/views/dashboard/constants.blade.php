@@ -17,6 +17,12 @@
                 aria-controls="advance_payment">
             مبلغ السلفة
         </button>
+        <button class="btn btn-info m-2"
+                type="button" data-toggle="collapse"
+                data-target="#state_effectiveness" aria-expanded="false"
+                aria-controls="state_effectiveness">
+            حالة الفعالية المجهزة
+        </button>
         <hr class="border border-danger border-2 opacity-50 w-100">
     </div>
 
@@ -68,6 +74,48 @@
                 <button class="btn btn-success" type="submit">
                     <i class="fe fe-check"></i>
                 </button>
+            </div>
+        </form>
+        <hr class="border border-danger border-2 opacity-50 w-100">
+    </div>
+    <div class="collapse multi-collapse" id="state_effectiveness">
+        <form action="{{ route('constants.store') }}" method="post">
+            @csrf
+            <div class="row p-3">
+                <div class="form-group m-0 col-12 d-flex justify-content-between align-items-end">
+                    <label for="state_effectivenessEmployees">حالة الفعالية للموظفين</label>
+                    <select class="custom-select" id="state_effectivenessEmployees" name="state_effectiveness">
+                        <option selected>عرض القيم المتوفرة</option>
+                        @foreach ($state_effectivenessEmployees as $state_effectivenes)
+                            <option value="{{$state_effectivenes}}">{{$state_effectivenes}}</option>
+                        @endforeach
+                    </select>
+                    <button class="btn btn-success" type="submit">
+                        <i class="fe fe-check"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form action="{{ route('constants.destroy') }}" method="post">
+            @csrf
+            @method('delete')
+            <div class="row p-3">
+                <div class="form-group m-0 col-12 d-flex justify-content-between align-items-end">
+                    <div class="input-group">
+                        <label for="state_effectiveness">حالة الفعالية المحدد لها الراتب</label>
+                        <select class="custom-select" id="state_effectiveness" name="state_effectiveness">
+                            <option selected>عرض القيم المتوفرة</option>
+                            @foreach ($state_effectiveness as $state_effectiveness)
+                                <option value="{{$state_effectiveness['id']}}">{{$state_effectiveness['value']}}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-danger" type="submit">
+                                <i class="fe fe-delete fe-30"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
         <hr class="border border-danger border-2 opacity-50 w-100">

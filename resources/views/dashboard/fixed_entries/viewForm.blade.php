@@ -88,11 +88,16 @@
                                     <tr style="white-space: nowrap;">
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$employee->name}}</td>
+                                        <style>
+                                            button{
+                                                border: 0;
+                                                background: transparent;
+                                            }
+                                        </style>
                                         @foreach ($fields as $name => $label)
                                             <td>
                                                 <div class="input-group-prepend">
-                                                    <button class="btn btn-outline-secondary openModal" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}">
-                                                        {{-- <i class="fe fe-maximize"></i> --}}
+                                                    <button class="btn btn-outline-secondary openModal" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
                                                         {{$controller->getFixedEntriesFialds($employee->id,$year,$month,$name)}}
                                                     </button>
                                                 </div>
@@ -102,8 +107,7 @@
                                         @foreach ($fieldsLoan as $name => $label)
                                             <td>
                                                 <div class="input-group-prepend">
-                                                    <button class="btn btn-outline-secondary openModalLoan" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}">
-                                                        {{-- <i class="fe fe-maximize"></i> --}}
+                                                    <button class="btn btn-outline-secondary openModalLoan" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
                                                         {{$controller->getFixedEntriesFialds($employee->id,$year,$month,$name)}}
                                                     </button>
                                                 </div>

@@ -38,6 +38,10 @@ class Salary extends Model
         'tax',
         'exemptions',
         'amount_tax',
+        'savings_loan',
+        'shekel_loan',
+        'association_loan',
+        'savings_rate',
     ];
 
     // Relationships

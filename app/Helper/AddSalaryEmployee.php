@@ -6,6 +6,7 @@ use Alkoumi\LaravelArabicNumbers\Numbers;
 use App\Models\Bank;
 use App\Models\Constant;
 use App\Models\Currency;
+use App\Models\LogRecord;
 use App\Models\ReceivablesLoans;
 use App\Models\Salary;
 use App\Models\SalaryScale;
@@ -20,9 +21,26 @@ class AddSalaryEmployee{
         //
     }
 
-    public static function addSalary($employee,$month = Carbon::now()->format('Y-m'))
+    public static function addSalary($employee,$month = null)
     {
+
+        // قيم ثابتة تجلب من الخارج
+        if($month == null){
+            $month = Carbon::now()->format('Y-m');
+        }
+        $state_effectiveness = Constant::where('type_constant','state_effectiveness')->get()? Constant::where('type_constant','state_effectiveness')->get()->pluck('value')->toArray()  : [];
+
         $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
+
+        // موظف غير فعال ام لا
+        if(!in_array($employee->workData->state_effectiveness,$state_effectiveness)){
+            LogRecord::create([
+                'type' => 'errorSalary',
+                'related_id' => "employee_$employee->id",
+                'description' => 'الموظف : ' . $employee->name . ' . موظف غير فعال',
+            ]);
+            return;
+        }
         // مزدوج الوظيفة
         $dual_function = $employee->dual_function;
 
@@ -51,13 +69,18 @@ class AddSalaryEmployee{
                     $account_default = $bank->accounts->where('employee_id',$employee->id)->first();
                 }
             }
-
             $bank = Bank::find($account_default->bank_id)->first()->name;
             $branch_number = Bank::find($account_default->bank_id)->first()->id;
             $account_number = $account_default->id;
         }catch (\Exception $e) {
-            return redirect()->back()->with('danger', 'حذث هنالك خطأ في تحديد حساب البنك يرجى التأكد من أن جميع الموظفين لديهم حساب واحد على الاقل');
+            LogRecord::create([
+                'type' => 'errorSalary',
+                'related_id' => "employee_$employee->id",
+                'description' => 'الموظف : ' . $employee->name . ' . ليس لديه حساب بنكي فلم يتم نزول الراتب له',
+            ]);
+            return;
         }
+
         if($employee->workData->type_appointment == 'مثبت'){
             // مثبتين
             // الحسابات
@@ -86,7 +109,12 @@ class AddSalaryEmployee{
         }else{
             $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
             if($secondary_salary == null || $secondary_salary == 0){
-                return redirect()->back()->with('danger', 'حذث هنالك خطأ في تنزيل الراتب لأحد الموظفين  ويكون السبب في عدم تحديد الراتب لهذا الشهر');
+                LogRecord::create([
+                    'type' => 'errorSalary',
+                    'related_id' => "employee_$employee->id",
+                    'description' => 'الموظف : ' . $employee->name . ' . لم يتم تحديد الراتب له',
+                ]);
+                return;
             }else{
                 $secondary_salary = $secondary_salary->salary;
             }
@@ -164,6 +192,7 @@ class AddSalaryEmployee{
 
         DB::beginTransaction();
         try{
+            $salaryOld = Salary::where('employee_id',$employee->id)->where('month',$month)->first();
             Salary::updateOrCreate([
                 'employee_id' => $employee->id,
                 'month' => ($month),
@@ -189,16 +218,67 @@ class AddSalaryEmployee{
                 'tax' => $tax,
                 'exemptions' => $exemptions,
                 'amount_tax' => $amount_tax,
+                // حقول ثابتة للتحقق
+                'savings_loan' => $savings_loan,
+                'shekel_loan' => $shekel_loan,
+                'association_loan' => $association_loan,
+                'savings_rate' => $savings_rate,
             ]);
-            ReceivablesLoans::updateOrCreate([
-                'employee_id' => $employee->id,
-            ],[
-                'total_savings_loan' => DB::raw('total_savings_loan - '.($savings_loan)),
-                'total_shekel_loan' => DB::raw('total_shekel_loan - '.($shekel_loan)),
-                'total_association_loan' => DB::raw('total_association_loan - '.($association_loan)),
-                'total_receivables' => DB::raw('total_receivables + '.($late_receivables)),
-                'total_savings' => DB::raw('total_savings + '.($savings_loan + (($savings_rate + $termination_service) / $USD ))),
-            ]);
+            if($salaryOld == null){
+                dd("Task 0");
+                ReceivablesLoans::updateOrCreate([
+                    'employee_id' => $employee->id,
+                ],[
+                    'total_savings_loan' => DB::raw('total_savings_loan - '.($savings_loan)),
+                    'total_shekel_loan' => DB::raw('total_shekel_loan - '.($shekel_loan)),
+                    'total_association_loan' => DB::raw('total_association_loan - '.($association_loan)),
+                    'total_receivables' => DB::raw('total_receivables + '.($late_receivables)),
+                    'total_savings' => DB::raw('total_savings + '.($savings_loan + (($savings_rate + $termination_service) / $USD ))),
+                ]);
+            }
+            if($salaryOld != null){
+                //dd($salaryOld);
+                if(floatval($salaryOld->savings_loan) != $savings_loan){
+                    dd('Task 1',$employee->name,$salaryOld->total_savings_loan,$savings_loan);
+                    ReceivablesLoans::updateOrCreate([
+                        'employee_id' => $employee->id,
+                    ],[
+                        'total_savings_loan' => DB::raw('total_savings_loan + '.($salaryOld->total_savings_loan) .'-' . ($savings_loan)),
+                    ]);
+                }
+                if(floatval($salaryOld->shekel_loan) != $shekel_loan){
+                    dd('Task 2');
+                    ReceivablesLoans::updateOrCreate([
+                        'employee_id' => $employee->id,
+                    ],[
+                        'total_shekel_loan' => DB::raw('total_shekel_loan + '.($salaryOld->total_shekel_loan) .'-' . ($shekel_loan)),
+                    ]);
+                }
+                if(floatval($salaryOld->association_loan) != $association_loan){
+                    dd('Task 3');
+                    ReceivablesLoans::updateOrCreate([
+                        'employee_id' => $employee->id,
+                    ],[
+                        'total_association_loan' => DB::raw('total_association_loan + '.($salaryOld->total_association_loan) .'-' . ($association_loan)),
+                    ]);
+                }
+                if(number_format($salaryOld->late_receivables,0) != number_format($late_receivables,0)){
+                    dd($employee->name,number_format($salaryOld->late_receivables),number_format($late_receivables));
+                    ReceivablesLoans::updateOrCreate([
+                        'employee_id' => $employee->id,
+                    ],[
+                        'total_receivables' => DB::raw('total_receivables - '.($salaryOld->late_receivables) .'+' . ($late_receivables)),
+                    ]);
+                }
+                if(floatval($salaryOld->savings_loan) != $savings_loan || floatval($salaryOld->savings_rate) != $savings_rate || floatval($salaryOld->termination_service) != $termination_service){
+                    dd('Task 5');
+                    ReceivablesLoans::updateOrCreate([
+                        'employee_id' => $employee->id,
+                    ],[
+                        'total_savings' => DB::raw('total_savings - '.($salaryOld->savings_loan + (($salaryOld->savings_rate + $salaryOld->termination_service) / $USD )) .'+' . ($savings_loan + (($savings_rate + $termination_service) / $USD ))),
+                    ]);
+                }
+            }
             DB::commit();
         }catch(\Exception $e){
             DB::rollBack();

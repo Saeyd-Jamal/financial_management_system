@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Constant;
+use App\Models\WorkData;
 use Illuminate\Http\Request;
 
 class ConstantController extends Controller
@@ -13,20 +14,19 @@ class ConstantController extends Controller
      */
     public function index()
     {
-        
-        $advance_payment_rate = Constant::where('type_constant','advance_payment_rate')->first('value');
-        if($advance_payment_rate){$advance_payment_rate = $advance_payment_rate->value;}
+        $advance_payment_rate = Constant::where('type_constant','advance_payment_rate')->first('value') ? Constant::where('type_constant','advance_payment_rate')->first('value')->value : 0;
 
-        $advance_payment_permanent = Constant::where('type_constant','advance_payment_permanent')->first('value');
-        if($advance_payment_permanent){$advance_payment_permanent = $advance_payment_permanent->value;}
+        $advance_payment_permanent = Constant::where('type_constant','advance_payment_permanent')->first('value') ? Constant::where('type_constant','advance_payment_permanent')->first('value')->value : 0;
 
-        $advance_payment_non_permanent = Constant::where('type_constant','advance_payment_non_permanent')->first('value');
-        if($advance_payment_non_permanent){$advance_payment_non_permanent = $advance_payment_non_permanent->value;}
+        $advance_payment_non_permanent = Constant::where('type_constant','advance_payment_non_permanent')->first('value') ? Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value : 0;
 
-        $advance_payment_riyadh = Constant::where('type_constant','advance_payment_riyadh')->first('value');
-        if($advance_payment_riyadh){$advance_payment_riyadh = $advance_payment_riyadh->value;}
+        $advance_payment_riyadh = Constant::where('type_constant','advance_payment_riyadh')->first('value') ? Constant::where('type_constant','advance_payment_riyadh')->first('value')->value : 0;
+
+        $state_effectivenessEmployees = WorkData::select('state_effectiveness')->distinct()->pluck('state_effectiveness')->toArray();
+        $state_effectiveness = Constant::where('type_constant','state_effectiveness')->get()? Constant::where('type_constant','state_effectiveness')->get()->toArray()  : [];
+
         $constants = Constant::get();
-        return view('dashboard.constants',compact('constants','advance_payment_rate', 'advance_payment_permanent', 'advance_payment_non_permanent', 'advance_payment_riyadh'));
+        return view('dashboard.constants',compact('constants','advance_payment_rate', 'advance_payment_permanent', 'advance_payment_non_permanent', 'advance_payment_riyadh','state_effectivenessEmployees','state_effectiveness'));
     }
     /**
      * Store a newly created resource in storage.
@@ -34,59 +34,40 @@ class ConstantController extends Controller
     public function store(Request $request)
     {
         if($request->advance_payment_rate){
-            $advance_payment_rate = Constant::where('type_constant','=','advance_payment_rate')->first();
-            if($advance_payment_rate){
-                $advance_payment_rate->update([
-                    'value' => $request->advance_payment_rate,
-                ]);
-            }else{
-                Constant::create([
-                    'type_constant' => 'advance_payment_rate',
-                    'value' => $request->advance_payment_rate,
-                ]);
-            }
+            Constant::updateOrCreate([
+                'type_constant' => 'advance_payment_rate',
+            ],[
+                'value' => $request->advance_payment_rate,
+            ]);
         }
         if($request->advance_payment_permanent){
-            $advance_payment_permanent = Constant::where('type_constant','=','advance_payment_permanent')->first();
-            if($advance_payment_permanent){
-                $advance_payment_permanent->update([
-                    'value' => $request->advance_payment_permanent,
-                ]);
-            }else{
-                Constant::create([
-                    'type_constant' => 'advance_payment_permanent',
-                    'value' => $request->advance_payment_permanent,
-                ]);
-            }
+            Constant::updateOrCreate([
+                'type_constant' => 'advance_payment_permanent',
+            ],[
+                'value' => $request->advance_payment_permanent,
+            ]);
         }
         if($request->advance_payment_non_permanent){
-            $advance_payment_non_permanent = Constant::where('type_constant','=','advance_payment_non_permanent')->first();
-            if($advance_payment_non_permanent){
-                $advance_payment_non_permanent->update([
-                    'value' => $request->advance_payment_non_permanent,
-                ]);
-            }else{
-                Constant::create([
-                    'type_constant' => 'advance_payment_non_permanent',
-                    'value' => $request->advance_payment_non_permanent,
-                ]);
-            }
+            Constant::updateOrCreate([
+                'type_constant' => 'advance_payment_non_permanent',
+            ],[
+                'value' => $request->advance_payment_non_permanent,
+            ]);
         }
         if($request->advance_payment_riyadh){
-            $advance_payment_riyadh = Constant::where('type_constant','=','advance_payment_riyadh')->first();
-            if($advance_payment_riyadh){
-                $advance_payment_riyadh->update([
-                    'value' => $request->advance_payment_riyadh,
-                ]);
-                return redirect()->route('constants.index')->with('success','تم تعديل القيمة');
-            }else{
-                Constant::create([
-                    'type_constant' => 'advance_payment_riyadh',
-                    'value' => $request->advance_payment_riyadh,
-                ]);
-            }
-            return redirect()->route('constants.index')->with('success','تم إضافة القيمة بنجاح');
+            Constant::updateOrCreate([
+                'type_constant' => 'advance_payment_riyadh',
+            ],[
+                'value' => $request->advance_payment_riyadh,
+            ]);
         }
+        if($request->state_effectiveness){
+            Constant::create([
+                'type_constant' => 'state_effectiveness',
+                'value' => $request->state_effectiveness,
+            ]);
+        }
+        return redirect()->route('constants.index')->with('success','تم تحديث القيم');
     }
 
     /**
@@ -94,6 +75,9 @@ class ConstantController extends Controller
      */
     public function destroy(Request $request)
     {
-        //
+        if($request->state_effectiveness){
+            Constant::findOrFail($request->state_effectiveness)->delete();
+        }
+        return redirect()->route('constants.index')->with('danger','تم حذف القيمة المحددة');
     }
 }
