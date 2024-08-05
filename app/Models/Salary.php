@@ -49,8 +49,4 @@ class Salary extends Model
     {
         return $this->belongsTo(Employee::class,'employee_id');
     }
-    public function banks() :BelongsTo
-    {
-        return $this->belongsTo(Bank::class,'branch_number');
-    }
 }

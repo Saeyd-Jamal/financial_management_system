@@ -163,11 +163,13 @@
                     <label for="report_type">نوع الكشف</label>
                     <select class="custom-select" name="report_type" id="report_type" required>
                         <option  value="" disabled selected>حدد نوع الكشف</option>
+                        <optgroup label="الكشوفات الأساسية">
                         <option value="employees">كشف موظفين</option>
                         <option value="salaries">كشف الرواتب</option>
                         <option value="accounts">كشف حسابات البنك</option>
                         <option value="employees_totals">كشف الإجماليات</option>
                         <option value="employees_fixed">كشف الإدخالات الثابتة</option>
+                        <option value="bank" >كشف البنك</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
@@ -176,6 +178,17 @@
                         <option selected="" value="view">معاينة</option>
                         <option value="export_pdf">PDF</option>
                         <option value="export_excel">Excel</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" id="bankDiv" style="display: none;">
+                <div class="form-group col-md-3">
+                    <label for="bank">البنك</label>
+                    <select name="bank" id="bank" class="custom-select">
+                        <option value="" selected>حدد البنك المراد</option>
+                        @foreach ($banks as $bank)
+                            <option value="{{ $bank}}">{{ $bank }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -195,5 +208,7 @@
             </div>
         </form>
     </div>
-
+    @push('scripts')
+    <script src="{{asset('js/report.js')}}"></script>
+    @endpush
 </x-front-layout>

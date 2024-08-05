@@ -70,8 +70,8 @@ class AddSalaryEmployee{
                 }
             }
             $bank = Bank::find($account_default->bank_id)->first()->name;
-            $branch_number = Bank::find($account_default->bank_id)->first()->id;
-            $account_number = $account_default->id;
+            $branch_number = Bank::find($account_default->bank_id)->first()->branch_number;
+            $account_number = $account_default->account_number;
         }catch (\Exception $e) {
             LogRecord::create([
                 'type' => 'errorSalary',
@@ -225,7 +225,6 @@ class AddSalaryEmployee{
                 'savings_rate' => $savings_rate,
             ]);
             if($salaryOld == null){
-                dd("Task 0");
                 ReceivablesLoans::updateOrCreate([
                     'employee_id' => $employee->id,
                 ],[
@@ -237,9 +236,7 @@ class AddSalaryEmployee{
                 ]);
             }
             if($salaryOld != null){
-                //dd($salaryOld);
                 if(floatval($salaryOld->savings_loan) != $savings_loan){
-                    dd('Task 1',$employee->name,$salaryOld->total_savings_loan,$savings_loan);
                     ReceivablesLoans::updateOrCreate([
                         'employee_id' => $employee->id,
                     ],[
@@ -247,7 +244,6 @@ class AddSalaryEmployee{
                     ]);
                 }
                 if(floatval($salaryOld->shekel_loan) != $shekel_loan){
-                    dd('Task 2');
                     ReceivablesLoans::updateOrCreate([
                         'employee_id' => $employee->id,
                     ],[
@@ -255,7 +251,6 @@ class AddSalaryEmployee{
                     ]);
                 }
                 if(floatval($salaryOld->association_loan) != $association_loan){
-                    dd('Task 3');
                     ReceivablesLoans::updateOrCreate([
                         'employee_id' => $employee->id,
                     ],[
@@ -263,7 +258,6 @@ class AddSalaryEmployee{
                     ]);
                 }
                 if(number_format($salaryOld->late_receivables,0) != number_format($late_receivables,0)){
-                    dd($employee->name,number_format($salaryOld->late_receivables),number_format($late_receivables));
                     ReceivablesLoans::updateOrCreate([
                         'employee_id' => $employee->id,
                     ],[
@@ -271,7 +265,6 @@ class AddSalaryEmployee{
                     ]);
                 }
                 if(floatval($salaryOld->savings_loan) != $savings_loan || floatval($salaryOld->savings_rate) != $savings_rate || floatval($salaryOld->termination_service) != $termination_service){
-                    dd('Task 5');
                     ReceivablesLoans::updateOrCreate([
                         'employee_id' => $employee->id,
                     ],[

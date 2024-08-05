@@ -29,8 +29,8 @@ return new class extends Migration
             $table->integer('net_salary')->default(0)->comment('صافي الراتب');
             $table->string('amount_letters')->comment('المبلغ بالحروف');
             $table->string('bank')->comment('البنك');
-            $table->foreignId('branch_number')->nullable()->constrained('banks')->nullOnDelete();
-            $table->foreignId('account_number')->nullable()->constrained('banks_employees')->nullOnDelete();
+            $table->string('branch_number')->comment('رقم الفرع');
+            $table->string('account_number')->comment('رقم الحساب');
             $table->string('resident_exemption')->default(0)->comment('إعفاء مقيم');
             $table->decimal('annual_taxable_amount', 10, 2)->default(0)->comment('مبلغ الضريبة الخاضع السنوي');
             $table->decimal('tax', 10, 2)->default(0)->comment('الضريبة');

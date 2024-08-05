@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>جدول التعديلات الثابتة للموظفين</title>
+    <title>جدول رواتب الموظفين</title>
     <style>
         body {
             font-family: 'XBRiyaz', sans-serif;
@@ -34,8 +34,8 @@
             font-size: 13px;
         }
 
-        table.blueTable tr:nth-child(even) {
-            background: #D0E4F5;
+        table.blueTable tbody tr {
+            background: #ffffff;
         }
 
         table.blueTable thead {
@@ -109,91 +109,102 @@
         ];
     @endphp
     <htmlpageheader name="page-header">
-        <p>
-            <span>قسم المالية</span> /
-            <span>جدول التعديلات الثابتة للموظفين</span>
-            @if (isset($filter))
-                @foreach ($filedsEmpolyees as $name)
-                    @if ($filter["$name"] != null)
-                    / <span>{{ $filter["$name"] }}</span>
-                    @endif
-                @endforeach
+        <div style="padding: 5px 0">
+            @if ($filter["association"] == "المدينة")
+            <img src="{{ public_path('assets/images/headers/city_architecture.jpg') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "حطين")
+            <img src="{{ public_path('assets/images/headers/hetten.png') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "الكويتي")
+            <img src="{{ public_path('assets/images/headers/Kuwaiti.jpg') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "يتيم")
+            <img src="{{ public_path('assets/images/headers/orphan.jpg') }}" style="max-width: 100%;" alt="">
+            @elseif ($filter["association"] == "صلاح")
+            <img src="{{ public_path('assets/images/headers/salah.png') }}" style="max-width: 100%;" alt="">
             @endif
-        </p>
+        </div>
     </htmlpageheader>
 
     <div lang="ar">
         <table class="table blueTable" style="margin-top: 20px">
+            @php
+
+                $co = 10;
+                $coHead = 10;
+                $coTotal = 7;
+                if($filter["bank"] != null){
+                    $co = 9;
+                    $coHead = 7;
+                    $coTotal = 6;
+                }
+                if($filter["bank"] != null){
+                }
+            @endphp
             <thead>
                 <tr style="background: #ffffff; border:0;">
-                    <td colspan="4" style="border:0;">
-                        @if ($filter["association"] == "المدينة")
-                            عمارة المدينة
-                        @elseif ($filter["association"] == "حطين")
-                            مزرعة حطين
-                        @elseif ($filter["association"] == "الكويتي")
-                            المركز الكويتي للأشعة التخصصية
-                        @elseif ($filter["association"] == "يتيم")
-                            دار اليتيم الفلسطيني
-                        @elseif ($filter["association"] == "صلاح")
-                            جميعة الصلاح الإسلامية
-                        @endif
+                    <td colspan="{{$coHead}}" style="border:0;">
+                        <p>
+                            <span>قسم المالية</span>
+                            @if (isset($filter))
+                                @foreach ($filedsEmpolyees as $name)
+                                    @if ($filter["$name"] != null)
+                                    / <span>{{ $filter["$name"] }}</span>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </p>
                     </td>
-                    <td colspan="12" align="center" style="color: #000;border:0;">
+                    @if ($filter["bank"] != null)
+                    <td colspan="2">البنك : {{ $filter["bank"] }}</td>
+                    @endif
+                </tr>
+                <tr style="background: #ffffff; border:0;">
+                    <td colspan="{{$co}}" align="center" style="color: #000;border:0;">
                         <p>بسم الله الرحمن الرحيم</p>
-                        <h1>جدول التعديلات الثابتة للموظفين لشهر : {{$month}}</h1>
+                        <h1>رواتب شهر {{ $monthName }}</h1>
                     </td>
-                    <td colspan="4" style="border:0;"></td>
                 </tr>
                 <tr class="table-bordered">
                     <th>#</th>
-                    <th style="width: 150px">الاسم</th>
-                    <th>علاوة إدارية</th>
-                    <th>علاوة مؤهل علمي</th>
-                    <th>مواصلات</th>
-                    <th>بدل إضافي</th>
-                    <th>علاوة اغراض راتب</th>
-                    <th>إضافة بأثر رجعي</th>
-                    <th>علاوة جوال</th>
-                    <th>تأمين صحي</th>
-                    <th>ف.أوريدو</th>
-                    <th>قرض جمعية </th>
-                    <th>قرض الإدخار</th>
-                    <th>قرض اللجنة</th>
-                    <th>رسوم دراسية</th>
-                    <th>تبرعات</th>
-                    <th>خصم اللجنة</th>
-                    <th>خصومات الإخرى</th>
-                    <th>تبرعات للحركة</th>
-                    <th>إدخار 5%</th>
+                    <th>مكان العمل</th>
+                    @if ($filter["bank"] == null)
+                        <th>البنك</th>
+                    @endif
+                    <th>رقم الهوية</th>
+                    <th>السكن</th>
+                    <th>الاسم</th>
+                    <th>رقم الحساب</th>
+                    <th>رقم الفرع</th>
+                    <th>صافي الراتب</th>
+                    <th style="width: 80px">التوقيع</th>
                 </tr>
             </thead>
             <tbody class="table  table-bordered">
-                @foreach ($fixed_entries as $fixed_entrie)
+                @foreach ($salaries as $salary)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{$fixed_entrie->employee->name}}</td>
-                        <td>{{$fixed_entrie->administrative_allowance}}</td>
-                        <td>{{$fixed_entrie->scientific_qualification_allowance}}</td>
-                        <td>{{$fixed_entrie->transport}}</td>
-                        <td>{{$fixed_entrie->extra_allowance}}</td>
-                        <td>{{$fixed_entrie->salary_allowance}}</td>
-                        <td>{{$fixed_entrie->ex_addition}}</td>
-                        <td>{{$fixed_entrie->mobile_allowance}}</td>
-                        <td>{{$fixed_entrie->health_insurance}}</td>
-                        <td>{{$fixed_entrie->f_Oredo}}</td>
-                        <td>{{$fixed_entrie->association_loan}}</td>
-                        <td>{{$fixed_entrie->savings_loan}}</td>
-                        <td>{{$fixed_entrie->shekel_loan}}</td>
-                        <td>{{$fixed_entrie->tuition_fees}}</td>
-                        <td>{{$fixed_entrie->voluntary_contributions}}</td>
-                        <td>{{$fixed_entrie->paradise_discount}}</td>
-                        <td>{{$fixed_entrie->other_discounts}}</td>
-                        <td>{{$fixed_entrie->proportion_voluntary}}</td>
-                        <td>{{$fixed_entrie->savings_rate}}</td>
+                        <td>{{ $salary->employee->workData->workplace }}</td>
+                        @if ($filter["bank"] == null)
+                        <td>{{ $salary->bank }}</td>
+                        @endif
+                        <td>{{ $salary->employee->employee_id }}</td>
+                        <td>{{ $salary->employee->area }}</td>
+                        <td>{{ $salary->employee->name }}</td>
+                        <td>{{ $salary->account_number }}</td>
+                        <td>{{ $salary->branch_number }}</td>
+                        <td>{{ $salary->net_salary }}</td>
+                        <td></td>
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr class="table-bordered"  style="color: #000; background-color: #d2d2d2;">
+                    <td>00</td>
+                    <td colspan="{{$coTotal}}">الإجمالي الكلي</td>
+                    <td>{{$salariesTotalArray['net_salary']}}</td>
+                    <td></td>
+                </tr>
+
+            </tfoot>
         </table>
         <htmlpagefooter name="page-footer">
             <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">

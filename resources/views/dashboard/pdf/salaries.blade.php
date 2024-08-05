@@ -402,7 +402,7 @@
     @endphp
     <htmlpageheader name="page-header">
         <p>
-            <span>قسم الرواتب والموظفين</span> /
+            <span>قسم المالية</span> /
             <span>الرواتب الشهرية</span>
             @if (isset($filter))
                 @foreach ($filedsEmpolyees as $name)
@@ -421,15 +421,15 @@
                 <tr>
                     <td colspan="7">
                         @if ($filter["association"] == "المدينة")
-                        {{-- <img src="{{ public_path('assets/images/logos/city_architecture.jpg') }}" style="max-width: 80px%;" alt=""> --}}
+                            عمارة المدينة
                         @elseif ($filter["association"] == "حطين")
-                        <img src="{{ public_path('assets/images/logos/hetten.jpg') }}" style="max-width: 80px%;" alt="">
+                            مزرعة حطين
                         @elseif ($filter["association"] == "الكويتي")
-                        <img src="{{ public_path('assets/images/logos/Kuwaiti.jpg') }}" style="max-width: 80px%;" alt="">
+                            المركز الكويتي للأشعة التخصصية
                         @elseif ($filter["association"] == "يتيم")
-                        <img src="{{ public_path('assets/images/logos/orphan.png') }}" style="max-width: 80px%;" alt="">
+                            دار اليتيم الفلسطيني
                         @elseif ($filter["association"] == "صلاح")
-                        <img src="{{ public_path('assets/images/logos/salah.png') }}" style="max-width: 80px%;" alt="">
+                            جميعة الصلاح الإسلامية
                         @endif
                     </td>
                     <td colspan="8" align="center" style="color: #000;">

@@ -276,7 +276,7 @@
 
         // get modal body
         $.ajax({
-            url: "/fixed_entries/getModalFormLoan/",
+            url: "/fixed_entries/getModalFormLoan",
             method: "post",
             data: {
                 type: type,

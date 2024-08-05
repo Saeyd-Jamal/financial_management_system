@@ -130,7 +130,7 @@
                 <tr style="background: #ffffff; border:0;">
                     <td colspan="7" style="border:0;">
                         <p>
-                            <span>قسم الرواتب والموظفين</span> /
+                            <span>قسم المالية</span> /
                             <span>جدول المستحقات والقروض للموظفين</span>
                             @if (isset($filter))
                                 @foreach ($filedsEmpolyees as $name)

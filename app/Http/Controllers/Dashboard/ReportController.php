@@ -17,14 +17,30 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
+use App\Models\Bank;
 
 class ReportController extends Controller
 {
 
     use AuthorizesRequests;
+    protected $monthNameAr;
 
     public function __construct(){
-
+        // مصفوفة لأسماء الأشهر باللغة العربية
+        $this->monthNameAr = [
+            '01' => 'يناير',
+            '02' => 'فبراير',
+            '03' => 'مارس',
+            '04' => 'أبريل',
+            '05' => 'مايو',
+            '06' => 'يونيو',
+            '07' => 'يوليو',
+            '08' => 'أغسطس',
+            '09' => 'سبتمبر',
+            '10' => 'أكتوبر',
+            '11' => 'نوفمبر',
+            '12' => 'ديسمبر'
+        ];
     }
 
     public function filterEmployees($data){
@@ -102,7 +118,6 @@ class ReportController extends Controller
             });
         }
 
-
         return $employees;
     }
 
@@ -122,9 +137,11 @@ class ReportController extends Controller
         $dependence = WorkData::select('dependence')->distinct()->pluck('dependence')->toArray();
         $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
         $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
+        $banksId = BanksEmployees::select('bank_id')->distinct()->pluck('bank_id')->toArray();
+        $banks = Bank::select('name')->distinct()->pluck('name')->toArray();
         $month = Carbon::now()->format('Y-m');
 
-        return view('dashboard.report',compact("areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement",'month'));
+        return view('dashboard.report',compact("areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement",'month','banks'));
     }
 
 
@@ -340,7 +357,7 @@ class ReportController extends Controller
                 return $pdf->stream();
             }
             // تحميل الملف المصدر
-            if($request->export_type == 'export_pdf'){
+            if($request->export_type == 'export_pdf' || $request->export_type == 'export_excel'){
                 $margin_top = 3;
                 if($request->association != ""){
                     $margin_top = 50;
@@ -386,6 +403,65 @@ class ReportController extends Controller
                     'default_font' => 'Arial',
                 ]);
                 return $pdf->download('سجلات للإدخالات الثابتة' . $time .'.pdf');
+            }
+        }
+
+        // كشف البنك
+        if($request->report_type == 'bank'){
+            $USD = Currency::where('code', 'USD')->first()->value;
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
+            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                ->where('month', $month);
+            if($request->bank != null){
+                $salaries = $salaries->where('bank', $request->bank);
+            }
+            $salaries = $salaries->get();
+
+            // دوال الموجوع اخر سطر في التقرير
+            $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
+                $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
+                return [
+                    'net_salary' => $salary->net_salary ?? '0',
+                ];
+            });
+            $salariesTotalArray = [
+                'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
+            ];
+
+            // معاينة pdf
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.bank',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'monthName' => $monthName,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
+                return $pdf->stream();
+            }
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $margin_top = 3;
+                if($request->association != ""){
+                    $margin_top = 50;
+                }
+                if($request->association == "الكويتي" || $request->association == "يتيم"){
+                    $margin_top = 35;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
+                ]);
+                return $pdf->download('سجلات حسابات الموظفين في البنوك' . $time .'.pdf');
             }
         }
     }
