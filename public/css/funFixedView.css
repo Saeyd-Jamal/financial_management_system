@@ -1,3 +1,9 @@
+
+.table-container {
+    overflow: auto; /* السماح بالتمرير الأفقي والعمودي */
+    position: relative;
+}
+
 table#dataTable-1 {
     width: 100%;
     border-collapse: collapse;

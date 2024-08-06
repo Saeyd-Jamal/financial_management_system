@@ -50,8 +50,14 @@ class AddSalaryEmployee{
         // مبلغ السلفة من حالة الدوام
         $working_status = $employee->workData->working_status;
         if($working_status == "مداوم" || $working_status == "نعم"){
+            if($employee->workData->type_appointment == 'يومي'){
+                $advance_payment = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
+            }
             $advance_payment = Constant::where('type_constant','advance_payment_permanent')->first('value')->value;
         }elseif($working_status == "غير مداوم" || $working_status == "لا"){
+            if($employee->workData->type_appointment == 'يومي'){
+                $advance_payment = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
+            }
             $advance_payment = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
         }elseif($working_status == "رياض"){
             $advance_payment = Constant::where('type_constant','advance_payment_riyadh')->first('value')->value;
@@ -69,9 +75,16 @@ class AddSalaryEmployee{
                     $account_default = $bank->accounts->where('employee_id',$employee->id)->first();
                 }
             }
-            $bank = Bank::find($account_default->bank_id)->first()->name;
-            $branch_number = Bank::find($account_default->bank_id)->first()->branch_number;
-            $account_number = $account_default->account_number;
+            if($account_default != null){
+                $bank = Bank::find($account_default->bank_id)->first()->name;
+                $branch_number = Bank::find($account_default->bank_id)->first()->branch_number;
+                $account_number = $account_default->account_number;
+            }
+            if($account_default == null){
+                $bank = '';
+                $branch_number = '';
+                $account_number = '';
+            }
         }catch (\Exception $e) {
             LogRecord::create([
                 'type' => 'errorSalary',
@@ -116,6 +129,11 @@ class AddSalaryEmployee{
                 ]);
                 return;
             }else{
+                $percentage_allowance = 0;
+                $initial_salary = 0;
+                $grade_Allowance = 0;
+                $allowance_boys = 0;
+                $nature_work_increase =  0; // علاوة طبيعة العمل
                 $secondary_salary = $secondary_salary->salary;
             }
         }
@@ -132,6 +150,9 @@ class AddSalaryEmployee{
         $mobile_allowance = ($fixedEntries != null) ? $fixedEntries->mobile_allowance : 0;
 
         $termination_service = $dual_function == null ?  number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*0.1,2) : 0;
+        if($employee->workData->type_appointment == 'نسبة'){
+            $termination_service = 0;
+        }
 
         $total_additions = ($allowance_boys + $nature_work_increase + $administrative_allowance + $scientific_qualification_allowance + $transport + $extra_allowance + $salary_allowance + $ex_addition + $mobile_allowance +$termination_service);
 
@@ -181,7 +202,9 @@ class AddSalaryEmployee{
         $gross_salary = ($secondary_salary + $total_additions) - $total_discounts;
 
         $late_receivables = ($gross_salary >= $advance_payment) ? $gross_salary - $advance_payment : 0; // مستحقات متأخرة
-
+        if($employee->workData->type_appointment == 'نسبة'){
+            $late_receivables = 0;
+        }
 
         $net_salary = $gross_salary - $late_receivables;
 
@@ -224,7 +247,8 @@ class AddSalaryEmployee{
                 'association_loan' => $association_loan,
                 'savings_rate' => $savings_rate,
             ]);
-            if($salaryOld == null){
+
+            if($salaryOld == null && $employee->workData->type_appointment != 'نسبة'){
                 ReceivablesLoans::updateOrCreate([
                     'employee_id' => $employee->id,
                 ],[
@@ -235,7 +259,7 @@ class AddSalaryEmployee{
                     'total_savings' => DB::raw('total_savings + '.($savings_loan + (($savings_rate + $termination_service) / $USD ))),
                 ]);
             }
-            if($salaryOld != null){
+            if($salaryOld != null && $employee->workData->type_appointment != 'نسبة'){
                 if(floatval($salaryOld->savings_loan) != $savings_loan){
                     ReceivablesLoans::updateOrCreate([
                         'employee_id' => $employee->id,

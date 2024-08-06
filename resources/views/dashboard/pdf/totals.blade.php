@@ -16,61 +16,54 @@
     </style>
     <style>
         table.blueTable {
-            border: 1px solid #1C6EA4;
-            background-color: #EEEEEE;
             width: 100%;
-            height: 200px;
             text-align: right;
             border-collapse: collapse;
         }
 
         table.blueTable td,
         table.blueTable th {
-            border: 1px solid #4C4C4C;
-            padding: 4px 5px;
+            border: 1px solid #AAAAAA;
+            padding: 5px 9px;
+            white-space: nowrap;
         }
 
         table.blueTable tbody td {
             font-size: 13px;
+            color: #000000;
         }
 
         table.blueTable tr:nth-child(even) {
-            background: #D0E4F5;
+            background: #F5F5F5;
         }
 
         table.blueTable thead {
-            background: #757575;
-            background: -moz-linear-gradient(top, #979797 0%, #828282 66%, #757575 100%);
-            background: -webkit-linear-gradient(top, #979797 0%, #828282 66%, #757575 100%);
-            background: linear-gradient(to bottom, #979797 0%, #828282 66%, #757575 100%);
-            border-bottom: 2px solid #000000;
+            background: #D3D3D3;
+            background: -moz-linear-gradient(top, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
+            background: -webkit-linear-gradient(top, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
+            background: linear-gradient(to bottom, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
+            border-bottom: 2px solid #444444;
         }
 
         table.blueTable thead th {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: bold;
-            color: #000000;
-            text-align: center;
-            border-left: 1px solid #24282A;
-        }
-
-        table.blueTable thead th:first-child {
-            border-left: none;
+            text-align: right;
         }
 
         table.blueTable tfoot {
-            font-size: 11px;
+            font-size: 14px;
             font-weight: bold;
             color: #FFFFFF;
-            background: #D0E4F5;
-            background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-            background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-            background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+            background: #EEEEEE;
+            background: -moz-linear-gradient(top, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
+            background: -webkit-linear-gradient(top, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
+            background: linear-gradient(to bottom, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
             border-top: 2px solid #444444;
         }
 
         table.blueTable tfoot td {
-            font-size: 11px;
+            font-size: 14px;
         }
 
         table.blueTable tfoot .links {
@@ -125,7 +118,7 @@
     </htmlpageheader>
 
     <div lang="ar">
-        <table class="table blueTable" style="margin-top: 20px">
+        <table class="blueTable">
             <thead>
                 <tr style="background: #ffffff; border:0;">
                     <td colspan="7" style="border:0;">
@@ -148,7 +141,7 @@
                         <h1>جدول المستحقات والقروض للموظفين</h1>
                     </td>
                 </tr>
-                <tr class="table-bordered">
+                <tr  style="background: #dddddd;">
                     <th>#</th>
                     <th>الاسم</th>
                     <th>إجمالي المستحقات</th>
@@ -158,7 +151,7 @@
                     <th>قرض اللجنة</th>
                 </tr>
             </thead>
-            <tbody class="table  table-bordered">
+            <tbody>
                 @foreach ($totals as $total)
                     <tr>
                         <td>{{ $loop->iteration }}</td>

@@ -56,7 +56,7 @@
                 <!-- Small table -->
                 <div class="col-md-12">
                     <div class="card shadow">
-                        <div class="card-body" id="table_box">
+                        <div class="card-body table-container" id="table_box">
                             <!-- table -->
                             <table class="table table-bordered  table-hover datatables text-dark"  id="dataTable-1">
                                 <thead>
@@ -87,7 +87,7 @@
                                     @foreach ($employees as $employee)
                                     <tr style="white-space: nowrap;">
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$employee->name}}</td>
+                                        <td  class="fixed">{{$employee->name}}</td>
                                         <style>
                                             button{
                                                 border: 0;

@@ -69,7 +69,7 @@
                                             $salary->net_salary,
                                             $salary->amount_letters,
                                             $salary->employee->workData->payroll_statement,
-                                            $salary->banks->name .  " - " . $salary->banks->branch_number,
+                                            $salary->bank .  " - " . $salary->branch_number,
                                             $salary->account_number,
                                             $salary->resident_exemption,
                                             $salary->annual_taxable_amount,

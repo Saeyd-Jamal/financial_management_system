@@ -183,6 +183,13 @@
             </div>
             <div class="row" id="bankDiv" style="display: none;">
                 <div class="form-group col-md-3">
+                    <label for="exchange_type">نوع الصرف</label>
+                    <select name="exchange_type" id="exchange_type" class="custom-select">
+                        <option value="cash" selected>نقدي</option>
+                        <option value="bank">بنك</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3" id="bank_select" style="display: none;">
                     <label for="bank">البنك</label>
                     <select name="bank" id="bank" class="custom-select">
                         <option value="" selected>حدد البنك المراد</option>

@@ -67,8 +67,6 @@ class SalaryController extends Controller
      */
     public function show(Salary $salary)
     {
-        $account_number = BanksEmployees::where('id', $salary->account_number)->first()->account_number;
-        $salary->account_number = $account_number;
         return view('dashboard.salaries.show', compact('salary'));
     }
 

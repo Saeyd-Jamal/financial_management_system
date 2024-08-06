@@ -5,380 +5,80 @@
     <meta charset="utf-8" />
     <title>جدول رواتب الموظفين</title>
     <style>
-        table {
-            border-collapse: collapse;
-        }
-        .table {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #6c757d;
-        }
-
-        .table th,
-        .table td {
-            padding: 0.5rem;
-            vertical-align: top;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .table thead th {
-            vertical-align: bottom;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .table tbody+tbody {
-            border-top: 2px solid #e9ecef;
-        }
-
-        .table-sm th,
-        .table-sm td {
-            padding: 0.3rem;
-        }
-
-        .table-bordered {
-            border: 1px solid #e9ecef;
-        }
-
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #e9ecef;
-        }
-
-        .table-bordered thead th,
-        .table-bordered thead td {
-            border-bottom-width: 2px;
-        }
-
-        .table-borderless th,
-        .table-borderless td,
-        .table-borderless thead th,
-        .table-borderless tbody+tbody {
-            border: 0;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #ffffff;
-        }
-
-        .table-hover tbody tr:hover {
-            color: #6c757d;
-            background-color: #dee2e6;
-        }
-
-        .table-primary,
-        .table-primary>th,
-        .table-primary>td {
-            background-color: #bfd5ff;
-        }
-
-        .table-primary th,
-        .table-primary td,
-        .table-primary thead th,
-        .table-primary tbody+tbody {
-            border-color: #88b0ff;
-        }
-
-        .table-hover .table-primary:hover {
-            background-color: #a6c4ff;
-        }
-
-        .table-hover .table-primary:hover>td,
-        .table-hover .table-primary:hover>th {
-            background-color: #a6c4ff;
-        }
-
-        .table-secondary,
-        .table-secondary>th,
-        .table-secondary>td {
-            background-color: #d6d8db;
-        }
-
-        .table-secondary th,
-        .table-secondary td,
-        .table-secondary thead th,
-        .table-secondary tbody+tbody {
-            border-color: #b3b7bb;
-        }
-
-        .table-hover .table-secondary:hover {
-            background-color: #c8cbcf;
-        }
-
-        .table-hover .table-secondary:hover>td,
-        .table-hover .table-secondary:hover>th {
-            background-color: #c8cbcf;
-        }
-
-        .table-success,
-        .table-success>th,
-        .table-success>td {
-            background-color: #c8f2e4;
-        }
-
-        .table-success th,
-        .table-success td,
-        .table-success thead th,
-        .table-success tbody+tbody {
-            border-color: #99e8cd;
-        }
-
-        .table-hover .table-success:hover {
-            background-color: #b3edda;
-        }
-
-        .table-hover .table-success:hover>td,
-        .table-hover .table-success:hover>th {
-            background-color: #b3edda;
-        }
-
-        .table-info,
-        .table-info>th,
-        .table-info>td {
-            background-color: #bee5eb;
-        }
-
-        .table-info th,
-        .table-info td,
-        .table-info thead th,
-        .table-info tbody+tbody {
-            border-color: #86cfda;
-        }
-
-        .table-hover .table-info:hover {
-            background-color: #abdde5;
-        }
-
-        .table-hover .table-info:hover>td,
-        .table-hover .table-info:hover>th {
-            background-color: #abdde5;
-        }
-
-        .table-warning,
-        .table-warning>th,
-        .table-warning>td {
-            background-color: #fae5b8;
-        }
-
-        .table-warning th,
-        .table-warning td,
-        .table-warning thead th,
-        .table-warning tbody+tbody {
-            border-color: #f6cf7c;
-        }
-
-        .table-hover .table-warning:hover {
-            background-color: #f8dca0;
-        }
-
-        .table-hover .table-warning:hover>td,
-        .table-hover .table-warning:hover>th {
-            background-color: #f8dca0;
-        }
-
-        .table-danger,
-        .table-danger>th,
-        .table-danger>td {
-            background-color: #f5c6cb;
-        }
-
-        .table-danger th,
-        .table-danger td,
-        .table-danger thead th,
-        .table-danger tbody+tbody {
-            border-color: #ed969e;
-        }
-
-        .table-hover .table-danger:hover {
-            background-color: #f1b0b7;
-        }
-
-        .table-hover .table-danger:hover>td,
-        .table-hover .table-danger:hover>th {
-            background-color: #f1b0b7;
-        }
-
-        .table-light,
-        .table-light>th,
-        .table-light>td {
-            background-color: #fdfdfe;
-        }
-
-        .table-light th,
-        .table-light td,
-        .table-light thead th,
-        .table-light tbody+tbody {
-            border-color: #fbfcfc;
-        }
-
-        .table-hover .table-light:hover {
-            background-color: #ececf6;
-        }
-
-        .table-hover .table-light:hover>td,
-        .table-hover .table-light:hover>th {
-            background-color: #ececf6;
-        }
-
-        .table-dark,
-        .table-dark>th,
-        .table-dark>td {
-            background-color: #c6c8ca;
-        }
-
-        .table-dark th,
-        .table-dark td,
-        .table-dark thead th,
-        .table-dark tbody+tbody {
-            border-color: #95999c;
-        }
-
-        .table-hover .table-dark:hover {
-            background-color: #b9bbbe;
-        }
-
-        .table-hover .table-dark:hover>td,
-        .table-hover .table-dark:hover>th {
-            background-color: #b9bbbe;
-        }
-
-        .table-active,
-        .table-active>th,
-        .table-active>td {
-            background-color: #dee2e6;
-        }
-
-        .table-hover .table-active:hover {
-            background-color: #cfd5db;
-        }
-
-        .table-hover .table-active:hover>td,
-        .table-hover .table-active:hover>th {
-            background-color: #cfd5db;
-        }
-
-        .table .thead-dark th {
-            color: #ffffff;
-            background-color: #343a40;
-            border-color: #454d55;
-        }
-
-        .table .thead-light th {
-            color: #495057;
-            background-color: #e9ecef;
-            border-color: #e9ecef;
-        }
-
-        .table-dark {
-            color: #ffffff;
-            background-color: #343a40;
-        }
-
-        .table-dark th,
-        .table-dark td,
-        .table-dark thead th {
-            border-color: #454d55;
-        }
-
-        .table-dark.table-bordered {
-            border: 0;
-        }
-
-        .table-dark.table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .table-dark.table-hover tbody tr:hover {
-            color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.075);
-        }
-
-        @media (max-width: 575.98px) {
-            .table-responsive-sm {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .table-responsive-sm>.table-bordered {
-                border: 0;
-            }
-        }
-
-        @media (max-width: 767.98px) {
-            .table-responsive-md {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .table-responsive-md>.table-bordered {
-                border: 0;
-            }
-        }
-
-        @media (max-width: 991.98px) {
-            .table-responsive-lg {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .table-responsive-lg>.table-bordered {
-                border: 0;
-            }
-        }
-
-        @media (max-width: 1199.98px) {
-            .table-responsive-xl {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .table-responsive-xl>.table-bordered {
-                border: 0;
-            }
-        }
-
-        .table-responsive {
-            display: block;
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .table-responsive>.table-bordered {
-            border: 0;
-        }
-    </style>
-    <style>
         body {
             font-family: 'XBRiyaz', sans-serif;
-            font-size: 10px;
         }
 
         @page {
             header: page-header;
             footer: page-footer;
         }
-        .table th{
-            color: #000;
-            font-size: bold;
+    </style>
+    <style>
+        table.blueTable {
+            width: 100%;
+            text-align: right;
+            border-collapse: collapse;
         }
-        .table td{
-            color: #252525;
+
+        table.blueTable td,
+        table.blueTable th
+        {
+            border: 1px solid #AAAAAA;
+            padding: 5px 9px;
         }
-        .table tfoot tr{
-            color: #000;
+
+        table.blueTable tbody td {
+            font-size: 13px;
+            color: #000000;
+        }
+
+        table.blueTable tr:nth-child(even) {
+            background: #F5F5F5;
+        }
+
+        table.blueTable thead {
+            background: #D3D3D3;
+            background: -moz-linear-gradient(top, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
+            background: -webkit-linear-gradient(top, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
+            background: linear-gradient(to bottom, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
+            border-bottom: 2px solid #444444;
+        }
+
+        table.blueTable thead th {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        table.blueTable tfoot {
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFFFFF;
+            background: #EEEEEE;
+            background: -moz-linear-gradient(top, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
+            background: -webkit-linear-gradient(top, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
+            background: linear-gradient(to bottom, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
+            border-top: 2px solid #444444;
+        }
+
+        table.blueTable tfoot td {
+            font-size: 14px;
+        }
+
+        table.blueTable tfoot .links {
+            text-align: right;
+        }
+
+        table.blueTable tfoot .links a {
+            display: inline-block;
+            background: #1C6EA4;
+            color: #FFFFFF;
+            padding: 2px 8px;
+            border-radius: 5px;
         }
     </style>
-
 </head>
-
 <body>
     @php
         $filedsEmpolyees = [
@@ -411,15 +111,14 @@
                     @endif
                 @endforeach
             @endif
-
         </p>
     </htmlpageheader>
 
     <div lang="ar">
-        <table class="table">
+        <table class="blueTable">
             <thead>
                 <tr>
-                    <td colspan="7">
+                    <th colspan="7" style="border: 0;">
                         @if ($filter["association"] == "المدينة")
                             عمارة المدينة
                         @elseif ($filter["association"] == "حطين")
@@ -431,16 +130,16 @@
                         @elseif ($filter["association"] == "صلاح")
                             جميعة الصلاح الإسلامية
                         @endif
-                    </td>
-                    <td colspan="8" align="center" style="color: #000;">
+                    </th>
+                    <th colspan="8" align="center" style="color: #000; border: 0;">
                         <p>بسم الله الرحمن الرحيم</p>
                         <h1>رواتب الموظفين لشهر : {{$month}}</h1>
-                    </td>
-                    <td colspan="9"></td>
+                    </th>
+                    <th colspan="9" style="border: 0;"></th>
                 </tr>
-                <tr class="table-bordered" style="color: #000; background-color: #e1e1e1;font-size:12px;">
+                <tr style="background: #dddddd;">
                     <th>#</th>
-                    <th style="width: 150px">الاسم</th>
+                    <th>الاسم</th>
                     <th>مكان العمل</th>
                     <th>الراتب الاساسي</th>
                     <th>علاوة الأولاد</th>
@@ -465,14 +164,14 @@
                     <th>صافي الراتب</th>
                 </tr>
             </thead>
-            <tbody class="table  table-bordered">
+            <tbody>
                 @foreach($salaries as $salary)
                     @php
                         $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
                     @endphp
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$salary->employee->name ?? ''}}</td>
+                        <td style="white-space: nowrap;">{{$salary->employee->name ?? ''}}</td>
                         <td>{{$salary->employee->workData->workplace ?? ''}}</td>
                         <td>{{$salary->secondary_salary ?? ''}}</td>
                         <td>{{$salary->allowance_boys ?? ''}}</td>
@@ -485,7 +184,6 @@
                         <td>{{$fixedEntries->ex_addition ?? ''}}</td>
                         <td>{{$fixedEntries->mobile_allowance ?? ''}}</td>
                         <td>{{$salary->termination_service ?? ''}}</td>
-                        {{-- <td>{{$salary->grade_Allowance + ($salary->total_discounts - $salary->late_receivables)}}</td> --}}
                         <td>{{ $salary->secondary_salary +($salary->allowance_boys ?? 0) + ($salary->nature_work_increase ?? 0) + ($fixedEntries->administrative_allowance ?? 0) + ($fixedEntries->scientific_qualification_allowance ?? 0) + ($fixedEntries->transport ?? 0) + ($fixedEntries->extra_allowance ?? 0) + ($fixedEntries->salary_allowance ?? 0) + ($fixedEntries->ex_addition ?? 0) + ($fixedEntries->mobile_allowance ?? 0) + ($salary->termination_service ?? 0) }}</td>
                         <td>{{$fixedEntries->health_insurance ?? ''}}</td>
                         <td>{{$salary->z_Income ?? ''}}</td>
@@ -500,7 +198,7 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <tr class="table-bordered"  style="color: #000; background-color: #d2d2d2;">
+                <tr>
                     <td>00</td>
                     <td>المجموع</td>
                     <td></td>
@@ -530,7 +228,7 @@
                     <td colspan="13">سعر الدولار : {{$USD}}</td>
                     <td colspan="2" style="text-align: left;">إجمالي : {{intval($salariesTotalArray['gross_salary'] / $USD)}} $</td>
                     <td colspan="7"></td>
-                    <td colspan="2">إجمالي : {{intval($salariesTotalArray['net_salary']  / $USD)}} $</td>
+                    <td colspan="2" style="text-align: left;">إجمالي : {{intval($salariesTotalArray['net_salary']  / $USD)}} $</td>
                 </tr>
             </tfoot>
         </table>
@@ -541,15 +239,16 @@
                 <td width="33%" style="text-align: left; padding-left: 80px;">إعتماد</td>
             </tr>
         </table>
+
         <htmlpagefooter name="page-footer">
             <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">
                 <tr>
                     <td width="33%">{DATE j-m-Y}</td>
                     <td width="33%" align="center">{PAGENO}/{nbpg}</td>
                     @auth
-                        <td width="33%" style="text-align: left;">{{Auth::user()->name }}</td>
+                        <td width="33%" style="text-align: left;">{{ Auth::user()->name }}</td>
                     @else
-                        <td width="33%" style="text-align: left;">اسم المستخدم</td>
+                        <td width="33%" style="text-align: left;"></td>
                     @endauth
                 </tr>
             </table>
