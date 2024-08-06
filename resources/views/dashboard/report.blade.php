@@ -169,7 +169,7 @@
                         <option value="accounts">كشف حسابات البنك</option>
                         <option value="employees_totals">كشف الإجماليات</option>
                         <option value="employees_fixed">كشف الإدخالات الثابتة</option>
-                        <option value="bank" >كشف البنك</option>
+                        <option value="bank" >كشف الصرف</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">

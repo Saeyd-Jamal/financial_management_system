@@ -12,12 +12,9 @@
                 </div>
             </div>
             <div class="card shadow">
+                <form action="{{route('specific_salaries.dailyCreate')}}" method="post">
+                    @csrf
                 <div class="card-body">
-                    <style>
-                        td{
-                            box-sizing: border-box !important;
-                        }
-                    </style>
                     <table class="datatables table table-bordered table-hover mb-0 " style="box-sizing: border-box" id="dataTable-1">
                         <thead>
                             <tr>
@@ -30,7 +27,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <form action="{{route('specific_salaries.dailyCreate')}}" method="post">
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group col-md-3">
@@ -46,7 +42,6 @@
                                         {{-- @endcan --}}
                                     </div>
                                 </div>
-                                @csrf
                                 @foreach ($employees as $employee)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
@@ -73,10 +68,10 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                            </form>
                         </tbody>
                     </table>
                 </div>
+                </form>
             </div>
         </div>
     </div>

@@ -412,10 +412,10 @@ class ReportController extends Controller
             $month = $request->month ?? Carbon::now()->format('Y-m');
             $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
             $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
-                ->where('month', $month);
-            if($request->bank != null){
-                $salaries = $salaries->where('bank', $request->bank);
-            }
+                    ->where('month', $month);
+                    if($request->bank != null){
+                        $salaries = $salaries->where('bank', $request->bank);
+                    }
             $salaries = $salaries->get();
 
             // دوال الموجوع اخر سطر في التقرير
@@ -430,7 +430,7 @@ class ReportController extends Controller
             ];
 
             // معاينة pdf
-            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+            if($request->export_type == 'view'){
                 $margin_top = 3;
                 if($request->association != ""){
                     $margin_top = 50;
@@ -462,6 +462,52 @@ class ReportController extends Controller
                     'margin_bottom' => 10
                 ]);
                 return $pdf->download('سجلات حسابات الموظفين في البنوك' . $time .'.pdf');
+            }
+
+            if($request->export_type == 'export_excel'){
+                if ($request->exchange_type == 'cash') {
+                    $headings = [
+                        'مكان العمل',
+                        'رقم الهوية',
+                        'السكن',
+                        'الاسم',
+                        'صافي الراتب',
+                        'التوقيع'
+                    ];
+
+                    $salaries = Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
+                                ->where('salaries.month', $month)
+                                ->join('employees', 'salaries.employee_id', '=', 'employees.id')
+                                ->join('work_data', 'salaries.employee_id', '=', 'work_data.employee_id')
+                                ->select('work_data.workplace as employee_workplace','employees.employee_id as employee_id','employees.area as employee_area','employees.name as employee_name','salaries.net_salary')
+                                ->get();
+                }
+                if ($request->exchange_type == 'bank') {
+                    $headings = [
+                        'مكان العمل',
+                        'البنك',
+                        'رقم الهوية',
+                        'السكن',
+                        'الاسم',
+                        'رقم الحساب',
+                        'رقم الفرع',
+                        'صافي الراتب',
+                        'التوقيع'
+                    ];
+
+                    $salaries = Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
+                                ->where('salaries.month', $month)
+                                ->join('employees', 'salaries.employee_id', '=', 'employees.id')
+                                ->join('work_data', 'salaries.employee_id', '=', 'work_data.employee_id')
+                                ->select('work_data.workplace as employee_workplace','salaries.bank','employees.employee_id as employee_id','employees.area as employee_area','employees.name as employee_name','salaries.account_number','salaries.branch_number','salaries.net_salary')
+                                ->get();
+                }
+
+
+                $filename = 'كشف الصرف' . $time .'.xlsx';
+                return Excel::download(new ModelExport($salaries,$headings), $filename);
+
+
             }
         }
     }

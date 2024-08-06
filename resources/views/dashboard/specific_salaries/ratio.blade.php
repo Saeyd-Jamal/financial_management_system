@@ -13,6 +13,8 @@
 
             </div>
             <div class="card shadow">
+                <form action="{{route('specific_salaries.ratioCreate')}}" method="post">
+                    @csrf
                 <div class="card-body">
                     <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1">
                         <thead>
@@ -24,7 +26,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <form action="{{route('specific_salaries.ratioCreate')}}" method="post">
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group col-md-3">
@@ -40,7 +41,6 @@
                                         {{-- @endcan --}}
                                     </div>
                                 </div>
-                                @csrf
                                 @foreach ($employees as $employee)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
@@ -56,10 +56,10 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                            </form>
                         </tbody>
                     </table>
                 </div>
+                </form>
             </div>
         </div>
     </div>

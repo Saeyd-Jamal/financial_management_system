@@ -141,11 +141,11 @@ class SalaryController extends Controller
                     LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$employee->id")->delete();
                     AddSalaryEmployee::addSalary($employee,'2024-07');
                 }catch(Exception $e){
-                    // LogRecord::create([
-                    //     'type' => 'errorSalary',
-                    //     'related_id' => "employee_$employee->id",
-                    //     'description' => 'خطأ في معالجة راتب الموظف : ' . $employee->name . '. الخطأ: ' . $e->getMessage(),
-                    // ]);
+                    LogRecord::create([
+                        'type' => 'errorSalary',
+                        'related_id' => "employee_$employee->id",
+                        'description' => 'خطأ في معالجة راتب الموظف : ' . $employee->name . '. الخطأ: ' . $e->getMessage(),
+                    ]);
                 }
             }
             $logRecords = LogRecord::where('type', 'errorSalary')->get()->pluck('description')->toArray();

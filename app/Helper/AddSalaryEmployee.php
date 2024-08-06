@@ -66,34 +66,23 @@ class AddSalaryEmployee{
         }else{
             $advance_payment = 0;
         }
-
         //  البنك المتعامل معه
-        try {
+        if($employee->banks->first() != null){
             foreach ($employee->banks as $bank) {
                 $account_default = $bank->accounts->where('employee_id',$employee->id)->where('default',1)->first();
                 if($account_default == null){
                     $account_default = $bank->accounts->where('employee_id',$employee->id)->first();
                 }
             }
-            if($account_default != null){
-                $bank = Bank::find($account_default->bank_id)->first()->name;
-                $branch_number = Bank::find($account_default->bank_id)->first()->branch_number;
-                $account_number = $account_default->account_number;
-            }
-            if($account_default == null){
-                $bank = '';
-                $branch_number = '';
-                $account_number = '';
-            }
-        }catch (\Exception $e) {
-            LogRecord::create([
-                'type' => 'errorSalary',
-                'related_id' => "employee_$employee->id",
-                'description' => 'الموظف : ' . $employee->name . ' . ليس لديه حساب بنكي فلم يتم نزول الراتب له',
-            ]);
-            return;
+            $bank = Bank::find($account_default->bank_id)->first()->name;
+            $branch_number = Bank::find($account_default->bank_id)->first()->branch_number;
+            $account_number = $account_default->account_number;
         }
-
+        if($employee->banks->first() == null){
+            $bank = '';
+            $branch_number = '';
+            $account_number = '';
+        }
         if($employee->workData->type_appointment == 'مثبت'){
             // مثبتين
             // الحسابات
@@ -121,7 +110,7 @@ class AddSalaryEmployee{
             $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
         }else{
             $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
-            if($secondary_salary == null || $secondary_salary == 0){
+            if($secondary_salary == null || $secondary_salary->salary == 0){
                 LogRecord::create([
                     'type' => 'errorSalary',
                     'related_id' => "employee_$employee->id",
@@ -135,6 +124,7 @@ class AddSalaryEmployee{
                 $allowance_boys = 0;
                 $nature_work_increase =  0; // علاوة طبيعة العمل
                 $secondary_salary = $secondary_salary->salary;
+
             }
         }
 
