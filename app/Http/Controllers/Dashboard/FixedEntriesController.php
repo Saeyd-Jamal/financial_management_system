@@ -88,10 +88,27 @@ class FixedEntriesController extends Controller
         $year = $this->thisYear;
         $month = $this->thisMonth;
         $monthNow = $this->monthNow;
+        $title = "جدول التعديلات الثابتة للموظفين";
 
         $fixed_entries = FixedEntries::with(['employee'])->where('month',$this->monthNow)->get();
         $employees = Employee::get();
-        return view('dashboard.fixed_entries.viewForm', compact('fixed_entries','monthNow','employees','year','month'));
+        return view('dashboard.fixed_entries.viewForm', compact('fixed_entries','monthNow','employees','year','month','title'));
+    }
+    public function tableView(Request $request)
+    {
+        $this->authorize('view', FixedEntries::class);
+        // تغير الشهر
+        if($request->monthChange == true){
+            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->get();
+            return $fixed_entries;
+        }
+        $year = $this->thisYear;
+        $month = $this->thisMonth;
+        $monthNow = $this->monthNow;
+
+        $fixed_entries = FixedEntries::with(['employee'])->where('month',$this->monthNow)->get();
+        $employees = Employee::get();
+        return view('dashboard.fixed_entries.tableView', compact('fixed_entries','monthNow','employees','year','month'));
     }
 
     // public function viewForm(Request $request)

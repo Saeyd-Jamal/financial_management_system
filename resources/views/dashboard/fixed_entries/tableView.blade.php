@@ -1,8 +1,27 @@
-<x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
+<x-table-view-layout classC="shadow p-3 mb-5 bg-white rounded ">
     @push('styles')
-    <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
-    <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
+        <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+        <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
+        <style>
+            nav.navbar,main.main-content {
+                margin-right: 0 !important;
+                padding: 0;
+            }
+            .container-fluid{
+                padding: 0;
+            }
+            table#dataTable-1 {
+                height: 70vh;
+            }
+            table#dataTable-1 thead th {
+                padding: 3.5px !important;
+            }
+            table#dataTable-1 td{
+                padding: 0px !important;
+            }
+        </style>
     @endpush
+
     @php
         $fields = [
             'administrative_allowance' => 'العلاوة الإدارية',
@@ -28,18 +47,16 @@
         ];
         $controller = new \App\Http\Controllers\Dashboard\FixedEntriesController();
     @endphp
+
     <script src="{{asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{ asset('js/funFixedView.js') }}"></script>
+
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="row align-items-center mb-2">
-                <div class="col">
-                    <h2 class="mb-2 page-title">واجهة التعديلات</h2>
-                    <p class="card-text">هنا يتم عرض البيانات المدخلة الشهرية لكل موظف والتي تستخدم في الرواتب</p>
-                </div>
                 <div class="col-auto">
-                    <a class="btn btn-info mb-2" href="{{ route('fixed_entries.tableView') }}">
-                        <i class="fe fe-grid"></i> عرض واجهة إكسيل
+                    <a class="btn btn-info mb-2" href="{{ route('fixed_entries.index') }}">
+                        <i class="fe fe-home"></i> الرجوع للبرنامج الرئيسي
                     </a>
                     {{-- <div class="form-group col-6 d-inline"> --}}
                         {{-- <input type="month" id="monthInputSearch" name="month" value="{{$monthNow}}" class="form-control"> --}}
@@ -58,11 +75,11 @@
                     <div class="card shadow">
                         <div class="card-body table-container" id="table_box">
                             <!-- table -->
-                            <table class="table table-bordered  table-hover datatables text-dark"  id="dataTable-1">
+                            <table class="blueTable datatables"  id="dataTable-1">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th style="white-space: nowrap;">الاسم <span style="    width: 115px; display: inline-block;"></span></th>
+                                        <th style="white-space: nowrap;">الاسم <span style="width: 115px; display: inline-block;"></span></th>
                                         <th>علاوة إدارية</th>
                                         <th>علاوة مؤهل علمي</th>
                                         <th>مواصلات</th>
@@ -101,7 +118,6 @@
                                                         {{$controller->getFixedEntriesFialds($employee->id,$year,$month,$name)}}
                                                     </button>
                                                 </div>
-
                                             </td>
                                         @endforeach
                                         @foreach ($fieldsLoan as $name => $label)
@@ -180,10 +196,10 @@
             {
                 autoWidth: true,
                 "lengthMenu": [
-                [10, 20, 100, -1],
-                [10, 20, 100, "جميع"]
+                [50, 100, 200, -1],
+                [50, 100, 200, "جميع"]
                 ]
             });
         </script>
     @endpush
-</x-front-layout>
+</x-table-view-layout>
