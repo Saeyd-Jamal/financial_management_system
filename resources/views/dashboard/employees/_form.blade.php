@@ -29,13 +29,13 @@
         </datalist>
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="عدد الزوجات" :value="$employee->number_wives"  name="number_wives" placeholder="0" required />
+        <x-form.input type="number" label="عدد الزوجات" min="0" value="{{$employee->number_wives ?? 0}}"  name="number_wives" placeholder="0" required />
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="عدد الأولاد" :value="$employee->number_children"  name="number_children" placeholder="0" required />
+        <x-form.input type="number" label="عدد الأولاد"  min="0" value="{{$employee->number_children ?? 0}}"  name="number_children" placeholder="0" required />
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="number" label="عدد الأولاد في الجامعة" :value="$employee->number_university_children"  name="number_university_children" placeholder="0" required />
+        <x-form.input type="number" label="عدد الأولاد في الجامعة"  min="0" value="{{$employee->number_university_children ?? 0}}"  name="number_university_children" placeholder="0" required />
     </div>
     <div class="form-group p-3 col-md-3">
         <x-form.input name="scientific_qualification" placeholder="أدخل المؤهل العلمي" :value="$employee->scientific_qualification" label="المؤهل العلمي" list="scientific_qualification_list" required />
@@ -60,13 +60,13 @@
         </datalist>
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="text" label="العنوان بالتفصيل" :value="$employee->address"  name="address" placeholder="دير البلح - شارع يافا - حي البشارة - مستشفى يافا" required />
+        <x-form.input type="text" label="العنوان بالتفصيل" :value="$employee->address"  name="address" placeholder="دير البلح - شارع يافا - حي البشارة - مستشفى يافا"/>
     </div>
     <div class="form-group p-3 col-3">
         <x-form.input type="email" label="الإيميل" :value="$employee->email"  name="email" placeholder="email@example.com" />
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="text" label="رقم الهاتف" :value="$employee->phone_number"  name="phone_number" placeholder="(734) 767-4418" required />
+        <x-form.input type="text" label="رقم الهاتف" :value="$employee->phone_number"  name="phone_number" placeholder="(734) 767-4418" />
     </div>
 
 </div>
@@ -90,7 +90,7 @@
     {{-- حقول خاصة بالموظف الثابت --}}
     <div class="row" id="proven" @if ($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
         <div class="form-group p-3 col-3">
-            <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" required />
+            <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" />
         </div>
         <div class="form-group p-3 col-3">
             <label for="grade">الدرجة في سلم الرواتب</label>
@@ -112,14 +112,14 @@
             </select>
         </div>
         <div class="form-group p-3 col-3">
-            <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="0.55" required/>
+            <x-form.input type="number" label="نسبة علاوة درجة" :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="0.55" />
         </div>
         <div class="form-group p-3 col-3">
             <x-form.input type="number" label="نسبة علاوة طبيعة العمل" :value="$workData->percentage_allowance" name="percentage_allowance" placeholder="10.."/>
         </div>
         <div class="form-group p-3 col-3">
             <label for="salary_category">فئة الراتب</label>
-            <select class="custom-select" id="salary_category" name="salary_category" required>
+            <select class="custom-select" id="salary_category" name="salary_category">
                 <option >عرض القيم المتوفرة</option>
                 <option value="1"  @selected($workData->salary_category == 1)>الأولى</option>
                 <option value="2"  @selected($workData->salary_category == 2)>الثانية</option>
@@ -134,7 +134,7 @@
         <x-form.input type="date" label="تاريخ العمل" :value="$workData->working_date"  name="working_date" required />
     </div>
     <div class="form-group p-3 col-3">
-        <x-form.input type="date" label="تاريخ التثبيت" :value="$workData->date_installation"  name="date_installation" required />
+        <x-form.input type="date" label="تاريخ التثبيت" :value="$workData->date_installation"  name="date_installation" />
     </div>
     <div class="form-group p-3 col-3">
         <x-form.input type="number" label="سنوات الخدمة" :value="$workData->years_service" name="years_service" placeholder="0" readonly  />
