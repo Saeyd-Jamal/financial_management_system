@@ -145,7 +145,6 @@ class ReportController extends Controller
     }
 
 
-
     public function export(Request $request){
         $time = Carbon::now();
         $employees = $this->filterEmployees($request->all())->get();
@@ -183,8 +182,93 @@ class ReportController extends Controller
                 return $pdf->download('سجلات الموظفين' . $time .'.pdf');
             }
             if($request->export_type == 'export_excel'){
+                $headings = [
+                    'رقم الموظف',
+                    'اسم الموظف',
+                    'رقم الهوية',
+                    'تاريخ الميلاد',
+                    'العمر',
+                    'الجنس',
+                    'الحالة الزوجية',
+                    'عدد الزوجات',
+                    'عدد الأولاد',
+                    'عدد أولاد الجامعة',
+                    'المؤهل العلمي',
+                    'التخصص',
+                    'الجامعة',
+                    'المنطقة',
+                    'العنوان',
+                    'الإيميل',
+                    'رقم الهاتف',
+                    'العلاوة',
+                    'الدرجة',
+                    'نسبة علاوة درجة',
+                    'فئة الراتب',
+                    'تاريخ العمل',
+                    'تاريخ التثبيت',
+                    'تاريخ التقاعد',
+                    'حالة الدوام',
+                    'نوع التعين',
+                    'مجال العمل',
+                    'مزدوج وظيفة',
+                    'حالة الفعالية',
+                    'سنوات الخدمة',
+                    'طبيعة العمل',
+                    'الجمعية',
+                    'مكان العمل',
+                    'القسم',
+                    'التبعية',
+                    'المنشأة',
+                    'المؤسسة',
+                    'بيان الراتب',
+                ];
+                $employees = $this->filterEmployees($request->all())
+                                ->join('work_data', 'work_data.employee_id', '=', 'employees.id')
+                                ->select(
+                                    'employees.id',
+                                    'employees.name',
+                                    'employees.employee_id',
+                                    'employees.date_of_birth',
+                                    'employees.age',
+                                    'employees.gender',
+                                    'employees.matrimonial_status',
+                                    'employees.number_wives',
+                                    'employees.number_children',
+                                    'employees.number_university_children',
+                                    'employees.scientific_qualification',
+                                    'employees.specialization',
+                                    'employees.university',
+                                    'employees.area',
+                                    'employees.address',
+                                    'employees.email',
+                                    'employees.phone_number',
+                                    'work_data.allowance',
+                                    'work_data.grade',
+                                    'work_data.grade_allowance_ratio',
+                                    'work_data.salary_category',
+                                    'work_data.working_date',
+                                    'work_data.date_installation',
+                                    'work_data.date_retirement',
+                                    'work_data.working_status',
+                                    'work_data.type_appointment',
+                                    'work_data.field_action',
+                                    'work_data.dual_function',
+                                    'work_data.state_effectiveness',
+                                    'work_data.years_service',
+                                    'work_data.nature_work',
+                                    'work_data.association',
+                                    'work_data.workplace',
+                                    'work_data.section',
+                                    'work_data.dependence',
+                                    'work_data.establishment',
+                                    'work_data.foundation_E',
+                                    'work_data.payroll_statement',
+                                )
+                                ->get();
+
+
                 $filename = 'سجلات الموظفين' . $time .'.xlsx';
-                return Excel::download(new EmployeesDataExport, $filename);
+                return Excel::download(new ModelExport($employees,$headings), $filename);
             }
         }
         // الرواتب
@@ -211,19 +295,7 @@ class ReportController extends Controller
                     'ex_addition' => $fixedEntries->ex_addition ?? '0',
                     'mobile_allowance' => $fixedEntries->mobile_allowance ?? '0',
                     'termination_service' => $salary->termination_service ?? '0',
-                    "gross_salary" => collect([
-                        $salary->secondary_salary ?? 0,
-                        $salary->allowance_boys ?? 0,
-                        $salary->nature_work_increase ?? 0,
-                        $fixedEntries->administrative_allowance ?? 0,
-                        $fixedEntries->scientific_qualification_allowance ?? 0,
-                        $fixedEntries->transport ?? 0,
-                        $fixedEntries->extra_allowance ?? 0,
-                        $fixedEntries->salary_allowance ?? 0,
-                        $fixedEntries->ex_addition ?? 0,
-                        $fixedEntries->mobile_allowance ?? 0,
-                        $salary->termination_service ?? 0,
-                    ])->sum() ?? 0,
+                    "gross_salary" => $salary->gross_salary?? 0,
                     'health_insurance' => $fixedEntries->health_insurance ?? '0',
                     'z_Income' => $salary->z_Income ?? '0',
                     'savings_rate' => $fixedEntries->savings_rate ?? '0',
@@ -279,28 +351,55 @@ class ReportController extends Controller
                 ]);
                 return $pdf->download('سجلات رواتب الموظفين' . $time .'.pdf');
             }
-            // if($request->export_type == 'export_excel'){
-                // $filename = 'سجلات رواتب الموظفين' . $time .'.xlsx';
-                // $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
-                // ->where('month', $month)
-                // ->select('employees.name', 'salaries.month','workData.workplace', 'salaries.secondary_salary', 'salaries.allowance_boys', 'salaries.nature_work_increase','fixedEntries.administrative_allowance', 'fixedEntries.	scientific_qualification_allowance', 'fixedEntries.transport', 'fixedEntries.extra_allowance', 'fixedEntries.salary_allowance', 'fixedEntries.ex_addition', 'fixedEntries.mobile_allowance', 'salaries.termination_service', 'salaries.gross_salary', 'fixedEntries.health_insurance', 'salaries.z_Income' , 'fixedEntries.savings_rate', 'fixedEntries.association_loan', 'fixedEntries.savings_loan', 'fixedEntries.shekel_loan', 'salaries.late_receivables', 'salaries.total_discounts', 'salaries.net_salary')
-                // ->join('employees', 'salaries.employee_id', '=', 'employees.id')
-                // ->join('work_data as workData', 'employees.id', '=', 'workData.employee_id')
-                // ->join('fixed_entries as fixedEntries', function ($join) use ($month) {
-                //     $join->on('employees.id', '=', 'fixedEntries.employee_id')
-                //         ->where('fixed_entries.month', $month);
-                // })
-                // ->get();
-                // $headings = ['الاسم', 'مكان العمل', 'الراتب الاساسي', 'علاوة الأولاد', 'علاوة طبيعة العمل', 'علاوة إدارية', 'علاوة مؤهل علمي', 'المواصلات', 'بدل إضافي +-', 'علاوة أغراض راتب', 'إضافة بأثر رجعي', 'علاوة جوال', 'نهاية الخدمة', 'إجمالي الراتب', 'تأمين صحي', 'ض.دخل', 'إدخار 5%', 'قرض الجمعية', 'قرض الإدخار', 'قرض شيكل', 'مستحقات متأخرة', 'إجمالي الخصومات', 'صافي الراتب'];
-                // return Excel::download(new ModelExport($salaries,$headings), $filename);
-            // }
+            if($request->export_type == 'export_excel'){
+                $headings = [
+                    'الاسم',
+                    'الشهر',
+                    'مكان العمل',
+                    'الراتب الاساسي',
+                    'علاوة الأولاد',
+                    'علاوة طبيعة العمل',
+                    'علاوة إدارية',
+                    'علاوة مؤهل علمي',
+                    'المواصلات',
+                    'بدل إضافي +-',
+                    'علاوة أغراض راتب',
+                    'إضافة بأثر رجعي',
+                    'علاوة جوال',
+                    'نهاية الخدمة',
+                    'إجمالي الراتب',
+                    'تأمين صحي',
+                    'ض.دخل',
+                    'إدخار 5%',
+                    'قرض الجمعية',
+                    'قرض الإدخار',
+                    'قرض شيكل',
+                    'مستحقات متأخرة',
+                    'إجمالي الخصومات',
+                    'صافي الراتب'
+                ];
+
+                $salaries = Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
+                        ->where('month', $month)
+                        ->join('employees', 'salaries.employee_id', '=', 'employees.id')
+                        ->join('work_data as workData', 'employees.id', '=', 'workData.employee_id')
+                        ->join('fixed_entries as fixedEntries', function ($join) use ($month) {
+                            $join->on('employees.id', '=', 'fixedEntries.employee_id')
+                                ->where('fixed_entries.month', $month);
+                        })
+                        ->select('employees.name', 'salaries.month','workData.workplace', 'salaries.secondary_salary', 'salaries.allowance_boys', 'salaries.nature_work_increase','fixedEntries.administrative_allowance', 'fixedEntries.	scientific_qualification_allowance', 'fixedEntries.transport', 'fixedEntries.extra_allowance', 'fixedEntries.salary_allowance', 'fixedEntries.ex_addition', 'fixedEntries.mobile_allowance', 'salaries.termination_service', 'salaries.gross_salary', 'fixedEntries.health_insurance', 'salaries.z_Income' , 'fixedEntries.savings_rate', 'fixedEntries.association_loan', 'fixedEntries.savings_loan', 'fixedEntries.shekel_loan', 'salaries.late_receivables', 'salaries.total_discounts', 'salaries.net_salary')
+                        ->get();
+
+                $filename = 'سجلات رواتب الموظفين' . $time .'.xlsx';
+                return Excel::download(new ModelExport($salaries,$headings), $filename);
+            }
         }
 
         // حسابات الموظفين في البنوك
         if($request->report_type == 'accounts'){
             $accounts = BanksEmployees::whereIn('employee_id', $employees->pluck('id'))->get();
             // معاينة pdf
-            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+            if($request->export_type == 'view'){
                 $margin_top = 3;
                 if($request->association != ""){
                     $margin_top = 50;
@@ -333,6 +432,25 @@ class ReportController extends Controller
                 ]);
                 return $pdf->download('سجلات حسابات الموظفين في البنوك' . $time .'.pdf');
             }
+            if($request->export_type == 'export_excel'){
+                $headings = [
+                    'اسم الموظف',
+                    'اسم البنك',
+                    'الفرع',
+                    'رقم الفرع',
+                    'رقم الحساب',
+                    'أساسي؟',
+                ];
+                $accounts = BanksEmployees::whereIn('banks_employees.employee_id', $employees->pluck('id'))
+                            ->join('employees', 'banks_employees.employee_id', '=', 'employees.id')
+                            ->join('banks', 'banks_employees.bank_id', '=', 'banks.id')
+                            ->select('employees.name as employee_name','banks.name as bank_name','banks.branch as branch_name','banks.branch_number as branch_number','banks_employees.account_number','banks_employees.default')
+                            ->get();
+
+
+                $filename = 'كشف حسابات الموظفين_' . $time .'.xlsx';
+                return Excel::download(new ModelExport($accounts,$headings), $filename);
+            }
         }
 
         // سجلات لمستحقات وقروض الموظفين
@@ -340,7 +458,7 @@ class ReportController extends Controller
             $totals = ReceivablesLoans::whereIn('employee_id', $employees->pluck('id'))->get();
 
             // معاينة pdf
-            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+            if($request->export_type == 'view'){
                 $margin_top = 3;
                 if($request->association != ""){
                     $margin_top = 50;
@@ -357,7 +475,7 @@ class ReportController extends Controller
                 return $pdf->stream();
             }
             // تحميل الملف المصدر
-            if($request->export_type == 'export_pdf' || $request->export_type == 'export_excel'){
+            if($request->export_type == 'export_pdf'){
                 $margin_top = 3;
                 if($request->association != ""){
                     $margin_top = 50;
@@ -373,6 +491,23 @@ class ReportController extends Controller
                 ]);
                 return $pdf->download('سجلات لمستحقات وقروض الموظفين' . $time .'.pdf');
             }
+            if($request->export_type == 'export_excel'){
+                $headings = [
+                    'اسم الموظف',
+                    'إجمالي المستحقات',
+                    'إجمالي الإدخارات $',
+                    'إجمالي قرض الجمعية',
+                    'إجمالي قرض الإدخار$',
+                    'إجمالي قرض اللجنة (الشيكل)',
+                ];
+                $totals = ReceivablesLoans::whereIn('totals.employee_id', $employees->pluck('id'))
+                            ->join('employees', 'totals.employee_id', '=', 'employees.id')
+                            ->select('employees.name as employee_name','totals.total_receivables','totals.total_savings','totals.total_association_loan','totals.total_shekel_loan','totals.total_savings_loan')
+                            ->get();
+
+                $filename = 'كشف المستحقات والقروض_' . $time .'.xlsx';
+                return Excel::download(new ModelExport($totals,$headings), $filename);
+            }
         }
 
         // التعديلات للموظفين
@@ -384,7 +519,7 @@ class ReportController extends Controller
                 ->get();
 
             // معاينة pdf
-            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+            if($request->export_type == 'view'){
                 $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month],[],[
                     'mode' => 'utf-8',
                     'format' => 'A4-L',
@@ -402,7 +537,39 @@ class ReportController extends Controller
                     'default_font_size' => 12,
                     'default_font' => 'Arial',
                 ]);
-                return $pdf->download('سجلات للإدخالات الثابتة' . $time .'.pdf');
+                return $pdf->download('سجلات التعديلات_' . $time .'.pdf');
+            }
+            if($request->export_type == 'export_excel'){
+                $headings = [
+                    'اسم الموظف',
+                    'الشهر',
+                    'علاوة إدارية',
+                    'علاوة مؤهل علمي',
+                    'مواصلات',
+                    'بدل إضافي',
+                    'علاوة اغراض راتب',
+                    'إضافة بأثر رجعي',
+                    'علاوة جوال',
+                    'تأمين صحي',
+                    'فاتورة وطنية',
+                    'قرض الجمعية',
+                    'رسوم دراسية',
+                    'تبرعات',
+                    'قرض إدخار',
+                    'قرض شيكل',
+                    'خصم اللجنة',
+                    'خصومات أخرى',
+                    'تبرعات الحركة',
+                    'إدخار 5%',
+                ];
+
+                $fixed_entries = FixedEntries::whereIn('fixed_entries.employee_id', $employees->pluck('id'))
+                            ->where('fixed_entries.month', $month)
+                            ->join('employees', 'fixed_entries.employee_id', '=', 'employees.id')
+                            ->select('employees.name as employee_name','fixed_entries.month','fixed_entries.administrative_allowance','fixed_entries.scientific_qualification_allowance','fixed_entries.transport','fixed_entries.extra_allowance','fixed_entries.salary_allowance','fixed_entries.ex_addition','fixed_entries.mobile_allowance','fixed_entries.health_insurance','fixed_entries.f_Oredo','fixed_entries.association_loan','fixed_entries.tuition_fees','fixed_entries.voluntary_contributions','fixed_entries.savings_loan','fixed_entries.shekel_loan','fixed_entries.paradise_discount','fixed_entries.other_discounts','fixed_entries.proportion_voluntary','fixed_entries.savings_rate')
+                            ->get();
+                $filename = 'كشف التعديلات_' . $time .'.xlsx';
+                return Excel::download(new ModelExport($fixed_entries,$headings), $filename);
             }
         }
 
@@ -455,13 +622,13 @@ class ReportController extends Controller
                 if($request->association == "الكويتي" || $request->association == "يتيم"){
                     $margin_top = 35;
                 }
-                $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()],[],[
+                $pdf = PDF::loadView('dashboard.pdf.bank',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'monthName' => $monthName,'filter' => $request->all()],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
                     'margin_bottom' => 10
                 ]);
-                return $pdf->download('سجلات حسابات الموظفين في البنوك' . $time .'.pdf');
+                return $pdf->download('كشف الصرف_' . $time .'.pdf');
             }
 
             if($request->export_type == 'export_excel'){
@@ -504,10 +671,8 @@ class ReportController extends Controller
                 }
 
 
-                $filename = 'كشف الصرف' . $time .'.xlsx';
+                $filename = 'كشف الصرف_' . $time .'.xlsx';
                 return Excel::download(new ModelExport($salaries,$headings), $filename);
-
-
             }
         }
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use Alkoumi\LaravelArabicNumbers\Numbers;
 use App\Exports\EmployeesDataExport;
 use App\Exports\EmployeesExport;
+use App\Exports\ModelExport;
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequset;
@@ -269,9 +270,134 @@ class EmployeeController extends Controller
     public function export(Request $request)
     {
         $this->authorize('export', Employee::class);
+        if($request->has('filter')){
+            parse_str($request->data, $data);
+            $filedsEmpolyees = [
+                'name',
+                'employee_id',
+                'gender',
+                'matrimonial_status',
+                'scientific_qualification',
+                'area',
+            ];
+            $filedsWork = [
+                'working_status',
+                'type_appointment',
+                'field_action',
+                'dual_function',
+                'state_effectiveness',
+                'nature_work',
+                'association',
+                'workplace',
+                'section',
+                'dependence',
+                'establishment',
+                'payroll_statement'
+            ];
+            $employees = Employee::query();
+            foreach($filedsEmpolyees as $filed){
+                $valInput = $data[$filed];
+                if($valInput != ""){
+                    $employees = Employee::where($filed,'LIKE',"%{$valInput}%");
+                }
+            }
+            foreach($filedsWork as $filed){
+                $valInput = $data[$filed];
+                if($valInput != ""){
+                    $employees = $employees->whereHas('workData', function($query) use ($filed, $valInput) {
+                        $query->where($filed,'LIKE',"%{$valInput}%");
+                    });
+                }
+            }
+        }
         $time = Carbon::now();
+        $headings = [
+            'رقم الموظف',
+            'اسم الموظف',
+            'رقم الهوية',
+            'تاريخ الميلاد',
+            'العمر',
+            'الجنس',
+            'الحالة الزوجية',
+            'عدد الزوجات',
+            'عدد الأولاد',
+            'عدد أولاد الجامعة',
+            'المؤهل العلمي',
+            'التخصص',
+            'الجامعة',
+            'المنطقة',
+            'العنوان',
+            'الإيميل',
+            'رقم الهاتف',
+            'العلاوة',
+            'الدرجة',
+            'نسبة علاوة درجة',
+            'فئة الراتب',
+            'تاريخ العمل',
+            'تاريخ التثبيت',
+            'تاريخ التقاعد',
+            'حالة الدوام',
+            'نوع التعين',
+            'مجال العمل',
+            'مزدوج وظيفة',
+            'حالة الفعالية',
+            'سنوات الخدمة',
+            'طبيعة العمل',
+            'الجمعية',
+            'مكان العمل',
+            'القسم',
+            'التبعية',
+            'المنشأة',
+            'المؤسسة',
+            'بيان الراتب',
+        ];
+        $employees = $employees
+                        ->join('work_data', 'work_data.employee_id', '=', 'employees.id')
+                        ->select(
+                            'employees.id',
+                            'employees.name',
+                            'employees.employee_id',
+                            'employees.date_of_birth',
+                            'employees.age',
+                            'employees.gender',
+                            'employees.matrimonial_status',
+                            'employees.number_wives',
+                            'employees.number_children',
+                            'employees.number_university_children',
+                            'employees.scientific_qualification',
+                            'employees.specialization',
+                            'employees.university',
+                            'employees.area',
+                            'employees.address',
+                            'employees.email',
+                            'employees.phone_number',
+                            'work_data.allowance',
+                            'work_data.grade',
+                            'work_data.grade_allowance_ratio',
+                            'work_data.salary_category',
+                            'work_data.working_date',
+                            'work_data.date_installation',
+                            'work_data.date_retirement',
+                            'work_data.working_status',
+                            'work_data.type_appointment',
+                            'work_data.field_action',
+                            'work_data.dual_function',
+                            'work_data.state_effectiveness',
+                            'work_data.years_service',
+                            'work_data.nature_work',
+                            'work_data.association',
+                            'work_data.workplace',
+                            'work_data.section',
+                            'work_data.dependence',
+                            'work_data.establishment',
+                            'work_data.foundation_E',
+                            'work_data.payroll_statement',
+                        )
+                        ->get();
+
+
         $filename = 'سجلات الموظفين' . $time .'.xlsx';
-        return Excel::download(new EmployeesDataExport, $filename);
+        return Excel::download(new ModelExport($employees,$headings), $filename);
     }
 
 

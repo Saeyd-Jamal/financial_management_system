@@ -203,6 +203,8 @@ class AddSalaryEmployee{
         // قرض الإدخار
         $savings_loan = $fixedEntries != null ? $fixedEntries->savings_loan : 0;
 
+        // إجمالي الراتب الاخير الخاص ببرنامج الإكسيل فقط للعرض
+        $gross_salary = $secondary_salary +$allowance_boys + $nature_work_increase + $administrative_allowance+ $scientific_qualification_allowance+ $transport + $extra_allowance+ $salary_allowance + $ex_addition + $mobile_allowance+ $termination_service;
         DB::beginTransaction();
         try{
             $salaryOld = Salary::where('employee_id',$employee->id)->where('month',$month)->first();

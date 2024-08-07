@@ -8,13 +8,13 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class ModelExport implements FromCollection,WithHeadings
 {
 
-    public $data;
+    public $collection;
     public $headings;
 
 
-    public function __construct($data,$headings)
+    public function __construct($collection,$headings)
     {
-        $this->data = $data;
+        $this->collection = $collection;
         $this->headings = $headings;
     }
     /**
@@ -22,7 +22,7 @@ class ModelExport implements FromCollection,WithHeadings
     */
     public function collection()
     {
-        return $this->data;
+        return $this->collection;
     }
 
     public function headings(): array
