@@ -88,7 +88,7 @@
     </div>
 
     {{-- حقول خاصة بالموظف الثابت --}}
-    <div class="row" id="proven" @if ($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
+    <div class="row" id="proven" @if($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
         <div class="form-group p-3 col-3">
             <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" />
         </div>
@@ -127,6 +127,11 @@
                 <option value="4"  @selected($workData->salary_category == 4)>الرابعة</option>
                 <option value="5"  @selected($workData->salary_category == 5)>الخامسة</option>
             </select>
+        </div>
+    </div>
+    <div class="row" id="notProven" @if($workData->type_appointment != 'مثبت' || $workData->type_appointment == null) style="display: flex; margin: 0; " @else style="display: none" @endif>
+        <div class="form-group p-3 col-3">
+            <x-form.input type="number" label="الراتب المحدد" min="0" :value="$employee->specificSalaries->salary" name="specificSalary" placeholder="0" />
         </div>
     </div>
 
