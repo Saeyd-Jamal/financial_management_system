@@ -114,3 +114,15 @@ function shekel_loan_fields_month(e){
     total_shekel_loan_new_val = Number(total_shekel_loan) - (shekel_loan_months_total);
     $("#total_shekel_loan").val(total_shekel_loan_new_val);
 }
+
+function fields_month(e){
+    fields_month_new_val = $('.fields_month').val();
+    console.log(fields_month_new_val);
+    for(let i = 1;i <= 12;i++){
+        if(i >= currentMonth){
+            $(".fields_month-"+i).val(fields_month_new_val)
+            console.log(fields_month_new_val);
+
+        }
+    }
+}

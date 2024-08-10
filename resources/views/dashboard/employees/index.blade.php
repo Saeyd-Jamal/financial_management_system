@@ -251,7 +251,7 @@
                                                     <button class="dropdown-item showEmployee"
                                                         data-id="{{ $employee->id }}"
                                                         style="margin: 0.5rem -0.75rem; text-align: right;">عرض</button>
-                                                    @can('update', 'App\\Models\Employee')
+                                                    @can('edit', 'App\\Models\Employee')
                                                         <a class="dropdown-item"
                                                             style="margin: 0.5rem -0.75rem; text-align: right;"
                                                             href="{{ route('employees.edit', $employee->id) }}">تعديل</a>

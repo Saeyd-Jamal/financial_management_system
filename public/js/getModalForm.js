@@ -41,7 +41,7 @@
                                 <div class="row mt-3">
                                     <div class="form-group col-md-3">
                                         <h3 class="ml-2">تحديد ثابت لكل شهر</h3>
-                                        <input type="number" id="` + type + `_months" name="` + type + `_months" value="" class="form-control" placeholder="0">
+                                        <input type="number" id="` + type + `_months" name="` + type + `_months" oninput="fields_month()" value="" class="form-control fields_month" placeholder="0">
                                     </div>
                                 </div>
                                 <hr>
@@ -61,62 +61,22 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <input type="number" id="` + type +`_month-1" name="` +type +`_month-1" class="form-control" placeholder="0." ` +disabledField(1) +`  value="` +response[type + "_month-1"] +`">
+                                                    <input type="number" id="` + type +`_month-1" name="` +type +`_month-1" class="form-control fields_month-1" placeholder="0." ` +disabledField(1) +`  value="` +response[type + "_month-1"] +`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-2" name="` +
-                    type +
-                    `_month-2" class="form-control" placeholder="0." ` +
-                    disabledField(2) +
-                    ` value="` +
-                    response[type + "_month-2"] +
-                    `">
+                                                    <input type="number" id="` + type +`_month-2" name="` +type +`_month-2" class="form-control fields_month-2" placeholder="0." ` +disabledField(2) +`  value="` +response[type + "_month-2"] +`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-3" name="` +
-                    type +
-                    `_month-3" class="form-control" placeholder="0." ` +
-                    disabledField(3) +
-                    ` value="` +
-                    response[type + "_month-3"] +
-                    `">
+                                                    <input type="number" id="` + type +`_month-3" name="` +type +`_month-3" class="form-control fields_month-3" placeholder="0." ` +disabledField(3) +`  value="` +response[type + "_month-3"] +`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-4" name="` +
-                    type +
-                    `_month-4" class="form-control" placeholder="0." ` +
-                    disabledField(4) +
-                    ` value="` +
-                    response[type + "_month-4"] +
-                    `">
+                                                    <input type="number" id="` + type +`_month-4" name="` +type +`_month-4" class="form-control fields_month-4" placeholder="0." ` +disabledField(4) +`  value="` +response[type + "_month-4"] +`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-5" name="` +
-                    type +
-                    `_month-5" class="form-control" placeholder="0." ` +
-                    disabledField(5) +
-                    ` value="` +
-                    response[type + "_month-5"] +
-                    `">
+                                                    <input type="number" id="` + type +`_month-5" name="` +type +`_month-5" class="form-control fields_month-5" placeholder="0." ` +disabledField(5) +`  value="` +response[type + "_month-5"] +`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-6" name="` +
-                    type +
-                    `_month-6" class="form-control" placeholder="0." ` +
-                    disabledField(6) +
-                    ` value="` +
-                    response[type + "_month-6"] +
-                    `">
+                                                    <input type="number" id="` + type +`_month-6" name="` +type +`_month-6" class="form-control fields_month-` + 6 + `" placeholder="0." ` +disabledField(6) +`  value="` +response[type + "_month-6"] +`">
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -135,70 +95,22 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-7" name="` +
-                    type +
-                    `_month-7" class="form-control" placeholder="0." ` +
-                    disabledField(7) +
-                    ` value="` +
-                    response[type + "_month-7"] +
-                    `">
+                                                    <input type="number" id="`+type+`_month-7" name="`+type+`_month-7" class="form-control fields_month-7" placeholder="0." `+disabledField(7)+` value="`+response[type+ "_month-7"]+`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-8" name="` +
-                    type +
-                    `_month-8" class="form-control" placeholder="0." ` +
-                    disabledField(8) +
-                    ` value="` +
-                    response[type + "_month-8"] +
-                    `">
+                                                    <input type="number" id="`+type+`_month-8" name="`+type+`_month-8" class="form-control fields_month-8" placeholder="0." `+disabledField(8)+` value="`+response[type+ "_month-8"]+`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-9" name="` +
-                    type +
-                    `_month-9" class="form-control" placeholder="0." ` +
-                    disabledField(9) +
-                    ` value="` +
-                    response[type + "_month-9"] +
-                    `">
+                                                    <input type="number" id="`+type+`_month-9" name="`+type+`_month-9" class="form-control fields_month-9" placeholder="0." `+disabledField(9)+` value="`+response[type+ "_month-9"]+`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-10" name="` +
-                    type +
-                    `_month-10" class="form-control" placeholder="0." ` +
-                    disabledField(10) +
-                    ` value="` +
-                    response[type + "_month-10"] +
-                    `">
+                                                    <input type="number" id="`+type+`_month-10" name="`+type+`_month-10" class="form-control fields_month-10" placeholder="0." `+disabledField(10)+` value="`+response[type+ "_month-10"]+`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-11" name="` +
-                    type +
-                    `_month-11" class="form-control" placeholder="0." ` +
-                    disabledField(11) +
-                    ` value="` +
-                    response[type + "_month-11"] +
-                    `">
+                                                    <input type="number" id="`+type+`_month-11" name="`+type+`_month-11" class="form-control fields_month-11" placeholder="0." `+disabledField(11)+` value="`+response[type+ "_month-11"]+`">
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="` +
-                    type +
-                    `_month-12" name="` +
-                    type +
-                    `_month-12" class="form-control" placeholder="0." ` +
-                    disabledField(12) +
-                    ` value="` +
-                    response[type + "_month-12"] +
-                    `">
+                                                    <input type="number" id="`+type+`_month-12" name="`+type+`_month-12" class="form-control fields_month-12" placeholder="0." `+disabledField(12)+` value="`+response[type+ "_month-12"]+`">
                                                 </td>
                                             </tr>
                                         </tbody>

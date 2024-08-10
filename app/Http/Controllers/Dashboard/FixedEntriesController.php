@@ -295,6 +295,13 @@ class FixedEntriesController extends Controller
         }
         return $reslut[$filedName];
     }
+    public function getFixedEntriesFialdsArray($employee_id,$month){
+        $reslut = FixedEntries::where('employee_id',$employee_id)->where('month',$month)->first();
+        if($reslut == null){
+            return $reslut = [];
+        }
+        return $reslut;
+    }
 
     public function getModalForm(Request $request){
         $year = $this->thisYear;

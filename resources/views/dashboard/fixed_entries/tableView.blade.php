@@ -111,24 +111,48 @@
                                                 background: transparent;
                                             }
                                         </style>
-                                        @foreach ($fields as $name => $label)
-                                            <td>
-                                                <div class="input-group-prepend">
-                                                    <button class="btn btn-outline-secondary openModal" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
-                                                        {{$controller->getFixedEntriesFialds($employee->id,$year,$month,$name)}}
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        @endforeach
-                                        @foreach ($fieldsLoan as $name => $label)
-                                            <td>
-                                                <div class="input-group-prepend">
-                                                    <button class="btn btn-outline-secondary openModalLoan" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
-                                                        {{$controller->getFixedEntriesFialds($employee->id,$year,$month,$name)}}
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        @endforeach
+                                        @if ($employee->fixedEntries() != null)
+                                            @php
+                                                $fixedEntriesArray = $controller->getFixedEntriesFialdsArray($employee->id,$monthNow)
+                                            @endphp
+                                            @foreach ($fields as $name => $label)
+                                                <td>
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-outline-secondary openModal" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
+                                                            {{$fixedEntriesArray[$name] ?? 0}}
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            @endforeach
+                                            @foreach ($fieldsLoan as $name => $label)
+                                                <td>
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-outline-secondary openModalLoan" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
+                                                            {{$fixedEntriesArray[$name] ?? 0}}
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            @endforeach
+                                        @else
+                                            @foreach ($fields as $name => $label)
+                                                <td>
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-outline-secondary openModal" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
+                                                            0
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            @endforeach
+                                            @foreach ($fieldsLoan as $name => $label)
+                                                <td>
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-outline-secondary openModalLoan" id="{{ $name }}" title="{{ $label }} ل{{$employee->name}}" type="button" data-type="{{$name}}" data-label="{{$label}}" data-employeeid="{{$employee->id}}" style="border: 0;">
+                                                            0
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            @endforeach
+                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>

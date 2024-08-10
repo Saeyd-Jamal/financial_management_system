@@ -31,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('abilities', function() {
             return include base_path('data/abilities.php');
         });
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**
