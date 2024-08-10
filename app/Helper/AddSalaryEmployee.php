@@ -108,7 +108,11 @@ class AddSalaryEmployee{
 
             $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
         }else{
-            $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
+            if($employee->workData->type_appointment == 'نسبة'){
+                $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
+            }else{
+                $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month','0000-00')->first();
+            }
             if($secondary_salary == null || $secondary_salary->salary == 0){
                 LogRecord::create([
                     'type' => 'errorSalary',
@@ -123,7 +127,6 @@ class AddSalaryEmployee{
                 $allowance_boys = 0;
                 $nature_work_increase =  0; // علاوة طبيعة العمل
                 $secondary_salary = $secondary_salary->salary;
-
             }
         }
 
