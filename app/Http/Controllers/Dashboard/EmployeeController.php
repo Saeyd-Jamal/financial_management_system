@@ -14,6 +14,7 @@ use App\Models\Constant;
 use App\Models\Employee;
 use App\Models\Salary;
 use App\Models\SalaryScale;
+use App\Models\SpecificSalary;
 use App\Models\User;
 use App\Models\WorkData;
 use Carbon\Carbon;
@@ -101,6 +102,11 @@ class EmployeeController extends Controller
             'employee_id' => $employee->id
         ]);
         WorkData::create($request->all());
+        SpecificSalary::create([
+            'employee_id' => $employee->id,
+            'month' => '0000-00',
+            'salary' => $request->specificSalary
+        ]);
         return redirect()->route('employees.index')->with('success', 'تم اضافة الموظف الجديد');
     }
 
@@ -147,7 +153,6 @@ class EmployeeController extends Controller
         if ($workData == null) {
             $workData = new WorkData();
         }
-
         return view('dashboard.employees.edit', compact('employee','workData','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement"));
     }
 
@@ -166,20 +171,39 @@ class EmployeeController extends Controller
         ],[
             'unique' => ' هذا الحقل (:attribute) مكرر يرجى التحقق'
         ]);
-
         $employee->update($request->all());
-        $workData = WorkData::where('employee_id', $employee->id)->first();
+
         $request->merge([
             'employee_id' => $employee->id
         ]);
         WorkData::updateOrCreate([
             'employee_id' => $employee->id
         ], $request->all());
+
+        // الراتب المحدد
+        if($request->type_appointment == 'يومي'){
+            SpecificSalary::updateOrCreate([
+                'employee_id'=> $employee->id,
+                'month' => '0000-00',
+                ],[
+                'number_of_days' => $request->number_of_days,
+                'today_price' => $request->today_price,
+                'salary' => $request->specificSalary
+            ]);
+        }
+        if($request->type_appointment != 'نسبة' && $request->type_appointment != 'يومي' && $request->type_appointment != 'مثبت'){
+            SpecificSalary::updateOrCreate([
+                'employee_id'=> $employee->id,
+                'month' => '0000-00',
+                ],[
+                'salary' => $request->specificSalary
+            ]);
+        }
+
         $salary = Salary::where('employee_id',$employee->id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
             AddSalaryEmployee::addSalary($employee);
         }
-        // AddSalaryEmployee::addSalary($employee);
         return redirect()->route('employees.index')->with('success', 'تم تحديث بيانات الموظف المختار');
     }
     /**

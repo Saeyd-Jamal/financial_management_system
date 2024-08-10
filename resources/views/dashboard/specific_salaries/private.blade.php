@@ -13,7 +13,7 @@
 
             </div>
             <div class="card shadow">
-                <form action="{{route('specific_salaries.ratioCreate')}}" method="post">
+                <form action="{{route('specific_salaries.privateCreate')}}" method="post">
                     @csrf
                 <div class="card-body">
                     <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1">
@@ -28,9 +28,6 @@
                         <tbody>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="form-group col-md-3">
-                                            <x-form.input type="month" :value="$month" name="month" label="شهر الراتب المطلوب" />
-                                        </div>
                                     </div>
                                     <div class="col-auto">
                                         {{-- @can('preparation', 'App\\Models\User') --}}

@@ -27,9 +27,7 @@
                         <tbody>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="form-group col-md-3">
-                                            <x-form.input type="month" :value="$month" name="month" label="شهر الراتب المطلوب" />
-                                        </div>
+
                                     </div>
                                     <div class="col-auto">
                                         {{-- @can('preparation', 'App\\Models\User') --}}

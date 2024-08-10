@@ -129,9 +129,20 @@
             </select>
         </div>
     </div>
-    <div class="row" id="notProven" @if($workData->type_appointment != 'مثبت' || $workData->type_appointment == null) style="display: flex; margin: 0; " @else style="display: none" @endif>
-        <div class="form-group p-3 col-3">
-            <x-form.input type="number" label="الراتب المحدد" min="0" :value="$employee->specificSalaries->salary" name="specificSalary" placeholder="0" />
+
+    <div id="notProven" class="form-group p-3 col-3" @if($workData->type_appointment != 'مثبت' && $workData->type_appointment != 'نسبة' && $workData->type_appointment != null) style="display: block; margin: 0; " @else style="display: none" @endif>
+        <x-form.input type="number" label="الراتب المحدد" min="0" :value="$employee->specificSalaries()->where('month', '0000-00')->first()->salary ?? 0" name="specificSalary" placeholder="0" />
+    </div>
+
+    <div class="row col-md-9" id="daily" @if($workData->type_appointment == 'يومي') style="display: flex; margin: 0; " @else style="display: none" @endif>
+        <div class="form-group p-3 col-4">
+            <x-form.input type="number" label="عدد الأيام" class="daily_fields" min="0" data-name="number_of_days"  :value="$employee->specificSalaries()->where('month', '0000-00')->first()->number_of_days ?? 0" name="number_of_days" placeholder="0" />
+        </div>
+        <div class="form-group p-3 col-4">
+            <x-form.input type="number" label="سعر اليوم" class="daily_fields" min="0" data-name="today_price" :value="$employee->specificSalaries()->where('month', '0000-00')->first()->today_price ?? 0" name="today_price" placeholder="0" />
+        </div>
+        <div class="form-group p-3 col-4">
+            <x-form.input type="number" label="الراتب المحدد" class="daily_fields" :value="$employee->specificSalaries()->where('month', '0000-00')->first()->salary ?? 0" name="specificSalary" placeholder="0" readonly />
         </div>
     </div>
 
@@ -258,6 +269,23 @@
 </div>
 @push('scripts')
     <script>
+        let number_of_days = 0;
+        let today_price = 0;
+        $('.daily_fields').on('input', function () {
+            let name = $(this).data("name");
+            if(name == 'number_of_days') {
+                number_of_days = $(this).val();
+            }
+            if(name == 'today_price') {
+                today_price = $(this).val();
+            }
+            let total = number_of_days * today_price;
+            $("input[name='specificSalary']").val(total)
+        });
+    </script>
+
+    <script>
+
         $("input[name='date_of_birth']").on("input", function () {
             let date_of_birth = $("input[name='date_of_birth']").val();
             let thisYear = new Date().getFullYear();

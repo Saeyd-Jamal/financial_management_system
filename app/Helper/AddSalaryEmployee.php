@@ -23,7 +23,6 @@ class AddSalaryEmployee{
 
     public static function addSalary($employee,$month = null)
     {
-
         // قيم ثابتة تجلب من الخارج
         if($month == null){
             $month = Carbon::now()->format('Y-m');
@@ -90,10 +89,10 @@ class AddSalaryEmployee{
             $initial_salary = SalaryScale::where('id',$employee->workData->allowance)->first()->{$employee->workData->grade}; // الراتب الأولي
 
             $grade_allowance_ratio = $employee->workData->grade_allowance_ratio; // نسبة علاوة درجة
-            if($grade_allowance_ratio != null || $grade_allowance_ratio != 0){
+            if($grade_allowance_ratio != 0){
                 $grade_Allowance = number_format($initial_salary * $grade_allowance_ratio,0); // علاوة درجة
             }else{
-                $grade_Allowance = $employee->workData->allowance * 10;
+                $grade_Allowance = 0;
             }
 
             $secondary_salary = $initial_salary + $grade_Allowance; // الراتب الثانوي

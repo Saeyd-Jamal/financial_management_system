@@ -57,18 +57,21 @@
             </li>
             @endcan
             @can('view','App\\Models\FixedEntries')
-            <li class="nav-item dropdown">
-                <a href="#fixed_entries" data-toggle="collapse" aria-expanded="false"
-                    class="dropdown-toggle nav-link">
+            <li class="nav-item w-100">
+                <a class="nav-link" href="{{route('fixed_entries.index')}}">
                     <i class="fe fe-lock fe-16"></i>
                     <span class="ml-3 item-text">التعديلات</span>
                 </a>
-                <ul class="collapse list-unstyled pl-4 w-100" id="fixed_entries">
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="{{route('fixed_entries.index')}}">
-                            <i class="fe fe-users fe-16"></i>
-                            <span class="ml-1 item-text">الموظفين</span></a>
-                    </li>
+            </li>
+            @endcan
+            @can('view','App\\Models\FixedEntries')
+            <li class="nav-item dropdown">
+                <a href="#specific_salaries" data-toggle="collapse" aria-expanded="false"
+                    class="dropdown-toggle nav-link">
+                    <i class="fe fe-dollar-sign fe-16"></i>
+                    <span class="ml-3 item-text">الرواتب المحددة</span>
+                </a>
+                <ul class="collapse list-unstyled pl-4 w-100" id="specific_salaries">
                     <li class="nav-item">
                         <a class="nav-link pl-3" href="{{route('specific_salaries.ratio')}}">
                             <i class="fe fe-percent fe-16"></i>
@@ -186,54 +189,7 @@
                 </a>
             </li>
             @endcan
-
         </ul>
-        {{-- for Example --}}
-        {{-- <p class="text-muted nav-heading mt-4 mb-1">
-            <span>Components</span>
-        </p>
-        <ul class="navbar-nav flex-fill w-100 mb-2">
-            <li class="nav-item w-100">
-                <a class="nav-link" href="widgets.html">
-                    <i class="fe fe-layers fe-16"></i>
-                    <span class="ml-3 item-text">Widgets</span>
-                    <span class="badge badge-pill badge-primary">New</span>
-                </a>
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#forms" data-toggle="collapse" aria-expanded="false"
-                    class="dropdown-toggle nav-link">
-                    <i class="fe fe-credit-card fe-16"></i>
-                    <span class="ml-3 item-text">Forms</span>
-                </a>
-                <ul class="collapse list-unstyled pl-4 w-100" id="forms">
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./form_elements.html"><span
-                                class="ml-1 item-text">Basic Elements</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./form_advanced.html"><span
-                                class="ml-1 item-text">Advanced Elements</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./form_validation.html"><span
-                                class="ml-1 item-text">Validation</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./form_wizard.html"><span
-                                class="ml-1 item-text">Wizard</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./form_layouts.html"><span
-                                class="ml-1 item-text">Layouts</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link pl-3" href="./form_upload.html"><span class="ml-1 item-text">File
-                                upload</span></a>
-                    </li>
-                </ul>
-            </li>
-        </ul> --}}
         <div class="btn-box w-100 mt-3 mb-1">
             <p class="text-muted font-weight-bold h6">© تم الإنشاء بواسطة <a href="https://saeyd-jamal.github.io/My_Portfolio/" target="_blank">م.السيد الأخرس</a></p>
         </div>

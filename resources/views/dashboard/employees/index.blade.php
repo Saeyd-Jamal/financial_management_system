@@ -49,22 +49,21 @@
                                 });
                             }
                         </script>
-                        </form>
                     @endcan
+                    <form id="filter-form">
+                        <div class="form-group col-md-12">
+                            <x-form.input class="employee_filter" name="name" placeholder="أدخل الاسم"
+                                label="اسم الموظف" />
+                        </div>
                     <button style="display: none;" id="openModalShow" data-toggle="modal" data-target="#ModalShow">
                         Launch demo modal
                     </button>
                 </div>
             </div>
-            <form id="filter-form">
                 <div class="row" id="filter-div" style="display: none;">
                     <div class="form-group col-md-3">
                         <x-form.input class="employee_filter" name="employee_id" placeholder="أدخل رقم الهوية"
                             label="رقم الهوية" maxlength="9" />
-                    </div>
-                    <div class="form-group col-md-3">
-                        <x-form.input class="employee_filter" name="name" placeholder="أدخل الاسم"
-                            label="اسم الموظف" />
                     </div>
                     <div class="form-group col-md-3">
                         <x-form.input class="employee_filter" name="area" placeholder="أدخل المنطقة" label="المنظقة"

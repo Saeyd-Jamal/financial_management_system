@@ -93,14 +93,21 @@ class SalaryController extends Controller
     {
         $USD = Currency::where('code', 'USD')->first()->value;
         $fixedEntries = $salary->employee->fixedEntries->where('month', $salary->month)->first();
+        // إجمالي الإدخارات (تم وضع معادلته سابقا لوجود مشكلة بالحسبة)
+        $savings_loan = ($fixedEntries != null) ? $fixedEntries->savings_loan : 0;
+        $savings_rate = ($fixedEntries != null) ? $fixedEntries->savings_rate : 0;
+        $termination_service = $salary->termination_service ?? 0;
+
+        $total_savings = $savings_loan + (($savings_rate + $termination_service) / $USD );
+
         ReceivablesLoans::updateOrCreate([
             'employee_id' => $salary->employee_id,
         ],[
-            'total_savings_loan' => DB::raw('total_savings_loan + '.($fixedEntries->savings_loan)),
-            'total_shekel_loan' => DB::raw('total_shekel_loan + '.($fixedEntries->shekel_loan)),
-            'total_association_loan' => DB::raw('total_association_loan + '.($fixedEntries->association_loan)),
-            'total_receivables' => DB::raw('total_receivables - '.($salary->late_receivables)),
-            'total_savings' => DB::raw('total_savings - '.($fixedEntries->savings_loan + (($fixedEntries->savings_rate + $salary->termination_service) / $USD ))),
+            'total_receivables' => DB::raw('total_receivables - '. ($salary->late_receivables )),
+            'total_savings' => DB::raw('total_savings - ' . $total_savings),
+            'total_savings_loan' => DB::raw('total_savings_loan + '.$savings_loan),
+            'total_shekel_loan' => DB::raw('total_shekel_loan + '.($fixedEntries->shekel_loan ?? 0)),
+            'total_association_loan' => DB::raw('total_association_loan + '.($fixedEntries->association_loan ?? 0))
         ]);
         $salary->forceDelete();
         // $salary->delete();
@@ -178,13 +185,12 @@ class SalaryController extends Controller
                     $USD = Currency::where('code', 'USD')->first()->value;
                     $fixedEntries = $salary->employee->fixedEntries->where('month', $salary->month)->first();
                     // إجمالي الإدخارات (تم وضع معادلته سابقا لوجود مشكلة بالحسبة)
-                    // ($fixedEntries->savings_loan ?? 0 + (($fixedEntries->savings_rate ?? 0 + $salary->termination_service ?? 0) / $USD ))
                     $savings_loan = ($fixedEntries != null) ? $fixedEntries->savings_loan : 0;
                     $savings_rate = ($fixedEntries != null) ? $fixedEntries->savings_rate : 0;
                     $termination_service = $salary->termination_service ?? 0;
 
                     $total_savings = $savings_loan + (($savings_rate + $termination_service) / $USD );
-                    
+
                     ReceivablesLoans::updateOrCreate([
                         'employee_id' => $salary->employee_id,
                     ],[

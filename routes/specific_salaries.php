@@ -16,6 +16,7 @@ Route::group([
     // النسبة
     Route::get('/specific_salaries/ratio', [SpecificSalaryController::class,'ratio'])->name('specific_salaries.ratio');
     Route::post('/specific_salaries/ratioCreate', [SpecificSalaryController::class,'ratioCreate'])->name('specific_salaries.ratioCreate');
+    Route::post('/specific_salaries/getRatio', [SpecificSalaryController::class,'getRatio'])->name('specific_salaries.getRatio');
 
     // خاص
     Route::get('/specific_salaries/private', [SpecificSalaryController::class,'private'])->name('specific_salaries.private');
