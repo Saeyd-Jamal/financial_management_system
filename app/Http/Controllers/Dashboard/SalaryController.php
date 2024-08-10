@@ -30,7 +30,7 @@ class SalaryController extends Controller
     {
         $this->authorize('view', Salary::class);
         $month  = "2024-07"; //Carbon::now()->format('Y-m')
-        $salaries = Salary::paginate(10);
+        $salaries = Salary::get();
         $USD = Currency::where('code', 'USD')->first()->value;
         $btn_download_salary = null;
         $employess = Employee::all();
@@ -138,7 +138,7 @@ class SalaryController extends Controller
 
     // Create All Salaries
     public function createAllSalaries(){
-        $this->authorize('createAll', Salary::class);
+        $this->authorize('create-all', Salary::class);
         DB::beginTransaction();
         try {
             $employees = Employee::get();
@@ -176,7 +176,7 @@ class SalaryController extends Controller
     }
     // Create All Salaries
     public function deleteAllSalaries(){
-        $this->authorize('deleteAll', Salary::class);
+        $this->authorize('delete-all', Salary::class);
         DB::beginTransaction();
         try {
             $salaries = Salary::get();

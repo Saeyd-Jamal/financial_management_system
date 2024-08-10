@@ -1,4 +1,7 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
+    @push('styles')
+    <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    @endpush
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="row align-items-center mb-2">
@@ -15,7 +18,7 @@
                     <a class="btn btn-danger" href="{{route('salaries.trashed')}}">
                         <i class="fe fe-trash"></i>
                     </a> --}}
-                    @can('createAll', 'App\\Models\Salary')
+                    @can('create-all', 'App\\Models\Salary')
                     @if ($btn_download_salary == "active")
                         <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
                             @csrf
@@ -26,7 +29,7 @@
                         </form>
                     @endif
                     @endcan
-                    @can('deleteAll', 'App\\Models\Salary')
+                    @can('delete-all', 'App\\Models\Salary')
                     @if ($btn_delete_salary == "active")
                     <form action="{{route('salaries.deleteAllSalaries')}}" method="post" class="mt-2">
                         @csrf
@@ -45,7 +48,7 @@
                     <div class="card shadow">
                         <div class="card-body">
                             <!-- table -->
-                            <table class="table table-bordered  table-hover">
+                            <table class="table table-bordered  table-hover datatables text-dark"  id="dataTable-1">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -103,9 +106,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div>
-                                {{$salaries->links()}}
-                            </div>
                         </div>
                     </div>
                 </div> <!-- simple table -->
@@ -140,5 +140,18 @@
         </div>
     </div>
     @endif
-
+    @push('scripts')
+        <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
+        <script>
+            $('#dataTable-1').DataTable(
+            {
+                autoWidth: true,
+                "lengthMenu": [
+                [10, 20, 100, -1],
+                [10, 20, 100, "جميع"]
+                ]
+            });
+        </script>
+    @endpush
 </x-front-layout>
