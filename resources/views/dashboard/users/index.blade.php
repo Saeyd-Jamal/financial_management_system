@@ -24,9 +24,11 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>حالة النشاط</th>
                                         <th>الاسم</th>
                                         <th>اسم المستخدم</th>
                                         <th>البريد الالكتروني</th>
+                                        <th>أخر موعد تواجد</th>
                                         <th>الحدث</th>
                                     </tr>
                                 </thead>
@@ -39,9 +41,19 @@
                                     @foreach($users as $user)
                                     <tr  id="user-{{$user->id}}">
                                         <td>{{ $loop->iteration - 1 }}</td>
+                                        @if ($user->last_activity >= now()->subMinutes(5))
+                                            <td>
+                                                <i class="fe fe-circle text-success bg-success rounded-circle"></i>
+                                            </td>
+                                        @else
+                                            <td>
+                                                <i class="fe fe-circle"></i>
+                                            </td>
+                                        @endif
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->username}}</td>
                                         <td>{{$user->email}}</td>
+                                        <td>{{$user->last_activity}}</td>
                                         <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <span class="text-muted sr-only">Action</span>
