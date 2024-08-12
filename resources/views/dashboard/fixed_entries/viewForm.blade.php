@@ -87,7 +87,7 @@
                                     @foreach ($employees as $employee)
                                     <tr style="white-space: nowrap;">
                                         <td>{{$loop->iteration}}</td>
-                                        <td  class="fixed">{{$employee->name}}</td>
+                                        <td  class="sticky">{{$employee->name}}</td>
                                         <style>
                                             button{
                                                 border: 0;

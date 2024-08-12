@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>جدول المستحقات والقروض للموظفين</title>
+    <title>جدول الأخطاء</title>
     <style>
         body {
             font-family: 'XBRiyaz', sans-serif;
@@ -33,12 +33,12 @@
             color: #000000;
         }
 
-        table.blueTable tr:nth-child(even) {
+        table.blueTable tbody tr:nth-child(even) {
             background: #F5F5F5;
         }
 
         table.blueTable thead {
-            background: #D3D3D3;
+            background: #b8b8b8;
             background: -moz-linear-gradient(top, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
             background: -webkit-linear-gradient(top, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
             background: linear-gradient(to bottom, #dedede 0%, #d7d7d7 66%, #D3D3D3 100%);
@@ -81,85 +81,33 @@
 </head>
 
 <body>
-    @php
-        $filedsEmpolyees = [
-            'gender',
-            'matrimonial_status',
-            'scientific_qualification',
-            'area',
-            'working_status',
-            'type_appointment',
-            'field_action',
-            'dual_function',
-            'state_effectiveness',
-            'nature_work',
-            'association',
-            'workplace',
-            'section',
-            'dependence',
-            'establishment',
-            'payroll_statement'
-        ];
-    @endphp
-    <htmlpageheader name="page-header">
-        <div style="padding: 5px 0">
-            @if ($filter["association"] == "المدينة")
-            <img src="{{ public_path('assets/images/headers/city_architecture.jpg') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "حطين")
-            <img src="{{ public_path('assets/images/headers/hetten.png') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "الكويتي")
-            <img src="{{ public_path('assets/images/headers/Kuwaiti.jpg') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "يتيم")
-            <img src="{{ public_path('assets/images/headers/orphan.jpg') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "صلاح")
-            <img src="{{ public_path('assets/images/headers/salah.png') }}" style="max-width: 100%;" alt="">
-            @endif
-        </div>
-    </htmlpageheader>
-
     <div lang="ar">
         <table class="blueTable">
             <thead>
-                <tr style="background: #ffffff; border:0;">
-                    <td colspan="7" style="border:0;">
+                <tr>
+                    <td colspan="6" style="border:0;">
                         <p>
                             <span>قسم المالية</span> /
-                            <span>جدول المستحقات والقروض للموظفين</span>
-                            @if (isset($filter))
-                                @foreach ($filedsEmpolyees as $name)
-                                    @if ($filter["$name"] != null)
-                                    / <span>{{ $filter["$name"] }}</span>
-                                    @endif
-                                @endforeach
-                            @endif
+                            <span>جدول الأخطاء</span>
                         </p>
                     </td>
                 </tr>
-                <tr style="background: #ffffff; border:0;">
-                    <td colspan="7" align="center" style="color: #000;border:0;">
-                        <h1>جدول المستحقات والقروض للموظفين</h1>
+                <tr>
+                    <td colspan="6" align="center" style="color: #000;border:0;">
+                        <p>بسم الله الرحمن الرحيم</p>
+                        <h1>جدول الأخطاء</h1>
                     </td>
                 </tr>
-                <tr  style="background: #dddddd;">
+                <tr style="background: #dddddd;">
                     <th>#</th>
-                    <th>الاسم</th>
-                    <th>إجمالي المستحقات</th>
-                    <th>إجمالي الإدخارات $</th>
-                    <th>قرض الجمعية</th>
-                    <th>قرض الإدخار $</th>
-                    <th>قرض اللجنة</th>
+                    <th>الخطأ</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($totals as $total)
+                @foreach ($logs as $log)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $total->employee->name }}</td>
-                        <td>{{ $total->total_receivables }}</td>
-                        <td>{{ $total->total_savings }}</td>
-                        <td>{{ $total->total_association_loan }}</td>
-                        <td>{{ $total->total_savings_loan }}</td>
-                        <td>{{ $total->total_shekel_loan }}</td>
+                        <td>{{ $log->description }}</td>
                     </tr>
                 @endforeach
             </tbody>

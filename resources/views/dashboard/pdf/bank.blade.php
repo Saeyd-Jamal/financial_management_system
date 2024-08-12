@@ -160,8 +160,7 @@
                 </tr>
                 <tr style="background: #ffffff; border:0;">
                     <td colspan="{{ $co }}" align="center" style="color: #000;border:0;">
-                        <p>بسم الله الرحمن الرحيم</p>
-                        <h1>رواتب شهر {{ $monthName }}</h1>
+                        <h1>رواتب شهر {{ $monthName }} - {{ Carbon\Carbon::parse($month)->format('Y') }}</h1>
                     </td>
                 </tr>
                 <tr style="background: #dddddd;">

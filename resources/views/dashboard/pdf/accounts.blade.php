@@ -137,7 +137,6 @@
                 </tr>
                 <tr>
                     <td colspan="6" align="center" style="color: #000;border:0;">
-                        <p>بسم الله الرحمن الرحيم</p>
                         <h1>جدول حسابات الموظفين</h1>
                     </td>
                 </tr>

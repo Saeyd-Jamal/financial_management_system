@@ -30,6 +30,17 @@ table#dataTable-1 tbody tr {
     table-layout: fixed;
 }
 
+.sticky {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    right: 0;
+    background-color: #f2f2f2;
+    z-index: 3; /* تأكد من أن العمود المثبت يظهر فوق الأعمدة الأخرى */
+}
+
+
+
+/*  التعديل على الجدول  */
 table.blueTable {
     width: 100%;
     text-align: right;

@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use App\Models\Bank;
+use App\Models\LogRecord;
 
 class ReportController extends Controller
 {
@@ -148,6 +149,9 @@ class ReportController extends Controller
     public function export(Request $request){
         $time = Carbon::now();
         $employees = $this->filterEmployees($request->all())->get();
+        if($request->employee_id != null){
+            $employees = $employees->where('id',$request->employee_id);
+        }
         if($request->report_type == 'employees'){
             if($request->export_type == 'view'){
                 $margin_top = 3;
@@ -577,6 +581,7 @@ class ReportController extends Controller
         if($request->report_type == 'bank'){
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');
+            
             $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
             $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
                     ->where('month', $month);

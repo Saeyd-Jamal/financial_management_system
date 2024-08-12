@@ -128,14 +128,13 @@
                             @elseif ($filter['association'] == 'الكويتي')
                                 المركز الكويتي للأشعة التخصصية
                             @elseif ($filter['association'] == 'يتيم')
-                                دار اليتيم الفلسطيني
+                            جمعية دار اليتيم الفلسطيني
                             @elseif ($filter['association'] == 'صلاح')
                                 جميعة الصلاح الإسلامية
                             @endif
                         @endisset
                     </td>
                     <td colspan="12" align="center" style="color: #000;border:0;">
-                        <p>بسم الله الرحمن الرحيم</p>
                         <h1>جدول التعديلات الثابتة للموظفين لشهر : {{ $month }}</h1>
                     </td>
                     <td colspan="4" style="border:0;"></td>

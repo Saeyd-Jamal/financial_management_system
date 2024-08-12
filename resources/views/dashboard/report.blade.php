@@ -167,8 +167,8 @@
                         <option value="employees">كشف موظفين</option>
                         <option value="salaries">كشف الرواتب</option>
                         <option value="accounts">كشف حسابات البنك</option>
-                        <option value="employees_totals">كشف الإجماليات</option>
-                        <option value="employees_fixed">كشف الإدخالات الثابتة</option>
+                        <option value="employees_totals">كشف المستحقات والقروض</option>
+                        <option value="employees_fixed">كشف التعديلات</option>
                         <option value="bank" >كشف الصرف</option>
                     </select>
                 </div>
@@ -179,6 +179,17 @@
                         <option value="export_pdf">PDF</option>
                         <option value="export_excel">Excel</option>
                     </select>
+                </div>
+                <div class="form-group p-3 col-4">
+                    <label for="gender">إختيار موظف معين</label>
+                    <div class="input-group mb-3">
+                        <x-form.input name="employee_id" placeholder="0" readonly  />
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchEmployee">
+                                <i class="fe fe-search"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row" id="bankDiv" style="display: none;">
@@ -215,7 +226,55 @@
             </div>
         </form>
     </div>
+    <div class="modal fade" id="searchEmployee" tabindex="-1" role="dialog" aria-labelledby="searchEmployeeLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchEmployeeLabel">البحث عن الموظفين</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="row mt-3">
+                            <div class="form-group col-md-6">
+                                <x-form.input name="employee_id_search" label="رقم الهوية" type="number" class="employee_fields_search"
+                                    placeholder="إملا رقم هوية الموظف"  />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <x-form.input name="employee_name_search" label="إسم الموظف" type="text" class="employee_fields_search"
+                                    placeholder="إملا إسم الموظف" />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">رقم الموظف</th>
+                                    <th scope="col">رقم الهوية</th>
+                                    <th scope="col">الإسم</th>
+                                    <th scope="col">تاريخ الميلاد</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_employee">
+                                <tr>
+                                    <td colspan='4'>يرجى تعبئة البيانات</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @push('scripts')
+    <script>
+        const csrf_token = "{{csrf_token()}}";
+    </script>
     <script src="{{asset('js/report.js')}}"></script>
+    <script src="{{ asset('js/getEmployee.js') }}"></script>
     @endpush
+
 </x-front-layout>
