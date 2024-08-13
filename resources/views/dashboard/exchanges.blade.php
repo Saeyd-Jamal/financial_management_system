@@ -6,18 +6,18 @@
         <div class="col-12">
             <div class="row align-items-center mb-2">
                 <div class="col">
-                    <h2 class="mb-2 page-title">جدول الإجماليات</h2>
-                    <p class="card-text">هنا يتم عرض جدول الإجماليات</p>
+                    <h2 class="mb-2 page-title">جدول الصرف</h2>
+                    <p class="card-text">هنا يتم عرض الصرف الذي يحدث للموظف من المستحقات والقروض</p>
                 </div>
                 <div class="col-auto">
-                    @can('create', 'App\\Models\ReceivablesLoans')
+                    @can('create', 'App\\Models\Exchange')
                     <a type="button" class="btn btn-success" data-toggle="modal" data-target="#createItem">
                         <i class="fe fe-plus"></i>
                     </a>
                     @endcan
-                    <button style="display: none;" id="openModalShow" data-toggle="modal" data-target="#editItem">
+                    {{-- <button style="display: none;" id="openModalShow" data-toggle="modal" data-target="#editItem">
                         Launch demo modal
-                    </button>
+                    </button> --}}
                 </div>
             </div>
             <div class="row my-4">
@@ -31,23 +31,40 @@
                                     <tr>
                                         <th>#</th>
                                         <th>الموظف</th>
-                                        <th>إجمالي المستحقات</th>
-                                        <th>إجمالي الإدخارات $</th>
-                                        <th>إجمالي قرض الجمعية</th>
-                                        <th>إجمالي قرض الإدخار $</th>
-                                        <th>إجمالي قرض اللجنة (الشيكل)</th>
+                                        <th>خصم المستحقات ش</th>
+                                        <th>خصم الإدخارات $</th>
+                                        <th>تاريخ الخصم</th>
+                                        <th>المستخدم</th>
+                                        <th>حدث</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($totals as $total)
-                                    <tr class="total_select" data-id="{{$total->id}}">
+                                    @foreach($exchanges as $exchange)
+                                    <tr class="exchange_select" data-id="{{$exchange->id}}">
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$total->employee->name}}</td>
-                                        <td>{{$total->total_receivables_view}}</td>
-                                        <td>{{$total->total_savings_view}}</td>
-                                        <td>{{$total->total_association_loan_view}}</td>
-                                        <td>{{$total->total_savings_loan_view}}</td>
-                                        <td>{{$total->total_shekel_loan_view}}</td>
+                                        <td>{{$exchange->employee->name}}</td>
+                                        <td>{{$exchange->receivables_discount}}</td>
+                                        <td>{{$exchange->savings_discount}}</td>
+                                        <td>{{$exchange->discount_date}}</td>
+                                        <td>{{$exchange->username}}</td>
+                                        <td>
+                                            <button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="text-muted sr-only">Action</span>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                {{-- <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
+                                                    href="{{route('salaries.edit',$salary->id)}}">تعديل</a> --}}
+                                                @can('delete', 'App\\Models\Exchange')
+                                                <form action="{{route('exchanges.destroy',$exchange->id)}}" method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
+                                                    href="#">حذف</button>
+                                                </form>
+                                                @endcan
+                                            </div>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -59,7 +76,7 @@
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
     {{-- create model --}}
-    @can('create', 'App\\Models\ReceivablesLoans')
+    @can('create', 'App\\Models\Exchange')
     <div class="modal fade" id="createItem" tabindex="-2" role="dialog" aria-labelledby="createItemLabel" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -70,34 +87,49 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('totals.store')}}" method="post" class="col-12">
+                    <form action="{{route('exchanges.store')}}" method="post" class="col-12">
                         @csrf
-                        <div class="form-group p-1 col-6">
-                            <label for="gender">رقم الموظف</label>
-                            <div class="input-group mb-3">
-                                <x-form.input name="employee_id" placeholder="0" readonly required />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchEmployee" >
-                                        <i class="fe fe-search"></i>
-                                    </button>
+                        <div class="row">
+                            <div class="form-group p-1 col-6">
+                                <label for="employee_id">رقم الموظف</label>
+                                <div class="input-group mb-3">
+                                    <x-form.input name="employee_id" placeholder="0" value="{{$employee_id ?? 0}}" readonly required />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchEmployee" >
+                                            <i class="fe fe-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="form-group p-1 col-6">
+                                <label for="discount_type">نوع الخصم</label>
+                                <select class="custom-select" name="discount_type" id="discount_type" required>
+                                    <option selected="" value="">إختر</option>
+                                    <option value="receivables_discount">خصم المستحقات ش</option>
+                                    <option value="savings_discount">خصم الإدخارات $</option>
+                                    <option value="receivables_savings_discount">خصم المستحقات والإدخارات</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0" value="0"  label="إجمالي المستحقات" name="total_receivables" placeholder="5000...." />
+                            <div class="form-group p-3 col-4" id="receivables" style="display: none;">
+                                <x-form.input type="number" min="0" value="0"  label="خصم المستحقات ش" name="receivables_discount" placeholder="0.." />
+                                <span class="totals" id="receivables_total">
+                                    {{$totals['total_receivables'] ?? ''}}
+                                </span>
+                            </div>
+                            <div class="form-group p-3 col-4" id="savings"  style="display: none;">
+                                <x-form.input type="number" min="0" value="0"  label="خصم الإدخارات $" name="savings_discount" placeholder="0.." />
+                                <span class="totals" id="savings_total">
+                                    {{$totals['total_savings']  ?? ''}}
+                                </span>
                             </div>
                             <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0" value="0"  label="إجمالي الإدخارات" name="total_savings" placeholder="5000...." />
+                                <x-form.input type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}"  label="تاريخ الخصم" name="discount_date"  />
                             </div>
-                            <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0"  value="0" label="إجمالي قرض الجمعية" name="total_association_loan" placeholder="5000...." />
-                            </div>
-                            <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0"  value="0" label="إجمالي قرض الإدخار" name="total_savings_loan" placeholder="5000...." />
-                            </div>
-                            <div class="form-group p-3 col-4">
-                                <x-form.input type="number" min="0"  value="0" label="إجمالي قرض اللجنة (الشيكل)" name="total_shekel_loan" placeholder="5000...." />
+                            <div class="form-group p-3 col-12">
+                                <label for="notes">ملاحظات حول الخصم</label>
+                                <textarea class="form-control" id="notes" name="notes" placeholder="....." rows="3"></textarea>
                             </div>
                         </div>
                         <div class="row align-items-center mb-2">
@@ -110,49 +142,6 @@
                             </div>
                         </div>
                     </form>
-                    @can('import','App\\\Models\Employee')
-                    <div class="col-md-6">
-                        <div class="card shadow mb-4">
-                            <div class="card-header">
-                                <strong>إستيراد ملف إكسيل</strong>
-                            </div>
-                            <div class="card-body">
-                                <form action="{{ route('totals.importExcel') }}" enctype="multipart/form-data" method="post">
-                                    @csrf
-                                    <label for="images" class="drop-container" id="dropcontainer">
-                                        <span class="drop-title">إسقاط الملف هنا</span>
-                                        or
-                                        <input type="file" name="fileUplode" id="fileUplode" accept=".xlsx, .xls, .csv, .xml , .xlsm" required>
-                                    </label>
-                                    <button type="submit" class="btn btn-primary">ارسال</button>
-                                </form>
-                                <p class="text-muted font-weight-bold h6">لتحميل نموذج الإدخال <a
-                                        href="{{ asset('files/style_totals.xlsx') }}" download="نموذج الإدخال"
-                                        target="_blank">إضغط هنا</a></p>
-                            </div> <!-- .card-body -->
-                        </div> <!-- .card -->
-                    </div> <!-- .col -->
-                    @endcan
-                </div>
-            </div>
-        </div>
-    </div>
-    @endcan
-    @can('edit','App\\Models\ReceivablesLoans')
-    <div class="modal fade" id="editItem" tabindex="-3" role="dialog" aria-labelledby="editItemLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered  modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editItemLabel">تعديل الإجماليات </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body " id="showtotal">
-
-                </div>
-                <div class="modal-footer">
-
                 </div>
             </div>
         </div>
@@ -207,12 +196,8 @@
             const csrf_token = "{{csrf_token()}}";
             const app_link = "{{config('app.url')}}";
         </script>
-        @can('create', 'App\\Models\ReceivablesLoans')
-            <script src="{{ asset('js/getEmployee.js') }}"></script>
-        @endcan
-        @can('edit','App\\Models\ReceivablesLoans')
-            <script src="{{asset('js/getShowTotals.js')}}"></script>
-        @endcan
+        {{-- <script src="{{ asset('js/getEmployee.js') }}"></script> --}}
+        <script src="{{ asset('js/exchange.js') }}"></script>
         <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
         <script>

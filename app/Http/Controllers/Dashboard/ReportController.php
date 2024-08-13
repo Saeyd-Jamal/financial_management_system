@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use App\Models\Bank;
+use Illuminate\Support\Facades\DB;
 use App\Models\LogRecord;
 
 class ReportController extends Controller
@@ -335,7 +336,7 @@ class ReportController extends Controller
                 'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
             ];
 
-            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+            if($request->export_type == 'view'){
                 $pdf = PDF::loadView('dashboard.pdf.salaries',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
                 [
                     'mode' => 'utf-8',
@@ -384,15 +385,42 @@ class ReportController extends Controller
                 ];
 
                 $salaries = Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
-                        ->where('month', $month)
-                        ->join('employees', 'salaries.employee_id', '=', 'employees.id')
-                        ->join('work_data as workData', 'employees.id', '=', 'workData.employee_id')
-                        ->join('fixed_entries as fixedEntries', function ($join) use ($month) {
-                            $join->on('employees.id', '=', 'fixedEntries.employee_id')
-                                ->where('fixed_entries.month', $month);
-                        })
-                        ->select('employees.name', 'salaries.month','workData.workplace', 'salaries.secondary_salary', 'salaries.allowance_boys', 'salaries.nature_work_increase','fixedEntries.administrative_allowance', 'fixedEntries.	scientific_qualification_allowance', 'fixedEntries.transport', 'fixedEntries.extra_allowance', 'fixedEntries.salary_allowance', 'fixedEntries.ex_addition', 'fixedEntries.mobile_allowance', 'salaries.termination_service', 'salaries.gross_salary', 'fixedEntries.health_insurance', 'salaries.z_Income' , 'fixedEntries.savings_rate', 'fixedEntries.association_loan', 'fixedEntries.savings_loan', 'fixedEntries.shekel_loan', 'salaries.late_receivables', 'salaries.total_discounts', 'salaries.net_salary')
-                        ->get();
+                                ->where('salaries.month', $month)
+                                ->join('employees', 'salaries.employee_id', '=', 'employees.id')
+                                ->join('work_data as workData', 'employees.id', '=', 'workData.employee_id')
+                                ->leftJoin('fixed_entries as fixedEntries', function ($join) use ($month) {
+                                    $join->on('employees.id', '=', 'fixedEntries.employee_id')
+                                        ->where('fixedEntries.month', $month);
+                                })
+                                ->select(
+                                    'employees.name',
+                                    'salaries.month',
+                                    'workData.workplace',
+                                    'workData.type_appointment',
+                                    'salaries.secondary_salary',
+                                    'salaries.allowance_boys',
+                                    'salaries.nature_work_increase',
+                                    DB::raw('COALESCE(fixedEntries.administrative_allowance, 0) as administrative_allowance'),
+                                    DB::raw('COALESCE(fixedEntries.scientific_qualification_allowance, 0) as scientific_qualification_allowance'),
+                                    DB::raw('COALESCE(fixedEntries.transport, 0) as transport'),
+                                    DB::raw('COALESCE(fixedEntries.extra_allowance, 0) as extra_allowance'),
+                                    DB::raw('COALESCE(fixedEntries.salary_allowance, 0) as salary_allowance'),
+                                    DB::raw('COALESCE(fixedEntries.ex_addition, 0) as ex_addition'),
+                                    DB::raw('COALESCE(fixedEntries.mobile_allowance, 0) as mobile_allowance'),
+                                    'salaries.termination_service',
+                                    'salaries.gross_salary',
+                                    DB::raw('COALESCE(fixedEntries.health_insurance, 0) as health_insurance'),
+                                    'salaries.z_Income',
+                                    DB::raw('COALESCE(fixedEntries.savings_rate, 0) as savings_rate'),
+                                    DB::raw('COALESCE(fixedEntries.association_loan, 0) as association_loan'),
+                                    DB::raw('COALESCE(fixedEntries.savings_loan, 0) as savings_loan'),
+                                    DB::raw('COALESCE(fixedEntries.shekel_loan, 0) as shekel_loan'),
+                                    'salaries.late_receivables',
+                                    'salaries.total_discounts',
+                                    'salaries.net_salary'
+                                )
+                                ->orderBy('employees.id')
+                                ->get();
 
                 $filename = 'سجلات رواتب الموظفين' . $time .'.xlsx';
                 return Excel::download(new ModelExport($salaries,$headings), $filename);
@@ -581,7 +609,7 @@ class ReportController extends Controller
         if($request->report_type == 'bank'){
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');
-            
+
             $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
             $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
                     ->where('month', $month);

@@ -59,6 +59,10 @@ class Employee extends Model
     {
         return $this->hasMany(FixedEntries::class,'employee_id');
     }
+    public function exchanges() :HasMany
+    {
+        return $this->hasMany(Exchange::class,'employee_id');
+    }
     public function salaries() :HasMany
     {
         return $this->hasMany(Salary::class,'employee_id');

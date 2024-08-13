@@ -64,6 +64,14 @@
                 </a>
             </li>
             @endcan
+            @can('view','App\\Models\Exchange')
+            <li class="nav-item w-100">
+                <a class="nav-link" href="{{route('exchanges.index')}}">
+                    <i class="fe fe-archive fe-16"></i>
+                    <span class="ml-3 item-text">الصرف</span>
+                </a>
+            </li>
+            @endcan
             @can('view','App\\Models\FixedEntries')
             <li class="nav-item dropdown">
                 <a href="#specific_salaries" data-toggle="collapse" aria-expanded="false"

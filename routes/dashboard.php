@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\BanksEmployeesController;
 use App\Http\Controllers\Dashboard\ConstantController;
 use App\Http\Controllers\Dashboard\CurrencyController;
 use App\Http\Controllers\Dashboard\EmployeeController;
+use App\Http\Controllers\Dashboard\ExchangeController;
 use App\Http\Controllers\Dashboard\FixedEntriesController;
 use App\Http\Controllers\Dashboard\NatureWorkIncreaseController;
 use App\Http\Controllers\Dashboard\ReportController;
@@ -37,6 +38,9 @@ Route::group([
     Route::post('/fixed_entries/getModalFormLoan', [FixedEntriesController::class,'getModalFormLoan'])->name('fixed_entries.getModalFormLoan');
     Route::get('/fixed_entries/viewForm', [FixedEntriesController::class,'viewForm'])->name('fixed_entries.viewForm');
     Route::get('/fixed_entries/tableView', [FixedEntriesController::class,'tableView'])->name('fixed_entries.tableView');
+
+    Route::post('/exchanges/getTotals', [ExchangeController::class,'getTotals'])->name('exchanges.getTotals');
+
 
     Route::post('/salaries/createAllSalaries', [SalaryController::class,'createAllSalaries'])->name('salaries.createAllSalaries');
     Route::post('/salaries/deleteAllSalaries', [SalaryController::class,'deleteAllSalaries'])->name('salaries.deleteAllSalaries');
@@ -84,6 +88,7 @@ Route::group([
         'totals' => TotalController::class,
         'salaries' => SalaryController::class,
         'users' => UserController::class,
+        'exchanges' => ExchangeController::class,
         // 'roles' => RoleController::class,
     ]);
 });

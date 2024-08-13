@@ -46,6 +46,7 @@
                             </div>
                             <div class="row align-items-center mb-2">
                                 <div class="col">
+                                    <a href="`+app_link+`exchanges?employee_id=`+ response['employee_id'] +`" class="nav-link" >عمل صرف للموظف</a>
                                 </div>
                                 <div class="col-auto">
                                     <button type="submit" class="btn btn-primary">

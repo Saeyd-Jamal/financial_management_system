@@ -183,7 +183,7 @@
                 <div class="form-group p-3 col-4">
                     <label for="gender">إختيار موظف معين</label>
                     <div class="input-group mb-3">
-                        <x-form.input name="employee_id" placeholder="0" readonly  />
+                        <x-form.input name="employee_id" placeholder="0"/>
                         <div class="input-group-append">
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchEmployee">
                                 <i class="fe fe-search"></i>

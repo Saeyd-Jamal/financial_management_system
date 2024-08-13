@@ -38,7 +38,39 @@
         let employee_id_select = $(this).data("id");
         $("input[name=employee_id]").val(employee_id_select);
         $("#searchEmployee .close").click();
-        $("#searchEmployee").modal("toggle");
+        $.ajax({
+            url: "/exchanges/getTotals", //data-id
+            method: "post",
+            data: {
+                employeeId: employee_id_select,
+                _token: csrf_token,
+            },
+            success: function (response) {
+                $(".totals").empty();
+                $("#receivables_total").text(response['total_receivables']);
+                $("#savings_total").text(response['total_savings']);
+            },
+        });
+    });
+
+    $("#discount_type").on('change',function () {
+        let type = $(this).val();
+        if(type == "receivables_discount"){
+            $("div#receivables").slideDown();
+            $("div#savings").slideUp();
+        }
+        if(type == "savings_discount"){
+            $("div#receivables").slideUp();
+            $("div#savings").slideDown();
+        }
+        if(type == "receivables_savings_discount"){
+            $("div#receivables").slideDown();
+            $("div#savings").slideDown();
+        }
+        if(type == ""){
+            $("div#receivables").slideUp();
+            $("div#savings").slideUp();
+        }
     });
 
 })(jQuery);
