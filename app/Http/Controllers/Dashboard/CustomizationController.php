@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
 use App\Models\Customization;
 use App\Models\Employee;
+use App\Models\Salary;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -35,9 +37,12 @@ class CustomizationController extends Controller
      */
     public function store(Request $request)
     {
-
         Customization::create($request->all());
-
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month','2024-07')->first();
+        if($salary != null){
+            $employee = Employee::findOrFail($request->employee_id);
+            AddSalaryEmployee::addSalary($employee);
+        }
         return redirect()->route('customizations.index')->with('success', 'تم اضافة التخصيصات لموظف');
     }
 
@@ -64,6 +69,11 @@ class CustomizationController extends Controller
     public function update(Request $request, Customization $customization)
     {
         $customization->update($request->all());
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month','2024-07')->first();
+        if($salary != null){
+            $employee = Employee::findOrFail($request->employee_id);
+            AddSalaryEmployee::addSalary($employee);
+        }
         return redirect()->route('customizations.index')->with('success', 'تم تعديل التخصيصات لموظف');
     }
 
