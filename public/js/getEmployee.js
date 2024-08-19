@@ -15,7 +15,7 @@
                 if (response.length != 0) {
                     for (let index = 0; index < response.length; index++) {
                         $("#table_employee").append(
-                            "<tr class='employee_select' data-id=" +response[index]["id"] +"><th scope='row'>" +
+                            "<tr class='employee_select' data-name='" +response[index]["name"] +"' data-id=" +response[index]["id"] +"><th scope='row'>" +
                                 response[index]["id"] +
                                 "</th><td>" +
                                 response[index]["employee_id"] +
@@ -36,7 +36,9 @@
     });
     $(".table-hover").delegate("tr.employee_select", "click", function () {
         let employee_id_select = $(this).data("id");
+        let employee_name_select = $(this).data("name");
         $("input[name=employee_id]").val(employee_id_select);
+        $('#nameEmployee').text(employee_name_select);
         $("#searchEmployee .close").click();
         $("#searchEmployee").modal("toggle");
     });

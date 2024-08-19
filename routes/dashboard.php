@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\BankController;
 use App\Http\Controllers\Dashboard\BanksEmployeesController;
 use App\Http\Controllers\Dashboard\ConstantController;
 use App\Http\Controllers\Dashboard\CurrencyController;
+use App\Http\Controllers\Dashboard\CustomizationController;
 use App\Http\Controllers\Dashboard\EmployeeController;
 use App\Http\Controllers\Dashboard\ExchangeController;
 use App\Http\Controllers\Dashboard\FixedEntriesController;
@@ -89,6 +90,7 @@ Route::group([
         'salaries' => SalaryController::class,
         'users' => UserController::class,
         'exchanges' => ExchangeController::class,
+        'customizations' => CustomizationController::class,
         // 'roles' => RoleController::class,
     ]);
 });

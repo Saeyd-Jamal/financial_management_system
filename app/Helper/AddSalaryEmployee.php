@@ -31,6 +31,7 @@ class AddSalaryEmployee{
 
         $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
 
+
         // موظف غير فعال ام لا
         if(!in_array($employee->workData->state_effectiveness,$state_effectiveness)){
             LogRecord::create([
@@ -41,8 +42,7 @@ class AddSalaryEmployee{
             return;
         }
         // مزدوج الوظيفة
-        $dual_function = $employee->dual_function;
-
+        $dual_function = $employee->workData->dual_function;
         if($dual_function == "غير موظف"){
             $dual_function = null;
         }
@@ -94,16 +94,29 @@ class AddSalaryEmployee{
             }else{
                 $grade_Allowance = 0;
             }
+            if($employee->customizations->first() != null){
+                if($employee->customizations->first()->grade_Allowance != null){
+                    $grade_Allowance = $employee->customizations->first()->grade_Allowance;
+                }
+            }
 
             $secondary_salary = $initial_salary + $grade_Allowance; // الراتب الثانوي
 
             // الإضافات الثابتة
             if($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج"){
                 $allowance_boys = (($employee->number_children * 20) + 60);
-            }elseif($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج - موظفة حكومة"){
+            }elseif($employee->workData->type_appointment == 'مثبت' && ($employee->matrimonial_status == "متزوج - موظفة حكومة" || $employee->matrimonial_status == "ارملة")){
                 $allowance_boys = ($employee->number_children * 20);
             }else{
                 $allowance_boys = 0;
+            }
+            if($employee->workData->section == 'الصحة'){
+                $allowance_boys = $allowance_boys / 2;
+            }
+            if($employee->customizations->first() != null){
+                if($employee->customizations->first()->allowance_boys_1 != null){
+                    $allowance_boys = (($employee->number_children * ($employee->customizations->first()->allowance_boys_1 ?? 20)) + ($employee->customizations->first()->allowance_boys_2 ?? 0));
+                }
             }
 
             $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
@@ -142,9 +155,16 @@ class AddSalaryEmployee{
         $mobile_allowance = ($fixedEntries != null) ? $fixedEntries->mobile_allowance : 0;
 
         $termination_service = $dual_function == null ?  number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*0.1,2) : 0;
-        if($employee->workData->type_appointment == 'نسبة'){
+        if($employee->workData->type_appointment == 'نسبة' || $dual_function == "موظف"){
             $termination_service = 0;
         }
+        if($employee->customizations->first() != null){
+            if($employee->customizations->first()->termination_service != null){
+                $termination_service = number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*($employee->customizations->first()->termination_service ?? 0.1),2) ?? 0;
+            }
+        }
+
+
 
         $total_additions = ($allowance_boys + $nature_work_increase + $administrative_allowance + $scientific_qualification_allowance + $transport + $extra_allowance + $salary_allowance + $ex_addition + $mobile_allowance +$termination_service);
 

@@ -29,7 +29,8 @@
         }
 
         table.blueTable tbody td {
-            font-size: 13px;
+            font-size: 18px;
+            padding: 10px 9px;
             color: #000000;
         }
 
@@ -192,7 +193,7 @@
                         <td>{{$fixedEntries->shekel_loan ?? ''}}</td>
                         <td>{{$salary->late_receivables ?? ''}}</td>
                         <td>{{$salary->total_discounts ?? ''}}</td>
-                        <td style="color: #000;">{{$salary->net_salary ?? ''}}</td>
+                        <td style="color: #000; background: #dddddd; font-weight: bold;">{{$salary->net_salary ?? ''}}</td>
                     </tr>
                 @endforeach
             </tbody>

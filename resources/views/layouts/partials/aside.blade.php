@@ -72,6 +72,14 @@
                 </a>
             </li>
             @endcan
+            @can('view','App\\Models\Customization')
+            <li class="nav-item w-100">
+                <a class="nav-link" href="{{route('customizations.index')}}">
+                    <i class="fe fe-trello fe-16"></i>
+                    <span class="ml-3 item-text">التخصيص</span>
+                </a>
+            </li>
+            @endcan
             @can('view','App\\Models\FixedEntries')
             <li class="nav-item dropdown">
                 <a href="#specific_salaries" data-toggle="collapse" aria-expanded="false"
