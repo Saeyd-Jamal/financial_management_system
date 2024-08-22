@@ -25,7 +25,7 @@ class AddSalaryEmployee{
     {
         // قيم ثابتة تجلب من الخارج
         if($month == null){
-            $month = '2024-07'; // Carbon::now()->format('Y-m');
+            $month = Carbon::now()->format('Y-m');
         }
         $state_effectiveness = Constant::where('type_constant','state_effectiveness')->get()? Constant::where('type_constant','state_effectiveness')->get()->pluck('value')->toArray()  : [];
 

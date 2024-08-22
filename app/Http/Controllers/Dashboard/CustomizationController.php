@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customization;
 use App\Models\Employee;
 use App\Models\Salary;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,7 @@ class CustomizationController extends Controller
     public function store(Request $request)
     {
         Customization::create($request->all());
-        $salary = Salary::where('employee_id',$request->employee_id)->where('month','2024-07')->first();
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
             $employee = Employee::findOrFail($request->employee_id);
             AddSalaryEmployee::addSalary($employee);
@@ -69,7 +70,7 @@ class CustomizationController extends Controller
     public function update(Request $request, Customization $customization)
     {
         $customization->update($request->all());
-        $salary = Salary::where('employee_id',$request->employee_id)->where('month','2024-07')->first();
+        $salary = Salary::where('employee_id',$request->employee_id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
             $employee = Employee::findOrFail($request->employee_id);
             AddSalaryEmployee::addSalary($employee);

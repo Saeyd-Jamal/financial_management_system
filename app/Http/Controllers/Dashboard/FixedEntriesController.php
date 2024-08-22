@@ -26,9 +26,9 @@ class FixedEntriesController extends Controller
 
 
     public function __construct(){
-        $this->thisYear = "2024"; // Carbon::now()->format('Y')
-        $this->thisMonth = "07"; // Carbon::now()->format('m')
-        $this->monthNow = "2024-07" ; // Carbon::now()->format('Y-m')
+        $this->thisYear = Carbon::now()->format('Y'); //
+        $this->thisMonth = Carbon::now()->format('m'); //
+        $this->monthNow = Carbon::now()->format('Y-m') ; //
     }
     public function updateEntries($request,$fieldName,$fieldNameMonth) {
         if($request->{$fieldNameMonth} != ""){

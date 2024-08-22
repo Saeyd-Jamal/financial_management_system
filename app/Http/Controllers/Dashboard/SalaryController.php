@@ -29,8 +29,8 @@ class SalaryController extends Controller
     public function index()
     {
         $this->authorize('view', Salary::class);
-        $month  = "2024-07"; //Carbon::now()->format('Y-m')
-        $salaries = Salary::get();
+        $month  = Carbon::now()->format('Y-m');
+        $salaries = Salary::where('month', $month)->get();
         $USD = Currency::where('code', 'USD')->first()->value;
         $btn_download_salary = null;
         $employess = Employee::all();
@@ -146,7 +146,7 @@ class SalaryController extends Controller
             foreach ($employees as $employee) {
                 try{
                     LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$employee->id")->delete();
-                    AddSalaryEmployee::addSalary($employee,'2024-07');
+                    AddSalaryEmployee::addSalary($employee);
                 }catch(Exception $e){
                     LogRecord::create([
                         'type' => 'errorSalary',
@@ -213,5 +213,10 @@ class SalaryController extends Controller
             throw $exception;
         }
         return redirect()->route('home')->with('danger', 'تم حذف الراتب لجميع الموظفين للشهر الحالي');
+    }
+
+    public function getSalariesMonth(Request $request){
+        $salaries = Salary::with('employee')->where('month', $request->month)->get();
+        return $salaries;
     }
 }

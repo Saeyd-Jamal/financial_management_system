@@ -45,6 +45,7 @@ Route::group([
 
     Route::post('/salaries/createAllSalaries', [SalaryController::class,'createAllSalaries'])->name('salaries.createAllSalaries');
     Route::post('/salaries/deleteAllSalaries', [SalaryController::class,'deleteAllSalaries'])->name('salaries.deleteAllSalaries');
+    Route::post('salaries/getSalariesMonth', [SalaryController::class, 'getSalariesMonth'])->name('salaries.getSalariesMonth');
 
 
 
