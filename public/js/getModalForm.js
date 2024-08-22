@@ -346,7 +346,7 @@
             success: function (response) {
                 $(this).find("button.close").click();
 
-                // $("button.close").click();
+                $("button.close").click();
             },
             error: function (response) {
                 console.error(response);

@@ -23,11 +23,11 @@
 <div class="row align-items-center ml-2 mr-2">
     <span>(عدد الأولاد X </span>
     <div class="form-group p-3 col-2">
-        <x-form.input type="number" label="" value="{{$customization->allowance_boys_1}}"  name="allowance_boys-1" placeholder="" />
+        <x-form.input type="number" label="" value="{{$customization->allowance_boys_1}}"  name="allowance_boys_1" placeholder="" />
     </div>
     <span>)+</span>
     <div class="form-group p-3 col-2">
-        <x-form.input type="number" label="" value="{{$customization->allowance_boys_2}}"  name="allowance_boys-2" placeholder="" />
+        <x-form.input type="number" label="" value="{{$customization->allowance_boys_2}}"  name="allowance_boys_2" placeholder="" />
     </div>
 </div>
 <h4>نهاية الخدمة</h4>

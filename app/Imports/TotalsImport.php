@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\ReceivablesLoans;
+use App\Models\WorkData;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -18,6 +19,8 @@ class TotalsImport implements ToModel,WithHeadingRow,SkipsOnError
     */
     public function model(array $row)
     {
+
+
         return new ReceivablesLoans([
             'employee_id' => $row['rkm_almothf'],
             'total_receivables' => $row['agmaly_almsthkat'],

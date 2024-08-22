@@ -1,4 +1,7 @@
 @include('layouts.partials.head', ['title' => 'نظام الإدارة المالية - تسجيل الدخول'])
+@php
+    // dd(auth()->guard());
+@endphp
 <div class="wrapper vh-100">
     <div class="row align-items-center h-100">
         <form class="col-lg-3 col-md-4 col-10 mx-auto text-center" action="{{ route('login') }}" method="POST">
@@ -9,8 +12,7 @@
             <h1 class="page-title mb-3">نظام الإدارة المالية</h1>
             <h3 class="h2 font-bold mb-3 text-muted">تسجيل الدخول</h3>
             <div class="form-group text-left">
-                <x-form.input name="username" label="اسم المستخدم" placeholder="اسم المستخدم" class="form-control-lg"
-                    required autofocus />
+                <x-form.input name="username" label="اسم المستخدم" placeholder="اسم المستخدم" class="form-control-lg" required autofocus />
             </div>
             <div class="form-group text-left">
                 <label>Password</label>

@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('establishment')->comment('المنشاءة');
             $table->string('foundation_E')->comment('المؤسسة E');
             $table->string('salary_category')->nullable()->comment('فئة الراتب المستخدمة للنظام');
-
+            $table->string('installation_new')->comment('التثبيت الجديد')->nullable();
             $table->timestamps();
         });
     }

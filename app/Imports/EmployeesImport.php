@@ -21,6 +21,7 @@ class EmployeesImport implements ToModel, WithHeadingRow//, SkipsOnError
      */
     public function model(array $row)
     {
+
         DB::beginTransaction();
         try {
             $date_of_birth = date('Y-m-d', strtotime(Employee::convertDateExcel($row['tarykh_almylad'])));

@@ -128,6 +128,14 @@
                 <option value="5"  @selected($workData->salary_category == 5)>الخامسة</option>
             </select>
         </div>
+        <div class="form-group p-3 col-3">
+            <label for="installation_new">هل هو مثبت جديد</label>
+            <select class="custom-select" id="installation_new" name="installation_new">
+                <option value="null">عرض القيم المتوفرة</option>
+                <option value="مثبت جديد"  @selected($workData->installation_new == 'مثبت جديد')>مثبت جديد (العلاوة * 10)</option>
+                <option value="مثبت جديد2"  @selected($workData->installation_new == 'مثبت جديد2')>مثبت جديد (العلاوة * 20)</option>
+            </select>
+        </div>
     </div>
 
     <div id="notProven" class="form-group p-3 col-3" @if($workData->type_appointment != 'مثبت' && $workData->type_appointment != 'نسبة' && $workData->type_appointment != null) style="display: block; margin: 0; " @else style="display: none" @endif>

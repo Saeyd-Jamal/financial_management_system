@@ -248,9 +248,9 @@
                                                     <span class="text-muted sr-only">Action</span>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <button class="dropdown-item showEmployee"
+                                                    {{-- <button class="dropdown-item showEmployee"
                                                         data-id="{{ $employee->id }}"
-                                                        style="margin: 0.5rem -0.75rem; text-align: right;">عرض</button>
+                                                        style="margin: 0.5rem -0.75rem; text-align: right;">عرض</button> --}}
                                                     @can('edit', 'App\\Models\Employee')
                                                         <a class="dropdown-item"
                                                             style="margin: 0.5rem -0.75rem; text-align: right;"

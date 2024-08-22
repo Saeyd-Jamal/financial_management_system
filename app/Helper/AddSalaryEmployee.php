@@ -87,13 +87,30 @@ class AddSalaryEmployee{
             // الحسابات
             $percentage_allowance = ($employee->workData->percentage_allowance != null) ? $employee->workData->percentage_allowance : 100; //نسبة علاوة من طبيعة العمل
             $initial_salary = SalaryScale::where('id',$employee->workData->allowance)->first()->{$employee->workData->grade}; // الراتب الأولي
-
+            if($employee->workData->field_action == 'صحة' && $employee->workData->type_appointment == 'مثبت'){
+                if($employee->scientific_qualification == 'بكالوريوس'){
+                    $initial_salary = 900;
+                }
+                if($employee->scientific_qualification == 'دبلوم'){
+                    $initial_salary = 800;
+                }
+                if($employee->scientific_qualification == 'ثانوية عامة'){
+                    $initial_salary = 700;
+                }
+            }
             $grade_allowance_ratio = $employee->workData->grade_allowance_ratio; // نسبة علاوة درجة
             if($grade_allowance_ratio != 0){
                 $grade_Allowance = number_format($initial_salary * $grade_allowance_ratio,0); // علاوة درجة
             }else{
                 $grade_Allowance = 0;
             }
+            if($employee->workData->installation_new == 'مثبت جديد'){
+                $grade_Allowance = $employee->workData->allowance * 10;
+            }
+            if($employee->workData->installation_new == 'مثبت جديد2'){
+                $grade_Allowance = $employee->workData->allowance * 20;
+            }
+
             if($employee->customizations->first() != null){
                 if($employee->customizations->first()->grade_Allowance != null){
                     $grade_Allowance = $employee->customizations->first()->grade_Allowance;
@@ -101,7 +118,6 @@ class AddSalaryEmployee{
             }
 
             $secondary_salary = $initial_salary + $grade_Allowance; // الراتب الثانوي
-
             // الإضافات الثابتة
             if($employee->workData->type_appointment == 'مثبت' && $employee->matrimonial_status == "متزوج"){
                 $allowance_boys = (($employee->number_children * 20) + 60);
@@ -119,7 +135,7 @@ class AddSalaryEmployee{
                 }
             }
 
-            $nature_work_increase =  intval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
+            $nature_work_increase = floatval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
         }else{
             if($employee->workData->type_appointment == 'نسبة'){
                 $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
@@ -154,6 +170,8 @@ class AddSalaryEmployee{
         $ex_addition = ($fixedEntries != null) ? $fixedEntries->ex_addition : 0;
         $mobile_allowance = ($fixedEntries != null) ? $fixedEntries->mobile_allowance : 0;
 
+
+        // نهاية الخدمة
         $termination_service = $dual_function == null ?  number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*0.1,2) : 0;
         if($employee->workData->type_appointment == 'نسبة' || $dual_function == "موظف"){
             $termination_service = 0;
@@ -162,6 +180,12 @@ class AddSalaryEmployee{
             if($employee->customizations->first()->termination_service != null){
                 $termination_service = number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*($employee->customizations->first()->termination_service ?? 0.1),2) ?? 0;
             }
+        }
+        if($employee->workData->state_effectiveness == "شهيد"){
+            $termination_service = 0;
+        }
+        if($employee->id == 134){
+            $termination_service = number_format(($secondary_salary+$nature_work_increase+$administrative_allowance+$salary_allowance)*0.1,2);
         }
 
 

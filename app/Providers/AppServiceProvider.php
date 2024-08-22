@@ -6,6 +6,7 @@ use App\Jobs\CreateSalary;
 use App\Models\BanksEmployees;
 use App\Models\FixedEntries;
 use App\Models\ReceivablesLoans;
+use App\Models\User;
 use App\Policies\BankEmployeePolicy;
 use App\Policies\FixedEntriesPolicy;
 use App\Policies\ReceivablesLoansPolicy;
@@ -43,27 +44,31 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
-
         //Authouration
         Gate::before(function ($user, $ability) {
-            if($user->super_admin) {
-                return true;
+            if($user instanceof User) {
+                if($user->super_admin) {
+                    return true;
+                }
             }
         });
         // the Authorization for Report Page
         Gate::define('report.view', function ($user) {
-            if($user->roles->contains('role_name', 'report.view')) {
-                return true;
+            if($user instanceof User) {
+                if($user->roles->contains('role_name', 'report.view')) {
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
         Gate::define('admins.backup', function ($user) {
-            if($user->roles->contains('role_name', 'admins.backup')) {
-                return true;
+            if($user instanceof User) {
+                if($user->roles->contains('role_name', 'admins.backup')) {
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
-
         Gate::policy(FixedEntries::class, FixedEntriesPolicy::class);
         Gate::policy(BanksEmployees::class, BankEmployeePolicy::class);
         Gate::policy(ReceivablesLoans::class, ReceivablesLoansPolicy::class);

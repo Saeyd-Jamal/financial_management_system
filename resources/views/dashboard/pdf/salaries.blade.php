@@ -53,9 +53,6 @@
         }
 
         table.blueTable tfoot {
-            font-size: 14px;
-            font-weight: bold;
-            color: #FFFFFF;
             background: #EEEEEE;
             background: -moz-linear-gradient(top, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
             background: -webkit-linear-gradient(top, #f2f2f2 0%, #efefef 66%, #EEEEEE 100%);
@@ -64,7 +61,9 @@
         }
 
         table.blueTable tfoot td {
-            font-size: 14px;
+            font-size: 18px;
+            padding: 10px 9px;
+            color: #000000;
         }
 
         table.blueTable tfoot .links {
