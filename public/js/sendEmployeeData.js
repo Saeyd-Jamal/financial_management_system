@@ -28,7 +28,7 @@
     for (let field of fields) {
         $('#' + field + '_form').on('click', function (event) {
             $.ajax({
-                url: "/fixed_entries",
+                url: app_link + "fixed_entries",
                 method: "post",
                 data: {
                     employee_id: $('#employee_id').val(),
@@ -65,7 +65,7 @@
     $(".table-hover").delegate("tr.employee_select", "click", function () {
         let employee_id_select = $(this).data("id");
         $.ajax({
-            url: "/fixed_entries/getFixedEntriesData",
+            url: app_link + "fixed_entries/getFixedEntriesData",
             method: "post",
             data: {
                 employee_id: employee_id_select,

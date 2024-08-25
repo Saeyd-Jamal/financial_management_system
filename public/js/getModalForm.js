@@ -25,7 +25,7 @@
 
         // get modal body
         $.ajax({
-            url: "/fixed_entries/getModalForm",
+            url: app_link + "fixed_entries/getModalForm",
             method: "post",
             data: {
                 type: type,
@@ -144,7 +144,7 @@
         let field = $('button[name="submit"]').data("type");
         let employee_id = $('button[name="submit"]').data("employeeid");
         $.ajax({
-            url: "/fixed_entries",
+            url: app_link + "fixed_entries",
             method: "post",
             data: {
                 employee_id: employee_id,
@@ -187,7 +187,7 @@
 
         // get modal body
         $.ajax({
-            url: "/fixed_entries/getModalFormLoan",
+            url: app_link + "fixed_entries/getModalFormLoan",
             method: "post",
             data: {
                 type: type,
@@ -319,9 +319,8 @@
 
         let field = $('button[name="submit"]').data("type");
         let employee_id = $('button[name="submit"]').data("employeeid");
-        console.log(field, employee_id);
         $.ajax({
-            url: "/fixed_entries",
+            url: app_link + "fixed_entries",
             method: "post",
             data: {
                 employee_id: employee_id,

@@ -120,8 +120,6 @@ function fields_month(e){
     for(let i = 1;i <= 12;i++){
         if(i >= currentMonth){
             $(".fields_month-"+i).val(fields_month_new_val)
-            console.log(fields_month_new_val);
-
         }
     }
 }

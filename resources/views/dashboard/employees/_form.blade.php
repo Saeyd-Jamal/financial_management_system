@@ -307,6 +307,8 @@
             let date_installation = moment($("input[name='date_installation']").val()).format('YYYY');
             $("input[name='years_service']").val(thisYear - date_installation)
         });
+        const app_link = "{{config('app.url')}}";
+
     </script>
     <script src="{{asset('js/formEmployee.js')}}"></script>
 @endpush

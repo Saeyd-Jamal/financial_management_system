@@ -29,7 +29,7 @@
                         <tbody>
                                 <div class="row">
                                     <div class="col">
-                                        
+
                                     </div>
                                     <div class="col-auto">
                                         {{-- @can('preparation', 'App\\Models\User') --}}

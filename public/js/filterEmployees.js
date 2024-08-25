@@ -5,7 +5,7 @@
     });
     $(".employee_filter").on("input", function (e) {
         $.ajax({
-            url: "/employees/filterEmployee",
+            url: app_link + "employees/filterEmployee",
             method: "post",
             data: {
                 name: $('input[name="name"]').val(),

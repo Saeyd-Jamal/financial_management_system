@@ -147,6 +147,7 @@
     </div>
     @endif
     @push('scripts')
+
         <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
         <script>
@@ -162,9 +163,10 @@
         <script>
             $(document).ready(function() {
                 const csrf_token = "{{ csrf_token() }}";
+                const app_link = "{{config('app.url')}}";
                 $('#month').on('input', function() {
                     $.ajax({
-                        url: "/salaries/getSalariesMonth",
+                        url: app_link + "/salaries/getSalariesMonth",
                         method: "post",
                         data: {
                             _token: csrf_token,

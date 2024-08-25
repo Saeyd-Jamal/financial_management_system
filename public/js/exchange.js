@@ -3,7 +3,7 @@
         let employeeId = $('#employee_id_search').val();
         let employeeName = $('#employee_name_search').val();
         $.ajax({
-            url: "/employees/getEmployee", //data-id
+            url: app_link + "employees/getEmployee", //data-id
             method: "get",
             data: {
                 employeeId: employeeId,
@@ -39,7 +39,7 @@
         $("input[name=employee_id]").val(employee_id_select);
         $("#searchEmployee .close").click();
         $.ajax({
-            url: "/exchanges/getTotals", //data-id
+            url: app_link + "exchanges/getTotals", //data-id
             method: "post",
             data: {
                 employeeId: employee_id_select,
