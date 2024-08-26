@@ -119,7 +119,7 @@ class EmployeeController extends Controller
             $employee = Employee::with(['workData'])->find($employee->id);
             return $employee;
         }
-        return redirect()->route('employees.edit');
+        // return redirect()->route('employees.edit');
     }
 
     /**

@@ -10,7 +10,8 @@
             },
             success: function (response) {
                 $("div#ModalShow").remove();
-                let employee = `<table class="table table-striped table-bordered">
+                let employee = `
+                <table class="table table-striped table-bordered">
                                     <tr>
                                         <td>رقم الهوية</td>
                                         <td>` + response["employee_id"] + `</td>

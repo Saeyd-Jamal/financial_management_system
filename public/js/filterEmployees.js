@@ -51,8 +51,8 @@
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item"
                                         style="margin: 0.5rem -0.75rem; text-align: right;"
-                                        href="/employees/`+ employee['id'] +`/edit">تعديل</a>
-                                    <form action="/employees/`+ employee['id'] +`"
+                                        href="` + app_link + `employees/`+ employee['id'] +`/edit">تعديل</a>
+                                    <form action="` + app_link + `employees/`+ employee['id'] +`"
                                         method="post">
                                         <input type="hidden" name="_token" value="`+ csrf_token +`" autocomplete="off">
                                         <input type="hidden" name="_method" value="delete">
@@ -64,15 +64,15 @@
                             </td>
                     </tr>`
                     );
-                    $('<button>', {
-                        class: 'dropdown-item showEmployee',
-                        text: 'عرض',
-                        style: 'margin: 0.5rem -0.75rem; text-align: right;',
-                        id : employee["id"],
-                        click: function () {
-                            showEmployee(employee["id"]);
-                        }
-                    }).appendTo('#' + employee["id"] + ' .dropdown-menu');
+                    // $('<button>', {
+                    //     class: 'dropdown-item showEmployee',
+                    //     text: 'عرض',
+                    //     style: 'margin: 0.5rem -0.75rem; text-align: right;',
+                    //     id : employee["id"],
+                    //     click: function () {
+                    //         showEmployee(employee["id"]);
+                    //     }
+                    // }).appendTo('#' + employee["id"] + ' .dropdown-menu');
                 });
             },
             error: function (response) {

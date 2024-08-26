@@ -45,77 +45,7 @@
                 </div>
 
             </div>
-            <div class="form-group p-3 col-3">
-                <x-form.input type="month" label="حدد شهر معين" :value="$month"  name="month" placeholder="" required/>
-            </div>
-            <div class="row my-4">
-                <!-- Small table -->
-                <div class="col-md-12">
-                    <div class="card shadow">
-                        <div class="card-body">
-                            <!-- table -->
-                            <table class="table table-bordered  table-hover datatables text-dark"  id="dataTable-1">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>الاسم</th>
-                                        <th>الشهر</th>
-                                        <th>الراتب الأولي</th>
-                                        <th> علاوة درجة</th>
-                                        <th>الراتب الاساسي</th>
-                                        <th>اجمالي الراتب</th>
-                                        <th>مستحقات متأخرة</th>
-                                        <th>اجمالي الخصومات</th>
-                                        <th>صافي الراتب</th>
-                                        <th>البنك</th>
-                                        <th>رقم الحساب</th>
-                                        <th>مبلغ السنوي الخاضع للضريبة</th>
-                                        <th>الحدث</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table_salaries">
-                                    @foreach($salaries as $salary)
-                                    <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{$salary->employee->name}}</td>
-                                        <td>{{$salary->month}}</td>
-                                        <td>{{$salary->initial_salary}}</td>
-                                        <td>{{$salary->grade_Allowance}}</td>
-                                        <td>{{$salary->secondary_salary}}</td>
-                                        <td>{{$salary->gross_salary}}</td>
-                                        <td>{{$salary->late_receivables}}</td>
-                                        <td>{{$salary->total_discounts}}</td>
-                                        <td>{{$salary->net_salary}}</td>
-                                        <td>{{$salary->bank}}</td>
-                                        <td>{{$salary->account_number}}</td>
-                                        <td>{{number_format($salary->annual_taxable_amount,2)}}</td>
-                                        <td><button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <span class="text-muted sr-only">Action</span>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" target="_blank" style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                    href="{{route('salaries.show',$salary->id)}}">عرض</a>
-                                                {{-- <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                    href="{{route('salaries.edit',$salary->id)}}">تعديل</a> --}}
-                                                @can('delete', 'App\\Models\Salary')
-                                                <form action="{{route('salaries.destroy',$salary->id)}}" method="post">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button type="submit" class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                    href="#">حذف</button>
-                                                </form>
-                                                @endcan
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div> <!-- simple table -->
-            </div> <!-- end section -->
+            <livewire:TableSalaries :salaries="$salaries" :month="$month" />
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
     <!-- Modal -->'
@@ -147,8 +77,7 @@
     </div>
     @endif
     @push('scripts')
-
-        <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
+        {{-- <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script> --}}
         <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
         <script>
             $('#dataTable-1').DataTable(
@@ -161,71 +90,71 @@
             });
         </script>
         <script>
-            $(document).ready(function() {
-                const csrf_token = "{{ csrf_token() }}";
-                const app_link = "{{config('app.url')}}";
-                $('#month').on('input', function() {
-                    $.ajax({
-                        url: app_link + "/salaries/getSalariesMonth",
-                        method: "post",
-                        data: {
-                            _token: csrf_token,
-                            month: $(this).val(),
-                        },
-                        success: function (response) {
-                            console.log(response.length);
-                            $("#table_salaries").empty();
-                            response.forEach((salary) => {
-                                $("#table_salaries").append(
-                                    `<tr>
-                                        <td>${response.indexOf(salary) + 1}</td>
-                                        <td>`+ salary['employee']['name'] +`</td>
-                                        <td>`+ salary['month'] +`</td>
-                                        <td>`+ salary['initial_salary'] +`</td>
-                                        <td>`+ salary['grade_Allowance'] +`</td>
-                                        <td>`+ salary['secondary_salary'] +`</td>
-                                        <td>`+ salary['gross_salary'] +`</td>
-                                        <td>`+ salary['late_receivables'] +`</td>
-                                        <td>`+ salary['total_discounts'] +`</td>
-                                        <td>`+ salary['net_salary'] +`</td>
-                                        <td>`+ salary['bank'] +`</td>
-                                        <td>`+ salary['account_number'] +`</td>
-                                        <td>`+ salary['annual_taxable_amount'] +`</td>
-                                        <td>
-                                            <button class="btn btn-sm dropdown-toggle more-horizontal"
-                                                type="button" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <span class="text-muted sr-only">Action</span>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item"
-                                                    style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                    href="/salaries/`+ salary['id'] +`/">عرض</a>
-                                                <form action="/salaries/`+ salary['id'] +`"
-                                                    method="post">
-                                                    <input type="hidden" name="_token" value="`+ csrf_token +`" autocomplete="off">
-                                                    <input type="hidden" name="_method" value="delete">
-                                                    <button type="submit" class="dropdown-item"
-                                                        style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                        href="#">حذف</button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                </tr>`
-                                );
-                            });
-                            if(response.length == 0){
-                                $("#table_salaries").append(
-                                    '<tr><td colspan="14" class="text-center text-danger">لا يوجد بيانات لعرضها</td></tr>'
-                                );
-                            }
-                        },
-                        error: function (response) {
-                            console.error(response);
-                        }
-                    });
-                });
-            });
+            // $(document).ready(function() {
+            //     const csrf_token = "{{ csrf_token() }}";
+            //     const app_link = "{{config('app.url')}}";
+            //     $('#month').on('input', function() {
+            //         $.ajax({
+            //             url: app_link + "salaries/getSalariesMonth",
+            //             method: "post",
+            //             data: {
+            //                 _token: csrf_token,
+            //                 month: $(this).val(),
+            //             },
+            //             success: function (response) {
+            //                 console.log(response.length);
+            //                 $("#table_salaries").empty();
+            //                 response.forEach((salary) => {
+            //                     $("#table_salaries").append(
+            //                         `<tr>
+            //                             <td>${response.indexOf(salary) + 1}</td>
+            //                             <td>`+ salary['employee']['name'] +`</td>
+            //                             <td>`+ salary['month'] +`</td>
+            //                             <td>`+ salary['initial_salary'] +`</td>
+            //                             <td>`+ salary['grade_Allowance'] +`</td>
+            //                             <td>`+ salary['secondary_salary'] +`</td>
+            //                             <td>`+ salary['gross_salary'] +`</td>
+            //                             <td>`+ salary['late_receivables'] +`</td>
+            //                             <td>`+ salary['total_discounts'] +`</td>
+            //                             <td>`+ salary['net_salary'] +`</td>
+            //                             <td>`+ salary['bank'] +`</td>
+            //                             <td>`+ salary['account_number'] +`</td>
+            //                             <td>`+ salary['annual_taxable_amount'] +`</td>
+            //                             <td>
+            //                                 <button class="btn btn-sm dropdown-toggle more-horizontal"
+            //                                     type="button" data-toggle="dropdown" aria-haspopup="true"
+            //                                     aria-expanded="false">
+            //                                     <span class="text-muted sr-only">Action</span>
+            //                                 </button>
+            //                                 <div class="dropdown-menu dropdown-menu-right">
+            //                                     <a class="dropdown-item"
+            //                                         style="margin: 0.5rem -0.75rem; text-align: right;"
+            //                                         href="/salaries/`+ salary['id'] +`/">عرض</a>
+            //                                     <form action="/salaries/`+ salary['id'] +`"
+            //                                         method="post">
+            //                                         <input type="hidden" name="_token" value="`+ csrf_token +`" autocomplete="off">
+            //                                         <input type="hidden" name="_method" value="delete">
+            //                                         <button type="submit" class="dropdown-item"
+            //                                             style="margin: 0.5rem -0.75rem; text-align: right;"
+            //                                             href="#">حذف</button>
+            //                                     </form>
+            //                                 </div>
+            //                             </td>
+            //                     </tr>`
+            //                     );
+            //                 });
+            //                 if(response.length == 0){
+            //                     $("#table_salaries").append(
+            //                         '<tr><td colspan="14" class="text-center text-danger">لا يوجد بيانات لعرضها</td></tr>'
+            //                     );
+            //                 }
+            //             },
+            //             error: function (response) {
+            //                 console.error(response);
+            //             }
+            //         });
+            //     });
+            // });
         </script>
     @endpush
 </x-front-layout>

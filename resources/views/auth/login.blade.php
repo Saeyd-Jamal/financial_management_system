@@ -1,4 +1,4 @@
-@include('layouts.partials.head', ['title' => 'نظام الإدارة المالية - تسجيل الدخول'])
+@include('layouts.partials.head', ['title' => Config::get('app.name')])
 @php
     // dd(auth()->guard());
 @endphp
@@ -9,7 +9,7 @@
             <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{{ route('home') }}">
                 <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 100%; margin-bottom: 50px">
             </a>
-            <h1 class="page-title mb-3">نظام الإدارة المالية</h1>
+            <h1 class="page-title mb-3">{{Config::get('app.name')}}</h1>
             <h3 class="h2 font-bold mb-3 text-muted">تسجيل الدخول</h3>
             <div class="form-group text-left">
                 <x-form.input name="username" label="اسم المستخدم" placeholder="اسم المستخدم" class="form-control-lg" required autofocus />

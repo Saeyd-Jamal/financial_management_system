@@ -155,14 +155,25 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $total->employee->name }}</td>
-                        <td>{{ $total->total_receivables }}</td>
-                        <td>{{ $total->total_savings }}</td>
-                        <td>{{ $total->total_association_loan }}</td>
-                        <td>{{ $total->total_savings_loan }}</td>
-                        <td>{{ $total->total_shekel_loan }}</td>
+                        <td>{{ $total->total_receivables_view }}</td>
+                        <td>{{ $total->total_savings_view }}</td>
+                        <td>{{ $total->total_association_loan_view }}</td>
+                        <td>{{ $total->total_savings_loan_view }}</td>
+                        <td>{{ $total->total_shekel_loan_view }}</td>
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr  style="background: #dddddd;">
+                    <td>00</td>
+                    <td>الإجمالي الكلي</td>
+                    <td>{{ $totalsFooterArray['total_receivables'] }}</td>
+                    <td>{{ $totalsFooterArray['total_savings'] }}</td>
+                    <td>{{ $totalsFooterArray['total_association_loan'] }}</td>
+                    <td>{{ $totalsFooterArray['total_savings_loan'] }}</td>
+                    <td>{{ $totalsFooterArray['total_shekel_loan'] }}</td>
+                </tr>
+            </tfoot>
         </table>
         <htmlpagefooter name="page-footer">
             <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">

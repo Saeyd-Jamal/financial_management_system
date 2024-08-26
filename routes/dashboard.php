@@ -28,8 +28,6 @@ Route::group([
     // 'as' => 'dashboard.'
 ], function () {
     // outhers fields
-
-
     Route::get('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
     Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
     Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
@@ -45,7 +43,7 @@ Route::group([
 
     Route::post('/salaries/createAllSalaries', [SalaryController::class,'createAllSalaries'])->name('salaries.createAllSalaries');
     Route::post('/salaries/deleteAllSalaries', [SalaryController::class,'deleteAllSalaries'])->name('salaries.deleteAllSalaries');
-    Route::post('salaries/getSalariesMonth', [SalaryController::class, 'getSalariesMonth'])->name('salaries.getSalariesMonth');
+    Route::post('/salaries/getSalariesMonth', [SalaryController::class, 'getSalariesMonth'])->name('salaries.getSalariesMonth');
 
 
 

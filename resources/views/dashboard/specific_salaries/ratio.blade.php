@@ -81,7 +81,7 @@
         $('#month').on('input', function () {
             let month = $(this).val();
             $.ajax({
-                url:  app_link + "/specific_salaries/getRatio",
+                url:  app_link + "specific_salaries/getRatio",
                 method: "post",
                 data: {
                     month: month,

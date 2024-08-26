@@ -188,6 +188,30 @@
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr  style="background: #dddddd;">
+                    <td>00</td>
+                    <td>الإجمالي الكلي</td>
+                    <td>{{ $fixedEntriesTotalsArray['administrative_allowance'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['scientific_qualification_allowance'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['transport'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['extra_allowance'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['salary_allowance'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['ex_addition'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['mobile_allowance'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['health_insurance'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['f_Oredo'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['association_loan'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['savings_loan'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['shekel_loan'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['tuition_fees'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['voluntary_contributions'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['paradise_discount'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['other_discounts'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['proportion_voluntary'] }}</td>
+                    <td>{{ $fixedEntriesTotalsArray['savings_rate'] }}</td>
+                </tr>
+            </tfoot>
         </table>
 
         <htmlpagefooter name="page-footer">

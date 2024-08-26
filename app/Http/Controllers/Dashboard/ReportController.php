@@ -488,7 +488,23 @@ class ReportController extends Controller
         // سجلات لمستحقات وقروض الموظفين
         if($request->report_type == 'employees_totals'){
             $totals = ReceivablesLoans::whereIn('employee_id', $employees->pluck('id'))->get();
-
+            // دوال الموجوع اخر سطر في التقرير
+            $totalsFooter = collect($totals)->map(function ($total)  {
+                return [
+                    'total_receivables' => $total->total_receivables ?? '0',
+                    'total_savings' => $total->total_savings ?? '0',
+                    'total_association_loan' => $total->total_association_loan ?? '0',
+                    'total_shekel_loan' => $total->total_shekel_loan ?? '0',
+                    'total_savings_loan' => $total->total_savings_loan ?? '0',
+                ];
+            });
+            $totalsFooterArray = [
+                'total_receivables' => number_format(collect($totalsFooter->pluck('total_receivables')->toArray())->sum(), 2, '.', ','),
+                'total_savings' => number_format(collect($totalsFooter->pluck('total_savings')->toArray())->sum(), 2, '.', ','),
+                'total_association_loan' => number_format(collect($totalsFooter->pluck('total_association_loan')->toArray())->sum(), 2, '.', ','),
+                'total_shekel_loan' => number_format(collect($totalsFooter->pluck('total_shekel_loan')->toArray())->sum(), 2, '.', ','),
+                'total_savings_loan' => number_format(collect($totalsFooter->pluck('total_savings_loan')->toArray())->sum(), 2, '.', ','),
+            ];
             // معاينة pdf
             if($request->export_type == 'view'){
                 $margin_top = 3;
@@ -498,7 +514,7 @@ class ReportController extends Controller
                 if($request->association == "الكويتي" || $request->association == "يتيم"){
                     $margin_top = 35;
                 }
-                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()],[],[
+                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all(),'totalsFooterArray' => $totalsFooterArray],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -515,7 +531,7 @@ class ReportController extends Controller
                 if($request->association == "الكويتي" || $request->association == "يتيم"){
                     $margin_top = 35;
                 }
-                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all()],[],[
+                $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all(),'totalsFooterArray' => $totalsFooterArray],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -545,14 +561,57 @@ class ReportController extends Controller
         // التعديلات للموظفين
         if($request->report_type == 'employees_fixed'){
             $month = $request->month ?? Carbon::now()->format('Y-m');
-
+            // SELECT `id`, `employee_id`, `month`, `administrative_allowance`, `scientific_qualification_allowance`, `transport`, `extra_allowance`, `salary_allowance`, `ex_addition`, `mobile_allowance`, `health_insurance`, `f_Oredo`, `association_loan`, `tuition_fees`, `voluntary_contributions`, `savings_loan`, `shekel_loan`, `paradise_discount`, `other_discounts`, `proportion_voluntary`, `savings_rate` FROM `fixed_entries` WHERE 1
             $fixed_entries = FixedEntries::whereIn('employee_id', $employees->pluck('id'))
                 ->where('month', $month)
                 ->get();
 
+            // دوال الموجوع اخر سطر في التقرير
+            $fixedEntriesTotals = collect($fixed_entries)->map(function ($fixedEntry)  {
+                return [
+                    'administrative_allowance' => $fixedEntry->administrative_allowance ?? '0',
+                    'scientific_qualification_allowance'=> $fixedEntry->scientific_qualification_allowance ??'0',
+                    'transport'=> $fixedEntry->transport ?? '0',
+                    'extra_allowance'=> $fixedEntry->extra_allowance ?? '0',
+                    'salary_allowance'=> $fixedEntry->salary_allowance ?? '0',
+                    'ex_addition'=> $fixedEntry->ex_addition ?? '0',
+                    'mobile_allowance'=> $fixedEntry->mobile_allowance ?? '0',
+                    'health_insurance'=> $fixedEntry->health_insurance ?? '0',
+                    'f_Oredo'=> $fixedEntry->f_Oredo ?? '0',
+                    'association_loan'=> $fixedEntry->association_loan ?? '0',
+                    'tuition_fees'=> $fixedEntry->tuition_fees ?? '0',
+                    'voluntary_contributions'=> $fixedEntry->voluntary_contributions ?? '0',
+                    'savings_loan'=> $fixedEntry->savings_loan ?? '0',
+                    'shekel_loan'=> $fixedEntry->shekel_loan ?? '0',
+                    'paradise_discount'=> $fixedEntry->paradise_discount ?? '0',
+                    'other_discounts'=> $fixedEntry->other_discounts ?? '0',
+                    'proportion_voluntary'=> $fixedEntry->proportion_voluntary ?? '0',
+                    'savings_rate'=> $fixedEntry->savings_rate ?? '0',
+                ];
+            });
+            $fixedEntriesTotalsArray = [
+                'administrative_allowance' => number_format(collect($fixedEntriesTotals->pluck('administrative_allowance')->toArray())->sum(), 2, '.', ','),
+                'scientific_qualification_allowance'=> number_format(collect($fixedEntriesTotals->pluck('scientific_qualification_allowance')->toArray())->sum(), 2, '.', ','),
+                'transport'=> number_format(collect($fixedEntriesTotals->pluck('transport')->toArray())->sum(), 2, '.', ','),
+                'extra_allowance'=> number_format(collect($fixedEntriesTotals->pluck('extra_allowance')->toArray())->sum(), 2, '.', ','),
+                'salary_allowance'=> number_format(collect($fixedEntriesTotals->pluck('salary_allowance')->toArray())->sum(), 2, '.', ','),
+                'ex_addition'=> number_format(collect($fixedEntriesTotals->pluck('ex_addition')->toArray())->sum(), 2, '.', ','),
+                'mobile_allowance'=> number_format(collect($fixedEntriesTotals->pluck('mobile_allowance')->toArray())->sum(), 2, '.', ','),
+                'health_insurance'=> number_format(collect($fixedEntriesTotals->pluck('health_insurance')->toArray())->sum(), 2, '.', ','),
+                'f_Oredo'=> number_format(collect($fixedEntriesTotals->pluck('f_Oredo')->toArray())->sum(), 2, '.', ','),
+                'association_loan'=> number_format(collect($fixedEntriesTotals->pluck('association_loan')->toArray())->sum(), 2, '.', ','),
+                'tuition_fees'=> number_format(collect($fixedEntriesTotals->pluck('tuition_fees')->toArray())->sum(), 2, '.', ','),
+                'voluntary_contributions'=> number_format(collect($fixedEntriesTotals->pluck('voluntary_contributions')->toArray())->sum(), 2, '.', ','),
+                'savings_loan'=> number_format(collect($fixedEntriesTotals->pluck('savings_loan')->toArray())->sum(), 2, '.', ','),
+                'shekel_loan'=> number_format(collect($fixedEntriesTotals->pluck('shekel_loan')->toArray())->sum(), 2, '.', ','),
+                'paradise_discount'=> number_format(collect($fixedEntriesTotals->pluck('paradise_discount')->toArray())->sum(), 2, '.', ','),
+                'other_discounts'=> number_format(collect($fixedEntriesTotals->pluck('other_discounts')->toArray())->sum(), 2, '.', ','),
+                'proportion_voluntary'=> number_format(collect($fixedEntriesTotals->pluck('proportion_voluntary')->toArray())->sum(), 2, '.', ','),
+                'savings_rate'=> number_format(collect($fixedEntriesTotals->pluck('savings_rate')->toArray())->sum(), 2, '.', ','),
+            ];
             // معاينة pdf
             if($request->export_type == 'view'){
-                $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month],[],[
+                $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month,'fixedEntriesTotalsArray' => $fixedEntriesTotalsArray],[],[
                     'mode' => 'utf-8',
                     'format' => 'A4-L',
                     'default_font_size' => 12,
@@ -563,7 +622,7 @@ class ReportController extends Controller
 
             // تحميل الملف المصدر
             if($request->export_type == 'export_pdf'){
-                $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month],[],[
+                $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month,'fixedEntriesTotalsArray' => $fixedEntriesTotalsArray],[],[
                     'mode' => 'utf-8',
                     'format' => 'A4-L',
                     'default_font_size' => 12,
@@ -707,6 +766,10 @@ class ReportController extends Controller
                 $filename = 'كشف الصرف_' . $time .'.xlsx';
                 return Excel::download(new ModelExport($salaries,$headings), $filename);
             }
+        }
+
+        if($request->report_type == 'customization_detection'){
+
         }
     }
 
