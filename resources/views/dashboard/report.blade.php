@@ -170,7 +170,7 @@
                         <option value="employees_totals">كشف المستحقات والقروض</option>
                         <option value="employees_fixed">كشف التعديلات</option>
                         <option value="bank" >كشف الصرف</option>
-                        <option value="customization_detection" >كشف التخصيصات</option>
+                        <option value="customization">كشف التخصيصات</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">

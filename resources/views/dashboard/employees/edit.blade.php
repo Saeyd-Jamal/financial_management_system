@@ -55,7 +55,7 @@
     <div class="row">
         <form action="{{route('employees.update',$employee->id)}}" method="post" class="col-12  mt-3">
             @csrf
-            @method('put')
+            @method('PUT')
             @include("dashboard.employees._form")
         </form>
     </div>

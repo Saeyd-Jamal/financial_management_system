@@ -162,16 +162,19 @@ class EmployeeController extends Controller
     public function update(EmployeeRequset $request, Employee $employee)
     {
         $this->authorize('edit', Employee::class);
-        $request->validate([
-            'employee_id' => [
-                'required',
-                'string',
-                "unique:employees,employee_id,$request->employee_id,employee_id"
-            ]
-        ],[
-            'unique' => ' هذا الحقل (:attribute) مكرر يرجى التحقق'
-        ]);
+
+        // $request->validate([
+        //     'employee_id' => [
+        //         'required',
+        //         'string',
+        //         "unique:employees,employee_id,$request->employee_id,employee_id"
+        //     ]
+        // ],[
+        //     'unique' => ' هذا الحقل (:attribute) مكرر يرجى التحقق'
+        // ]);
+
         $employee->update($request->all());
+
 
         $request->merge([
             'employee_id' => $employee->id
@@ -179,6 +182,7 @@ class EmployeeController extends Controller
         WorkData::updateOrCreate([
             'employee_id' => $employee->id
         ], $request->all());
+
 
         // الراتب المحدد
         if($request->type_appointment == 'يومي'){
@@ -188,22 +192,23 @@ class EmployeeController extends Controller
                 ],[
                 'number_of_days' => $request->number_of_days,
                 'today_price' => $request->today_price,
-                'salary' => $request->specificSalary
+                'salary' => $request->specific_salary
             ]);
         }
-        if($request->type_appointment != 'نسبة' && $request->type_appointment != 'يومي' && $request->type_appointment != 'مثبت'){
+        if(in_array($request->type_appointment,['خاص','مؤقت','فصلي','رياض'])){
             SpecificSalary::updateOrCreate([
                 'employee_id'=> $employee->id,
                 'month' => '0000-00',
                 ],[
-                'salary' => $request->specificSalary
+                'salary' => $request->specific_salary
             ]);
         }
-
         $salary = Salary::where('employee_id',$employee->id)->where('month',Carbon::now()->format('Y-m'))->first();
         if($salary != null){
             AddSalaryEmployee::addSalary($employee);
         }
+
+
         return redirect()->route('employees.index')->with('success', 'تم تحديث بيانات الموظف المختار');
     }
     /**

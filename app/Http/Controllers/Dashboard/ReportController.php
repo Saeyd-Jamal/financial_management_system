@@ -361,6 +361,7 @@ class ReportController extends Controller
                     'الاسم',
                     'الشهر',
                     'مكان العمل',
+                    'نوع التعين',
                     'الراتب الاساسي',
                     'علاوة الأولاد',
                     'علاوة طبيعة العمل',
@@ -561,7 +562,6 @@ class ReportController extends Controller
         // التعديلات للموظفين
         if($request->report_type == 'employees_fixed'){
             $month = $request->month ?? Carbon::now()->format('Y-m');
-            // SELECT `id`, `employee_id`, `month`, `administrative_allowance`, `scientific_qualification_allowance`, `transport`, `extra_allowance`, `salary_allowance`, `ex_addition`, `mobile_allowance`, `health_insurance`, `f_Oredo`, `association_loan`, `tuition_fees`, `voluntary_contributions`, `savings_loan`, `shekel_loan`, `paradise_discount`, `other_discounts`, `proportion_voluntary`, `savings_rate` FROM `fixed_entries` WHERE 1
             $fixed_entries = FixedEntries::whereIn('employee_id', $employees->pluck('id'))
                 ->where('month', $month)
                 ->get();
@@ -768,8 +768,378 @@ class ReportController extends Controller
             }
         }
 
-        if($request->report_type == 'customization_detection'){
+        if($request->report_type == 'customization'){
+            $USD = Currency::where('code', 'USD')->first()->value;
+            $month = $request->month ?? Carbon::now()->format('Y-m');
 
+            $workplaces = Workdata::select('association','dependence','type_appointment','field_action','workplace')->where('association','صلاح')->orderBy('association')->orderBy('dependence')->orderBy('field_action')->distinct()->pluck('workplace')->toArray();
+
+
+            $data = [
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'المقر العام'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'المقر/الهدايا'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'رفح',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع رفح'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'خانيونس',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع خانيونس'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'دير البلح',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع دير البلح'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'الزوايدة',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع الزوايدة'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المغازي',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع المغازي'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'البريج',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع البريج'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'غزة',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع غزة'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'جباليا',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'فرع جباليا'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'دير البلح',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'صالة دير البلح'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'جباليا',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'صالة جباليا'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'عمارة سعد'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'عمارة المدينة'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'البريج',
+                    'field_action' => 'تحلية',
+                    'type_appointment' => 'تحلية',
+                    'workplace' => 'البريج سيارة جحر الديك'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المغازي',
+                    'field_action' => 'تحلية',
+                    'type_appointment' => 'تحلية',
+                    'workplace' => 'المغازي سيارة مستبيشي'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'تحلية',
+                    'type_appointment' => 'تحلية',
+                    'workplace' => 'سيارة كساب'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'رفح',
+                    'field_action' => 'تحلية',
+                    'type_appointment' => 'تحلية',
+                    'workplace' => 'رفح سيارة 410'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'البريج',
+                    'field_action' => 'تعليم',
+                    'type_appointment' => 'تعليم',
+                    'workplace' => 'روضة حمدية'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المغازي',
+                    'field_action' => 'تعليم',
+                    'type_appointment' => 'تعليم',
+                    'workplace' => 'روضة بيت المقدس'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'خانيونس',
+                    'field_action' => 'تعليم',
+                    'type_appointment' => 'تعليم',
+                    'workplace' => 'روضة عبد الرحمن بن عوف'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'دير البلح',
+                    'field_action' => 'تعليم',
+                    'type_appointment' => 'تعليم',
+                    'workplace' => 'روضة شموع المستقبل'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'رفح',
+                    'field_action' => 'تعليم',
+                    'type_appointment' => 'تعليم',
+                    'workplace' => 'روضة القدس النموذجية'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'تعليم',
+                    'type_appointment' => 'تعليم',
+                    'workplace' => 'مدرسة الأحمد الخيرية'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'تعليم',
+                    'type_appointment' => 'تعليم',
+                    'workplace' => 'مدرسة خديجة'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'مستشفى يافا'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المقر',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'نسبة',
+                    'workplace' => 'مستشفى يافا'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المغازي',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'مركز الوسطى'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'المغازي',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'نسبة',
+                    'workplace' => 'مركز الوسطى'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'البريج',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'مركز بيسان'
+                ],
+                [
+                    'association' => 'صلاح',
+                    'dependence' => 'البريج',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'نسبة',
+                    'workplace' => 'مركز بيسان'
+                ],
+                [
+                    'association' => 'يتيم',
+                    'dependence' => 'المقر',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'المقر العام'
+                ],
+                [
+                    'association' => 'يتيم',
+                    'dependence' => 'المقر',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'المقر/الهدايا'
+                ],
+                [
+                    'association' => 'الكويتي',
+                    'dependence' => 'المقر',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'مركز الكويتي'
+                ],
+                [
+                    'association' => 'الكويتي',
+                    'dependence' => 'المقر',
+                    'field_action' => 'صحي',
+                    'type_appointment' => 'نسبة',
+                    'workplace' => 'مركز الكويتي'
+                ],
+                [
+                    'association' => 'المدينة',
+                    'dependence' => 'المقر',
+                    'field_action' => 'اداري',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'عمارة المدينة'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'الادارة'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'اليات 1'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'اليات 2'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'زراعة الإدارة'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'اداري',
+                    'workplace' => 'المشتل'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'اسماعيل صرصور'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'زياد ابو سويرح'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'عطية ابو عمرة'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'محمد الاسطل'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'مصلح العر'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'علي بشير'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'دار اليتيم - ساهر'
+                ],
+                [
+                    'association' => 'حطين',
+                    'dependence' => 'زراعة',
+                    'field_action' => 'زراعة',
+                    'type_appointment' => 'زراعي',
+                    'workplace' => 'دار اليتيم- عصام'
+                ],
+            ];
+            $employees = Employee::query();
+
+            $employees = $employees->whereHas('workData', function($query) {
+                $query->where('association','حطين')->where('field_action','زراعة')->where('workplace','الادارة');
+            });
+
+            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                ->where('month', '2024-08')
+                ->sum('gross_salary');
+
+            dd($salaries);
+
+            if($request->export_type == 'view'){
+                $pdf = PDF::loadView('dashboard.pdf.customization',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
+                [
+                    'mode' => 'utf-8',
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->stream();
+            }
         }
     }
 

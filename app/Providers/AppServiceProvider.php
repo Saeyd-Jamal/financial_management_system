@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Jobs\CreateSalary;
 use App\Models\BanksEmployees;
 use App\Models\FixedEntries;
 use App\Models\ReceivablesLoans;
@@ -23,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/dashboard';
+    public const HOME = '/';
     /**
      * Register any application services.
      */

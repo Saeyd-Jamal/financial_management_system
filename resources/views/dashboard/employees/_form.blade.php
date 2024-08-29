@@ -139,7 +139,7 @@
     </div>
 
     <div id="notProven" class="form-group p-3 col-3" @if($workData->type_appointment != 'مثبت' && $workData->type_appointment != 'نسبة' && $workData->type_appointment != null) style="display: block; margin: 0; " @else style="display: none" @endif>
-        <x-form.input type="number" label="الراتب المحدد" min="0" :value="$employee->specificSalaries()->where('month', '0000-00')->first()->salary ?? 0" name="specificSalary" placeholder="0" />
+        <x-form.input type="number" label="الراتب المحدد" min="0" :value="$employee->specificSalaries()->where('month', '0000-00')->first()->salary ?? 0" name="specific_salary" placeholder="0" />
     </div>
 
     <div class="row col-md-9" id="daily" @if($workData->type_appointment == 'يومي') style="display: flex; margin: 0; " @else style="display: none" @endif>
