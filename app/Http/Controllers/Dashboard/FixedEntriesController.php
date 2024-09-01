@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FixedEntryRequest;
+use App\Models\Accreditation;
 use App\Models\Employee;
 use App\Models\FixedEntries;
 use App\Models\Salary;
@@ -88,11 +89,15 @@ class FixedEntriesController extends Controller
         $year = $this->thisYear;
         $month = $this->thisMonth;
         $monthNow = $this->monthNow;
+
+        $lastAccreditations = Accreditation::latest()->first();
+        $lastMonth = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('m') : '07' ;
+
         $title = "جدول التعديلات الثابتة للموظفين";
 
         $fixed_entries = FixedEntries::with(['employee'])->where('month',$this->monthNow)->get();
         $employees = Employee::get();
-        return view('dashboard.fixed_entries.viewForm', compact('fixed_entries','monthNow','employees','year','month','title'));
+        return view('dashboard.fixed_entries.viewForm', compact('fixed_entries','monthNow','lastMonth','employees','year','month','title'));
     }
     public function tableView(Request $request)
     {
@@ -106,9 +111,12 @@ class FixedEntriesController extends Controller
         $month = $this->thisMonth;
         $monthNow = $this->monthNow;
 
+        $lastAccreditations = Accreditation::latest()->first();
+        $lastMonth = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('m') : '07' ;
+
         $fixed_entries = FixedEntries::with(['employee'])->where('month',$this->monthNow)->get();
         $employees = Employee::get();
-        return view('dashboard.fixed_entries.tableView', compact('fixed_entries','monthNow','employees','year','month'));
+        return view('dashboard.fixed_entries.tableView', compact('fixed_entries','monthNow','lastMonth','employees','year','month'));
     }
 
     // public function viewForm(Request $request)

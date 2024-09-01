@@ -1,10 +1,6 @@
 (function ($) {
-    // الشهر
-    var currentDate = new Date();
-    var currentMonth = currentDate.getMonth() + 1; // إضافة 1 لأن getMonth() تعيد الشهر بصيغة رقمية تبدأ من 0
-
     function disabledField(month) {
-        if (month < currentMonth) {
+        if (month < lastMonth) {
             return "disabled";
         }
     }

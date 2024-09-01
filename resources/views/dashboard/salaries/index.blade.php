@@ -18,34 +18,36 @@
                     <a class="btn btn-danger" href="{{route('salaries.trashed')}}">
                         <i class="fe fe-trash"></i>
                     </a> --}}
+                    @can('view','App\\Models\Accreditation')
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AccreditationModal">
+                        اعتماد الأشهر
+                    </button>
+                    @endcan
                     @can('create-all', 'App\\Models\Salary')
-                    @if ($btn_download_salary == "active")
-                        <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
-                            @csrf
-                            <button type="submit" class="btn btn-warning">
-                                <i class="fe fe-activity"></i>
-                                <span>تحميل جميع الرواتب لشهر {{$month}}</span>
-                            </button>
-                        </form>
-                    @endif
+                        @if ($btn_download_salary == "active")
+                            <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
+                                @csrf
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fe fe-activity"></i>
+                                    <span>تحميل جميع الرواتب لشهر {{$monthDownload}}</span>
+                                </button>
+                            </form>
+                        @endif
                     @endcan
                     @can('delete-all', 'App\\Models\Salary')
-                    @if ($btn_delete_salary == "active")
-                    <form action="{{route('salaries.deleteAllSalaries')}}" method="post" class="mt-2">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fe fe-activity"></i>
-                            <span>حذف جميع الرواتب</span>
-                        </button>
-                    </form>
-                    @endif
+                        @if ($btn_delete_salary == "active")
+                        <form action="{{route('salaries.deleteAllSalaries')}}" method="post" class="mt-2">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fe fe-activity"></i>
+                                <span>حذف جميع الرواتب  لشهر {{$monthDownload}}</span>
+                            </button>
+                        </form>
+                        @endif
                     @endcan
-
-
                 </div>
-
             </div>
-            <livewire:TableSalaries :salaries="$salaries" :month="$month" />
+            <livewire:TableSalaries :salaries="$salaries" :month="$monthDownload" />
         </div> <!-- .col-12 -->
     </div> <!-- .row -->
     <!-- Modal -->'
@@ -76,6 +78,65 @@
         </div>
     </div>
     @endif
+    @can('view','App\\Models\Accreditation')
+    <div class="modal fade" id="AccreditationModal" tabindex="-1" role="dialog" aria-labelledby="AccreditationModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AccreditationModalLongTitle">اعتماد الأشهر</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">الشهر</th>
+                            <th scope="col">معتمد</th>
+                            <th scope="col">المستخدم المعتمد</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($accreditations as $accreditation)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $accreditation->month }}</td>
+                            <td>{{ ($accreditation->status == 1 ? 'معتمد' : 'غير معتمد') }}</td>
+                            <td>{{ $accreditation->user->name }}</td>
+                            <td>
+                                <form action="{{ route('accreditations.destroy', $accreditation->id) }}" method="post">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="btn btn-danger">حذف</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <form action="{{ route('accreditations.store') }}" method="post" class="col-12">
+                    @csrf
+                    <h3>تحديد شهر معين للإعتماد</h3>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <input type="month" name="month" class="form-control" value="{{date('Y-m')}}">
+                        </div>
+                        <div class="form-group col-6">
+                            <button type="submit" class="btn btn-primary">اعتماد</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    @endcan
+
     @push('scripts')
         {{-- <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script> --}}
         <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>

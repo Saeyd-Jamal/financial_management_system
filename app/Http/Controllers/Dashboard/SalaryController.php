@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SalaryRequest;
+use App\Models\Accreditation;
 use App\Models\BanksEmployees;
 use App\Models\Currency;
 use App\Models\Employee;
@@ -29,19 +30,26 @@ class SalaryController extends Controller
     public function index()
     {
         $this->authorize('view', Salary::class);
+        $accreditations = Accreditation::get();
+        $lastAccreditations = Accreditation::latest()->first();
+
+
         $month  = Carbon::now()->format('Y-m');
-        $salaries = Salary::where('month', $month)->get();
+        $monthDownload = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('Y-m') : '2024-07' ;
         $USD = Currency::where('code', 'USD')->first()->value;
+        $salaries = Salary::where('month', $monthDownload)->get();
+
         $btn_download_salary = null;
         $employess = Employee::all();
         foreach ($employess as $employee) {
-            $salary = Salary::where('employee_id', $employee->id)->where('month', $month)->first();
+            $salary = Salary::where('employee_id', $employee->id)->where('month', $monthDownload)->first();
             if($salary == null){
                 $btn_download_salary = "active";
             }
         }
         $btn_delete_salary = $salaries->isNotEmpty() ? "active" : null;
-        return view('dashboard.salaries.index', compact('salaries','btn_download_salary','btn_delete_salary','USD','month'));
+
+        return view('dashboard.salaries.index', compact('salaries','btn_download_salary','btn_delete_salary','accreditations','USD','month','monthDownload'));
     }
 
     /**

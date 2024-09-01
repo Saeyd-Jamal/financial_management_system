@@ -49,6 +49,9 @@
     @endphp
 
     <script src="{{asset('assets/js/jquery.min.js')}}"></script>
+    <script>
+        const lastMonth  = "{{ $lastMonth }}";
+    </script>
     <script src="{{ asset('js/funFixedView.js') }}"></script>
 
     <div class="row justify-content-center">
@@ -210,7 +213,6 @@
         <script>
             const csrf_token = "{{ csrf_token() }}";
             const app_link = "{{config('app.url')}}";
-
         </script>
         <script src="{{ asset('js/getShowFixed.js') }}"></script>
         <script src="{{ asset('js/getModalForm.js') }}"></script>
