@@ -30,6 +30,12 @@ class FixedEntriesController extends Controller
         $this->thisYear = Carbon::now()->format('Y'); //
         $this->thisMonth = Carbon::now()->format('m'); //
         $this->monthNow = Carbon::now()->format('Y-m') ; //
+        $lastAccreditations = Accreditation::latest()->first();
+        $lastMonth = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('m') : '07' ;
+        $this->thisMonth = $lastMonth; //
+        $this->monthNow = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('Y-m') : '2024-07' ;
+        $this->thisYear = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('Y') : '2024' ; //
+
     }
     public function updateEntries($request,$fieldName,$fieldNameMonth) {
         if($request->{$fieldNameMonth} != ""){

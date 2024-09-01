@@ -97,8 +97,9 @@ class SalaryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SalaryRequest $request, Salary $salary)
+    public function destroy(SalaryRequest $request, $id)
     {
+        $salary = Salary::findOrFail($id);
         $USD = Currency::where('code', 'USD')->first()->value;
         $fixedEntries = $salary->employee->fixedEntries->where('month', $salary->month)->first();
         // إجمالي الإدخارات (تم وضع معادلته سابقا لوجود مشكلة بالحسبة)
@@ -145,24 +146,28 @@ class SalaryController extends Controller
 
 
     // Create All Salaries
-    public function createAllSalaries(){
+    public function createAllSalaries(Request $request){
         $this->authorize('create-all', Salary::class);
         DB::beginTransaction();
         try {
             $employees = Employee::get();
             $logRecords = [];
-            foreach ($employees as $employee) {
-                try{
-                    LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$employee->id")->delete();
-                    AddSalaryEmployee::addSalary($employee);
-                }catch(Exception $e){
-                    LogRecord::create([
-                        'type' => 'errorSalary',
-                        'related_id' => "employee_$employee->id",
-                        'description' => 'خطأ في معالجة راتب الموظف : ' . $employee->name . '. الخطأ: ' . $e->getMessage(),
-                    ]);
-                }
-            }
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $employee = Employee::find(537);
+            AddSalaryEmployee::addSalary($employee,$month);
+
+            // foreach ($employees as $employee) {
+            //     try{
+            //         LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$employee->id")->delete();
+            //         AddSalaryEmployee::addSalary($employee,$month);
+            //     }catch(Exception $e){
+            //         LogRecord::create([
+            //             'type' => 'errorSalary',
+            //             'related_id' => "employee_$employee->id",
+            //             'description' => 'خطأ في معالجة راتب الموظف : ' . $employee->name . '. الخطأ: ' . $e->getMessage(),
+            //         ]);
+            //     }
+            // }
             $logRecords = LogRecord::where('type', 'errorSalary')->get()->pluck('description')->toArray();
             // الحصول على بداية ونهاية الشهر السابق
             $startOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
@@ -183,11 +188,12 @@ class SalaryController extends Controller
                 ->with('danger', $logRecords);
     }
     // Create All Salaries
-    public function deleteAllSalaries(){
+    public function deleteAllSalaries(Request $request){
         $this->authorize('delete-all', Salary::class);
         DB::beginTransaction();
         try {
-            $salaries = Salary::get();
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $salaries = Salary::where('month', $month)->get();
             foreach ($salaries as $salary) {
                 try{
                     $USD = Currency::where('code', 'USD')->first()->value;

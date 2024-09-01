@@ -10,7 +10,7 @@
                     <x-form.input type="month" label="حدد شهر معين" :value="$month" name="month" wire:input="filterMonth($event.target.value)"/>
                 </div>
                 <div class="form-group col-md-3">
-                    <x-form.input name="name" label="اسم الموظف" placeholder="إملأ الاسم" wire:input="filter('employees.name', $event.target.value)" />
+                    <x-form.input name="name" label="اسم الموظف" placeholder="إملأ الاسم" wire:input="filter('name', $event.target.value)" />
                 </div>
             </div>
         </form>

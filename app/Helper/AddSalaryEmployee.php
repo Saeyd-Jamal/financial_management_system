@@ -111,8 +111,8 @@ class AddSalaryEmployee{
                 $grade_Allowance = $employee->workData->allowance * 20;
             }
 
-            if($employee->customizations->first() != null){
-                if($employee->customizations->first()->grade_Allowance != null){
+            if($employee->customizations->isNotEmpty() != null){
+                if($employee->customizations->first()->grade_Allowance != ''){
                     $grade_Allowance = $employee->customizations->first()->grade_Allowance;
                 }
             }
@@ -129,8 +129,8 @@ class AddSalaryEmployee{
             if($employee->workData->section == 'الصحة'){
                 $allowance_boys = $allowance_boys / 2;
             }
-            if($employee->customizations->first() != null){
-                if($employee->customizations->first()->allowance_boys_1 != null){
+            if($employee->customizations->isNotEmpty() != null){
+                if($employee->customizations->first()->allowance_boys_1 != ''){
                     $allowance_boys = (($employee->number_children * ($employee->customizations->first()->allowance_boys_1 ?? 20)) + ($employee->customizations->first()->allowance_boys_2 ?? 0));
                 }
             }
@@ -176,8 +176,8 @@ class AddSalaryEmployee{
         if($employee->workData->type_appointment == 'نسبة' || $dual_function == "موظف"){
             $termination_service = 0;
         }
-        if($employee->customizations->first() != null){
-            if($employee->customizations->first()->termination_service != null){
+        if($employee->customizations->isNotEmpty() != null){
+            if($employee->customizations->first()->termination_service != ''){
                 $termination_service = number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*($employee->customizations->first()->termination_service ?? 0.1),2) ?? 0;
             }
         }

@@ -27,6 +27,7 @@
                         @if ($btn_download_salary == "active")
                             <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
                                 @csrf
+                                <input type="hidden" name="month" value="{{$monthDownload}}" >
                                 <button type="submit" class="btn btn-warning">
                                     <i class="fe fe-activity"></i>
                                     <span>تحميل جميع الرواتب لشهر {{$monthDownload}}</span>
@@ -38,6 +39,7 @@
                         @if ($btn_delete_salary == "active")
                         <form action="{{route('salaries.deleteAllSalaries')}}" method="post" class="mt-2">
                             @csrf
+                            <input type="hidden" name="month" value="{{$monthDownload}}" >
                             <button type="submit" class="btn btn-danger">
                                 <i class="fe fe-activity"></i>
                                 <span>حذف جميع الرواتب  لشهر {{$monthDownload}}</span>
