@@ -1,6 +1,6 @@
 <x-front-layout>
     @push('styles')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/select2.css">
     @endpush
     <div class="row align-items-center mb-2">
         <div class="col">
@@ -16,8 +16,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="area">المنظقة</label>
-                    <select name="area" id="area" class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="area[]" id="area" class="form-control select2-multi" multiple>
                         @foreach ($areas as $area)
                             <option value="{{ $area }}"> {{ $area }} </option>
                         @endforeach
@@ -25,8 +24,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="matrimonial_status">الحالة الزوجية</label>
-                    <select name="matrimonial_status" id="matrimonial_status"  class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="matrimonial_status[]" id="matrimonial_status" class="form-control select2-multi" multiple >
                         @foreach ($matrimonial_status as $matrimonial_status)
                             <option value="{{ $matrimonial_status }}"> {{ $matrimonial_status }} </option>
                         @endforeach
@@ -34,8 +32,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="scientific_qualification">المؤهل العلمي</label>
-                    <select name="scientific_qualification" id="scientific_qualification"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="scientific_qualification[]" id="scientific_qualification" class="form-control select2-multi" multiple >
                         @foreach ($scientific_qualification as $scientific_qualification)
                             <option value="{{ $scientific_qualification }}">{{ $scientific_qualification }}</option>
                         @endforeach
@@ -43,8 +40,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="gender">الجنس</label>
-                    <select name="gender" id="gender"   class="custom-select">
-                        <option value="" selected>حدد جنس معين</option>
+                    <select name="gender[]" id="gender" class="form-control select2-multi" multiple >
                         <option value="ذكر">ذكور</option>
                         <option value="انثى">إناث</option>
                     </select>
@@ -52,18 +48,15 @@
                 {{-- بيانات العمل --}}
                 <div class="form-group col-md-3">
                     <label for="working_status">حالة الدوام</label>
-                    <select name="working_status" id="working_status"   class="custom-select">
-                        <option value="" selected>حدد الحالة</option>
+                    <select name="working_status[]" id="working_status" class="form-control select2-multi" multiple >
                         @foreach ($working_status as $working_status)
                             <option value="{{ $working_status }}">{{ $working_status }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group col-md-3">
-
                     <label for="field_action">مجال العمل</label>
-                    <select name="field_action" id="field_action"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="field_action[]" id="field_action" class="form-control select2-multi" multiple >
                         @foreach ($field_action as $field_action)
                             <option value="{{ $field_action }}">{{ $field_action }}</option>
                         @endforeach
@@ -71,16 +64,14 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="dual_function">مزدوج الوظيفة</label>
-                    <select name="dual_function" id="dual_function"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="dual_function[]" id="dual_function"   class="form-control select2-multi" multiple >
                         <option value="غير موظف"> غير موظف</option>
                         <option value="موظف"> موظف</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="state_effectiveness">حالة الفعالية</label>
-                    <select name="state_effectiveness" id="state_effectiveness"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="state_effectiveness[]" id="state_effectiveness" class="form-control select2-multi" multiple >
                         @foreach ($state_effectiveness as $state_effectiveness)
                             <option value="{{ $state_effectiveness }}">{{ $state_effectiveness }}</option>
                         @endforeach
@@ -88,8 +79,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="nature_work">طبيعة العمل</label>
-                    <select name="nature_work" id="nature_work"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="nature_work[]" id="nature_work"   class="form-control select2-multi" multiple >
                         @foreach ($nature_work as $nature_work)
                             <option value="{{ $nature_work }}">{{ $nature_work }}</option>
                         @endforeach
@@ -97,8 +87,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="workplace">مكان العمل</label>
-                    <select name="workplace" id="workplace"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="workplace[]" id="workplace"   class="form-control select2-multi" multiple >
                         @foreach ($workplace as $workplace)
                             <option value="{{ $workplace }}">{{ $workplace }}</option>
                         @endforeach
@@ -106,8 +95,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="section">القسم</label>
-                    <select name="section" id="section"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="section[]" id="section"   class="form-control select2-multi" multiple >
                         @foreach ($section as $section)
                             <option value="{{ $section }}">{{ $section }}</option>
                         @endforeach
@@ -115,8 +103,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="type_appointment">نوع التعين</label>
-                    <select name="type_appointment" id="type_appointment"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="type_appointment[]" id="type_appointment"   class="form-control select2-multi" multiple >
                         @foreach ($type_appointment as $type_appointment)
                             <option value="{{ $type_appointment }}">{{ $type_appointment }}</option>
                         @endforeach
@@ -124,8 +111,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="dependence">التبعية</label>
-                    <select name="dependence" id="dependence"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="dependence[]" id="dependence"   class="form-control select2-multi" multiple >
                         @foreach ($dependence as $dependence)
                             <option value="{{ $dependence }}">{{ $dependence }}</option>
                         @endforeach
@@ -133,8 +119,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="establishment">المنشأة</label>
-                    <select name="establishment" id="establishment"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="establishment[]" id="establishment"   class="form-control select2-multi" multiple >
                         @foreach ($establishment as $establishment)
                             <option value="{{ $establishment }}">{{ $establishment }}</option>
                         @endforeach
@@ -142,8 +127,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="payroll_statement">بيان الراتب</label>
-                    <select name="payroll_statement" id="payroll_statement"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="payroll_statement[]" id="payroll_statement"   class="form-control select2-multi" multiple >
                         @foreach ($payroll_statement as $payroll_statement)
                             <option value="{{ $payroll_statement }}">{{ $payroll_statement }}</option>
                         @endforeach
@@ -151,8 +135,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="association">الجمعية</label>
-                    <select name="association" id="association"   class="custom-select">
-                        <option value="" selected>حدد القيمة</option>
+                    <select name="association[]" id="association" class="form-control select2-multi" multiple >
                         @foreach ($association as $association)
                             <option value="{{ $association }}">{{ $association }}</option>
                         @endforeach
@@ -196,14 +179,14 @@
             <div class="row" id="bankDiv" style="display: none;">
                 <div class="form-group col-md-3">
                     <label for="exchange_type">نوع الصرف</label>
-                    <select name="exchange_type" id="exchange_type" class="custom-select">
+                    <select name="exchange_type" id="exchange_type" class="custom-select" >
                         <option value="cash" selected>نقدي</option>
                         <option value="bank">بنك</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3" id="bank_select" style="display: none;">
                     <label for="bank">البنك</label>
-                    <select name="bank" id="bank" class="custom-select">
+                    <select name="bank" id="bank" class="custom-select" >
                         <option value="" selected>حدد البنك المراد</option>
                         @foreach ($banks as $bank)
                             <option value="{{ $bank}}">{{ $bank }}</option>
@@ -277,6 +260,14 @@
     </script>
     <script src="{{asset('js/report.js')}}"></script>
     <script src="{{ asset('js/getEmployee.js') }}"></script>
+    <script src='js/select2.min.js'></script>
+    <script>
+        $('.select2-multi').select2(
+        {
+          multiple: true,
+          theme: 'bootstrap4',
+        });
+    </script>
     @endpush
 
 </x-front-layout>

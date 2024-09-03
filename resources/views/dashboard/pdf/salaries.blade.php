@@ -106,8 +106,11 @@
             <span>الرواتب الشهرية</span>
             @if (isset($filter))
                 @foreach ($filedsEmpolyees as $name)
-                    @if ($filter["$name"] != null)
-                    / <span>{{ $filter["$name"] }}</span>
+                    @if (isset($filter["$name"]))
+                    /
+                        @foreach ($filter["$name"] as $value)
+                            <span> {{ $value }} + </span>
+                        @endforeach
                     @endif
                 @endforeach
             @endif
@@ -119,16 +122,18 @@
             <thead>
                 <tr>
                     <th colspan="7" style="border: 0;">
-                        @if ($filter["association"] == "المدينة")
-                            عمارة المدينة
-                        @elseif ($filter["association"] == "حطين")
-                            مزرعة حطين
-                        @elseif ($filter["association"] == "الكويتي")
-                            المركز الكويتي للأشعة التخصصية
-                        @elseif ($filter["association"] == "يتيم")
-                            جمعية دار اليتيم الفلسطيني
-                        @elseif ($filter["association"] == "صلاح")
-                            جميعة الصلاح الإسلامية
+                        @if(isset($filter["association"]))
+                            @if ($filter["association"] == "المدينة")
+                                عمارة المدينة
+                            @elseif ($filter["association"] == "حطين")
+                                مزرعة حطين
+                            @elseif ($filter["association"] == "الكويتي")
+                                المركز الكويتي للأشعة التخصصية
+                            @elseif ($filter["association"] == "يتيم")
+                                جمعية دار اليتيم الفلسطيني
+                            @elseif ($filter["association"] == "صلاح")
+                                جميعة الصلاح الإسلامية
+                            @endif
                         @endif
                     </th>
                     <th colspan="8" align="center" style="color: #000; border: 0;">

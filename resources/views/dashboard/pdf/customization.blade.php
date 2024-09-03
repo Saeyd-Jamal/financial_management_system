@@ -103,16 +103,18 @@
     @endphp
     <htmlpageheader name="page-header">
         <div style="padding: 5px 0">
-            @if ($filter["association"] == "المدينة")
-            <img src="{{ public_path('assets/images/headers/city_architecture.jpg') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "حطين")
-            <img src="{{ public_path('assets/images/headers/hetten.png') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "الكويتي")
-            <img src="{{ public_path('assets/images/headers/Kuwaiti.jpg') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "يتيم")
-            <img src="{{ public_path('assets/images/headers/orphan.jpg') }}" style="max-width: 100%;" alt="">
-            @elseif ($filter["association"] == "صلاح")
-            <img src="{{ public_path('assets/images/headers/salah.png') }}" style="max-width: 100%;" alt="">
+            @if(isset($filter["association"]))
+                @if ($filter["association"] == "المدينة")
+                <img src="{{ public_path('assets/images/headers/city_architecture.jpg') }}" style="max-width: 100%;" alt="">
+                @elseif ($filter["association"] == "حطين")
+                <img src="{{ public_path('assets/images/headers/hetten.png') }}" style="max-width: 100%;" alt="">
+                @elseif ($filter["association"] == "الكويتي")
+                <img src="{{ public_path('assets/images/headers/Kuwaiti.jpg') }}" style="max-width: 100%;" alt="">
+                @elseif ($filter["association"] == "يتيم")
+                <img src="{{ public_path('assets/images/headers/orphan.jpg') }}" style="max-width: 100%;" alt="">
+                @elseif ($filter["association"] == "صلاح")
+                <img src="{{ public_path('assets/images/headers/salah.png') }}" style="max-width: 100%;" alt="">
+                @endif
             @endif
         </div>
     </htmlpageheader>
@@ -127,8 +129,11 @@
                             <span>جدول حسابات الموظفين</span>
                             @if (isset($filter))
                                 @foreach ($filedsEmpolyees as $name)
-                                    @if ($filter["$name"] != null)
-                                    / <span>{{ $filter["$name"] }}</span>
+                                    @if (isset($filter["$name"]))
+                                    /
+                                        @foreach ($filter["$name"] as $value)
+                                            <span> {{ $value }} + </span>
+                                        @endforeach
                                     @endif
                                 @endforeach
                             @endif

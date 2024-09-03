@@ -47,79 +47,82 @@ class ReportController extends Controller
 
     public function filterEmployees($data){
         $employees = Employee::query();
-        if($data["scientific_qualification"] != null){
-            $employees = Employee::where("scientific_qualification",'=',$data["scientific_qualification"]);
+        if(isset($data["scientific_qualification"])){
+            $employees = $employees->whereIn("scientific_qualification",$data["scientific_qualification"]);
         }
-        if($data["area"] != null){
-            $employees = $employees->where("area",'=',$data["area"]);
+        if(isset($data["area"])){
+            $employees = $employees->whereIn("area",$data["area"]);
         }
-        if($data["gender"] != null){
-            $employees = $employees->where("gender",'=',$data["gender"]);
+        if(isset($data["gender"])){
+            foreach($data["gender"] as $gender){
+                $employees = $employees->whereIn("gender",$gender);
+            }
         }
-        if($data["matrimonial_status"] != null){
-            $employees = $employees->where("matrimonial_status",'=',$data["matrimonial_status"]);
+        if(isset($data["matrimonial_status"])){
+            foreach($data["matrimonial_status"] as $matrimonial_status){
+                $employees = $employees->whereIn("matrimonial_status",$matrimonial_status);
+            }
         }
-        if($data["working_status"] != null){
+        if(isset($data["working_status"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('working_status','=',$data["working_status"]);
+                $query->whereIn('working_status',$data["working_status"]);
             });
         }
-        if($data["type_appointment"] != null){
+        if(isset($data["type_appointment"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('type_appointment','=',$data["type_appointment"]);
+                $query->whereIn('type_appointment',$data["type_appointment"]);
             });
         }
-        if($data["field_action"] != null){
+        if(isset($data["field_action"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('field_action','=',$data["field_action"]);
+                $query->whereIn("field_action",$data["field_action"]);
             });
         }
-        if($data["dual_function"] != null){
+        if(isset($data["dual_function"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('dual_function','=',$data["dual_function"]);
+                $query->whereIn('dual_function',$data["dual_function"]);
             });
         }
-        if($data["state_effectiveness"] != null){
+        if(isset($data["state_effectiveness"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('state_effectiveness','=',$data["state_effectiveness"]);
+                $query->whereIn('state_effectiveness',$data["state_effectiveness"]);
             });
         }
-        if($data["nature_work"] != null){
+        if(isset($data["nature_work"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('nature_work','=',$data["nature_work"]);
+                $query->whereIn('nature_work',$data["nature_work"]);
             });
         }
-        if($data["association"] != null){
+        if(isset($data["association"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('association','=',$data["association"]);
+                $query->whereIn('association',$data["association"]);
             });
         }
-        if($data["workplace"] != null){
+        if(isset($data["workplace"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('workplace','=',$data["workplace"]);
+                $query->whereIn('workplace',$data["workplace"]);
             });
         }
-        if($data["section"] != null){
+        if(isset($data["section"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('section','=',$data["section"]);
+                $query->whereIn('section',$data["section"]);
             });
         }
-        if($data["dependence"] != null){
+        if(isset($data["dependence"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('dependence','=',$data["dependence"]);
+                $query->whereIn('dependence',$data["dependence"]);
             });
         }
-        if($data["establishment"] != null){
+        if(isset($data["establishment"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('establishment','=',$data["establishment"]);
+                $query->whereIn('establishment',$data["establishment"]);
             });
         }
-        if($data["payroll_statement"] != null){
+        if(isset($data["payroll_statement"])){
             $employees = $employees->whereHas('workData', function($query) use ($data) {
-                $query->where('payroll_statement','=',$data["payroll_statement"]);
+                $query->whereIn('payroll_statement',$data["payroll_statement"]);
             });
         }
-
         return $employees;
     }
 

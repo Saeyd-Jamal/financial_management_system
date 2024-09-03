@@ -14,20 +14,32 @@ class TableSalaries extends Component
     public $salaries;
     public $month;
     public $USD;
+    public $filterArray = [
+        'name' => '',
+        'month' => '',
+    ];
+
 
     public function __construct(){
         $this->USD = Currency::where('code','USD')->first()->value;
+        $this->month = Carbon::now()->format('Y-m');
+        $this->filterArray['month'] = $this->month;
     }
-    public function filterMonth($month){
-        $this->month = $month;
-        $this->filter();
-    }
-    public function filter(Request $request = null,$name = null, $value = null,){
-        $request->merge([
-            $name => $value
-        ]);
+
+    public function filter(Request $request = null){
+        if($request == null){
+            $request = new Request();
+        }
+        if($this->filterArray['name'] != ''){
+            $request->merge([
+                'name' => $this->filterArray['name'],
+            ]);
+        }
+
         $controller = new EmployeeController();
         $employees = $controller->filterEmployee($request);
+
+        $this->month = ($this->filterArray['month'] != '') ? $this->filterArray['month'] : Carbon::now()->format('Y-m');
 
         $this->salaries = Salary::whereIn('employee_id', $employees->pluck('id'))->where('salaries.month', $this->month)->get();
     }

@@ -107,8 +107,11 @@
             <span>جدول التعديلات الثابتة للموظفين</span>
             @if (isset($filter))
                 @foreach ($filedsEmpolyees as $name)
-                    @if ($filter["$name"] != null)
-                        / <span>{{ $filter["$name"] }}</span>
+                    @if (isset($filter["$name"]))
+                    /
+                        @foreach ($filter["$name"] as $value)
+                            <span> {{ $value }} + </span>
+                        @endforeach
                     @endif
                 @endforeach
             @endif
