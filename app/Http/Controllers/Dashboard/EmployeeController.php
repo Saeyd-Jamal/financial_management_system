@@ -232,7 +232,8 @@ class EmployeeController extends Controller
             $employees = $employees->where('employee_id','LIKE',"{$employee_search_id}%");
         }
         if($employee_search_name != ""){
-            $employees = $employees->where('name','LIKE',"%{$employee_search_name}%");
+            $valueS = str_replace('*', '%', $employee_search_name);
+            $employees = $employees->where('name','LIKE',"%{$valueS}%");
         }
 
 

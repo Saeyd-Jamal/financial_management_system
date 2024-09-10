@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 use App\Models\Bank;
+use App\Models\Exchange;
 use Illuminate\Support\Facades\DB;
 use App\Models\LogRecord;
 
@@ -1171,11 +1172,16 @@ class ReportController extends Controller
                 ->distinct()
                 ->pluck('month');
 
+            $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+            $endOfMonth = Carbon::createFromFormat('Y-m', $to_month)->endOfMonth();
 
+            $exchanges = Exchange::whereIn('employee_id', $employees->pluck('id'))
+                                ->whereBetween('discount_date', [$startOfMonth, $endOfMonth])
+                                ->get();
             // معاينة pdf
             if($request->export_type == 'view' || $request->export_type == 'export_excel'){
                 $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -1186,7 +1192,7 @@ class ReportController extends Controller
             // تحميل الملف المصدر
             if($request->export_type == 'export_pdf'){
                 $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,

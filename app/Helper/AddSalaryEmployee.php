@@ -46,18 +46,20 @@ class AddSalaryEmployee{
         if($dual_function == "غير موظف"){
             $dual_function = null;
         }
+
+
         // مبلغ السلفة من حالة الدوام
         $working_status = $employee->workData->working_status;
         if($working_status == "مداوم" || $working_status == "نعم"){
-            if($employee->workData->type_appointment == 'يومي'){
-                $advance_payment = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
-            }
             $advance_payment = Constant::where('type_constant','advance_payment_permanent')->first('value')->value;
-        }elseif($working_status == "غير مداوم" || $working_status == "لا"){
             if($employee->workData->type_appointment == 'يومي'){
                 $advance_payment = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
             }
+        }elseif($working_status == "غير مداوم" || $working_status == "لا"){
             $advance_payment = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
+            if($employee->workData->type_appointment == 'يومي'){
+                $advance_payment = Constant::where('type_constant','advance_payment_rate')->first('value')->value;
+            }
         }elseif($working_status == "رياض"){
             $advance_payment = Constant::where('type_constant','advance_payment_riyadh')->first('value')->value;
         }elseif($working_status == "نسبة"){
@@ -65,6 +67,8 @@ class AddSalaryEmployee{
         }else{
             $advance_payment = 0;
         }
+
+
         //  البنك المتعامل معه
         if($employee->banks->first() != null){
             foreach ($employee->banks as $bank) {
@@ -138,9 +142,11 @@ class AddSalaryEmployee{
             $nature_work_increase = floatval(($percentage_allowance*0.01) * $secondary_salary); // علاوة طبيعة العمل
         }else{
             if($employee->workData->type_appointment == 'نسبة'){
-                $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
+                $initial_salary = SpecificSalary::where('employee_id',$employee->id)->where('month',$month)->first();
+                $secondary_salary = $initial_salary;
             }else{
-                $secondary_salary = SpecificSalary::where('employee_id',$employee->id)->where('month','0000-00')->first();
+                $initial_salary = SpecificSalary::where('employee_id',$employee->id)->where('month','0000-00')->first();
+                $secondary_salary = $initial_salary;
             }
             if($secondary_salary == null || $secondary_salary->salary == 0){
                 LogRecord::create([
@@ -151,11 +157,11 @@ class AddSalaryEmployee{
                 return;
             }else{
                 $percentage_allowance = 0;
-                $initial_salary = 0;
                 $grade_Allowance = 0;
                 $allowance_boys = 0;
                 $nature_work_increase =  0; // علاوة طبيعة العمل
-                $secondary_salary = $secondary_salary->salary;
+                $initial_salary = $secondary_salary->salary;
+                $secondary_salary = $initial_salary;
             }
         }
 
@@ -251,6 +257,48 @@ class AddSalaryEmployee{
 
         // إجمالي الراتب الاخير الخاص ببرنامج الإكسيل فقط للعرض
         $gross_salary = $secondary_salary +$allowance_boys + $nature_work_increase + $administrative_allowance+ $scientific_qualification_allowance+ $transport + $extra_allowance+ $salary_allowance + $ex_addition + $mobile_allowance+ $termination_service;
+
+
+        // الراتب الشهري للموظفين الغير مداومين
+        // if($employee->workData->working_status == 'لا'){
+        //     $advance_payment = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
+
+        //     if($secondary_salary < $advance_payment  ){
+        //         $initial_salary = $initial_salary;
+        //         $secondary_salary = $initial_salary;
+        //         $gross_salary = $initial_salary;
+        //         $net_salary = $initial_salary;
+        //     }else{
+        //         $initial_salary = $advance_payment;
+        //         $secondary_salary = $advance_payment;
+        //         $gross_salary = $advance_payment;
+        //         $net_salary = $advance_payment;
+        //     }
+
+        //     $amount_letters = Numbers::TafqeetMoney($net_salary,'ILS');
+
+        //     // حقول مصفرة
+        //     $percentage_allowance = 0;
+        //     $grade_Allowance = 0;
+        //     $allowance_boys = 0;
+        //     $nature_work_increase = 0;
+        //     $termination_service = 0;
+        //     $z_Income = 0;
+        //     $late_receivables = 0;
+        //     $total_discounts = 0;
+        //     $bank = 0;
+        //     $branch_number = 0;
+        //     $account_number = 0;
+        //     $resident_exemption = 0;
+        //     $annual_taxable_amount = 0;
+        //     $tax = 0;
+        //     $exemptions = 0;
+        //     $amount_tax = 0;
+        //     $savings_loan = 0;
+        //     $shekel_loan = 0;
+        //     $association_loan = 0;
+        //     $savings_rate = 0;
+        // }
         DB::beginTransaction();
         try{
             $salaryOld = Salary::where('employee_id',$employee->id)->where('month',$month)->first();

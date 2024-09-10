@@ -176,7 +176,7 @@
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td style="white-space: nowrap;">{{$salary->employee->name ?? ''}}</td>
-                        <td>{{$salary->employee->workData->workplace ?? ''}}</td>
+                        <td style="white-space: nowrap;">{{$salary->employee->workData->workplace ?? ''}}</td>
                         <td>{{$salary->secondary_salary ?? ''}}</td>
                         <td>{{$salary->allowance_boys ?? ''}}</td>
                         <td>{{$salary->nature_work_increase ?? ''}}</td>

@@ -126,9 +126,6 @@
                     <th>الشهر</th>
                     <th>الراتب الاساسي</th>
                     <th>إجمالي الراتب</th>
-                    <th>قرض الجمعية</th>
-                    <th>قرض الإدخار</th>
-                    <th>قرض شيكل</th>
                     <th>مستحقات متأخرة</th>
                     <th>إجمالي الخصومات</th>
                     <th>صافي الراتب</th>
@@ -136,17 +133,14 @@
             </thead>
             <tbody>
                 @foreach($salaries as $salary)
-                    @php
+                    {{-- @php
                         $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
-                    @endphp
+                    @endphp --}}
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td style="white-space: nowrap;">{{$salary->month ?? ''}}</td>
                         <td>{{$salary->secondary_salary ?? ''}}</td>
                         <td>{{$salary->gross_salary }}</td>
-                        <td>{{$fixedEntries->association_loan ?? ''}}</td>
-                        <td>{{$fixedEntries != null  ? $fixedEntries->savings_loan * $USD : ''}}</td>
-                        <td>{{$fixedEntries->shekel_loan ?? ''}}</td>
                         <td>{{$salary->late_receivables ?? ''}}</td>
                         <td>{{$salary->total_discounts ?? ''}}</td>
                         <td style="color: #000; background: #dddddd; font-weight: bold;">{{$salary->net_salary ?? ''}}</td>
@@ -156,7 +150,7 @@
         </table>
     </div>
     <div lang="ar">
-        <h3>الأرصدة</h3>
+        <h3>الأرصدة (المستحقات والإدخارات)</h3>
         <table class="blueTable">
             <thead>
                 <tr  style="background: #dddddd;">
@@ -171,7 +165,8 @@
                 @php
                     $total = $employee->totals;
                     $late_receivables = $salaries->select('late_receivables')->sum('late_receivables');
-                    $total_savings = $salary->employee->fixedEntries->sum('savings_loan');
+                    $fixedEntries = App\Models\FixedEntries::where('employee_id', $employee->id)->whereBetween('month', [$month, $to_month])->get();
+                    $total_savings = $fixedEntries->sum('savings_loan');
                 @endphp
                 <tr>
                     <td>00</td>
@@ -183,14 +178,13 @@
                 @foreach($salaries as $salary)
                     @php
                         $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
-                        // ($savings_loan + (($savings_rate + $termination_service) / $USD )
                     @endphp
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td style="white-space: nowrap;">{{$salary->month ?? ''}}</td>
                         <td>سند قيد</td>
                         <td>{{$salary->late_receivables ?? ''}}</td>
-                        <td>{{ $fixedEntries->savings_loan + (($salary->savings_rate + $salary->termination_service) / $USD)}}</td>
+                        <td>{{ number_format(($fixedEntries->savings_loan + (($salary->savings_rate + $salary->termination_service) / $USD)), 2) }}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -204,23 +198,33 @@
         </table>
     </div>
     <div lang="ar">
-        <h3>كشف الرواتب</h3>
+        <h3>أرصدة القروض</h3>
         <table class="blueTable">
             <thead>
                 <tr  style="background: #dddddd;">
                     <th>#</th>
                     <th>الشهر</th>
-                    <th>الراتب الاساسي</th>
-                    <th>إجمالي الراتب</th>
+                    <th>البيان</th>
                     <th>قرض الجمعية</th>
                     <th>قرض الإدخار</th>
-                    <th>قرض شيكل</th>
-                    <th>مستحقات متأخرة</th>
-                    <th>إجمالي الخصومات</th>
-                    <th>صافي الراتب</th>
+                    <th>قرض الشيكل</th>
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $fixedEntries = App\Models\FixedEntries::where('employee_id', $employee->id)->whereBetween('month', [$month, $to_month])->get();
+                    $association_loan = $fixedEntries->sum('association_loan');
+                    $savings_loan = $fixedEntries->sum('savings_loan');
+                    $shekel_loan = $fixedEntries->sum('shekel_loan');
+                @endphp
+                <tr>
+                    <td>00</td>
+                    <td></td>
+                    <td>الرصيد السابق</td>
+                    <td>{{ floatval($total->total_association_loan) + floatval($association_loan) }}</td>
+                    <td>{{ floatval($total->total_savings_loan) + floatval($savings_loan) }}</td>
+                    <td>{{ floatval($total->total_shekel_loan) + floatval($shekel_loan) }}</td>
+                </tr>
                 @foreach($salaries as $salary)
                     @php
                         $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
@@ -228,19 +232,51 @@
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td style="white-space: nowrap;">{{$salary->month ?? ''}}</td>
-                        <td>{{$salary->secondary_salary ?? ''}}</td>
-                        <td>{{$salary->gross_salary }}</td>
+                        <td>سند قيد</td>
                         <td>{{$fixedEntries->association_loan ?? ''}}</td>
-                        <td>{{$fixedEntries != null  ? $fixedEntries->savings_loan * $USD : ''}}</td>
+                        <td>{{$fixedEntries->savings_loan ?? ''}}</td>
                         <td>{{$fixedEntries->shekel_loan ?? ''}}</td>
-                        <td>{{$salary->late_receivables ?? ''}}</td>
-                        <td>{{$salary->total_discounts ?? ''}}</td>
-                        <td style="color: #000; background: #dddddd; font-weight: bold;">{{$salary->net_salary ?? ''}}</td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td>00</td>
+                    <td>---</td>
+                    <td>الإجمالي (المتبقي)</td>
+                    <td>{{ $total->total_association_loan }}</td>
+                    <td>{{ $total->total_savings_loan }}</td>
+                    <td>{{ $total->total_shekel_loan }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    @if ($exchanges->isNotEmpty())
+    <div lang="ar">
+        <h3>كشف الصرف</h3>
+        <table class="blueTable">
+            <thead>
+                <tr  style="background: #dddddd;">
+                    <th>#</th>
+                    <th>تاريخ الخصم</th>
+                    <th>خصم المستحقات ش</th>
+                    <th>خصم الإدخارات $</th>
+                    <th>الملاحظات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($exchanges as $exchange)
+                    <tr>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$exchange->discount_date}}</td>
+                        <td>{{$exchange->receivables_discount}}</td>
+                        <td>{{$exchange->savings_discount}}</td>
+                        <td>{{$exchange->notes}}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+    @endif
+
 
     <htmlpagefooter name="page-footer">
         <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">
