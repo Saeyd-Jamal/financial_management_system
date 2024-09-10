@@ -154,7 +154,7 @@ class ReportController extends Controller
         $time = Carbon::now();
         $employees = $this->filterEmployees($request->all())->get();
         if($request->employee_id != null){
-            $employees = $employees->where('id',$request->employee_id);
+            $employees = Employee::where('id',$request->employee_id)->get();
         }
         if($request->report_type == 'employees'){
             if($request->export_type == 'view'){
@@ -772,12 +772,11 @@ class ReportController extends Controller
         }
 
         if($request->report_type == 'customization'){
+            return redirect()->back()->with('danger', 'التقرير لم يجهز');
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');
 
             $workplaces = Workdata::select('association','dependence','type_appointment','field_action','workplace')->where('association','صلاح')->orderBy('association')->orderBy('dependence')->orderBy('field_action')->distinct()->pluck('workplace')->toArray();
-
-
             $data = [
                 [
                     'association' => 'صلاح',
@@ -1142,6 +1141,58 @@ class ReportController extends Controller
                     'default_font' => 'Arial',
                 ]);
                 return $pdf->stream();
+            }
+        }
+
+        if($request->report_type == 'employee_accounts'){
+            $USD = Currency::where('code', 'USD')->first()->value;
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $to_month = $request->to_month ?? Carbon::now()->format('Y-m');
+            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
+
+            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                        ->whereBetween('month', [$month, $to_month])
+                        ->get();
+
+
+            // دوال الموجوع اخر سطر في التقرير
+            $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
+                $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
+                return [
+                    'net_salary' => $salary->net_salary ?? '0',
+                ];
+            });
+            $salariesTotalArray = [
+                'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
+            ];
+
+            $months = Salary::whereIn('employee_id', $employees->pluck('id'))
+                ->whereBetween('month', [$month, $to_month])
+                ->distinct()
+                ->pluck('month');
+
+
+            // معاينة pdf
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                ]);
+                return $pdf->stream();
+            }
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                ]);
+                return $pdf->download('كشف الصرف_' . $time .'.pdf');
             }
         }
     }

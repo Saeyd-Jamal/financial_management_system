@@ -109,7 +109,7 @@
                     @if (isset($filter["$name"]))
                     /
                         @foreach ($filter["$name"] as $value)
-                            <span> {{ $value }} + </span>
+                            <span> {{ $value }} / </span>
                         @endforeach
                     @endif
                 @endforeach
@@ -122,16 +122,16 @@
             <thead>
                 <tr>
                     <th colspan="7" style="border: 0;">
-                        @if(isset($filter["association"]))
-                            @if ($filter["association"] == "المدينة")
+                        @if(!isset($filter["association"][1]) && isset($filter["association"][0]))
+                            @if ($filter["association"][0] == "المدينة")
                                 عمارة المدينة
-                            @elseif ($filter["association"] == "حطين")
+                            @elseif ($filter["association"][0] == "حطين")
                                 مزرعة حطين
-                            @elseif ($filter["association"] == "الكويتي")
+                            @elseif ($filter["association"][0] == "الكويتي")
                                 المركز الكويتي للأشعة التخصصية
-                            @elseif ($filter["association"] == "يتيم")
+                            @elseif ($filter["association"][0] == "يتيم")
                                 جمعية دار اليتيم الفلسطيني
-                            @elseif ($filter["association"] == "صلاح")
+                            @elseif ($filter["association"][0] == "صلاح")
                                 جميعة الصلاح الإسلامية
                             @endif
                         @endif

@@ -110,7 +110,7 @@
                     @if (isset($filter["$name"]))
                     /
                         @foreach ($filter["$name"] as $value)
-                            <span> {{ $value }} + </span>
+                            <span> {{ $value }} / </span>
                         @endforeach
                     @endif
                 @endforeach
@@ -123,19 +123,19 @@
             <thead>
                 <tr>
                     <td colspan="4" style="border:0;">
-                        @isset($filter['association'])
-                            @if ($filter['association'] == 'المدينة')
+                        @if(!isset($filter["association"][1]) && isset($filter["association"][0]))
+                            @if ($filter["association"][0] == "المدينة")
                                 عمارة المدينة
-                            @elseif ($filter['association'] == 'حطين')
+                            @elseif ($filter["association"][0] == "حطين")
                                 مزرعة حطين
-                            @elseif ($filter['association'] == 'الكويتي')
+                            @elseif ($filter["association"][0] == "الكويتي")
                                 المركز الكويتي للأشعة التخصصية
-                            @elseif ($filter['association'] == 'يتيم')
-                            جمعية دار اليتيم الفلسطيني
-                            @elseif ($filter['association'] == 'صلاح')
+                            @elseif ($filter["association"][0] == "يتيم")
+                                جمعية دار اليتيم الفلسطيني
+                            @elseif ($filter["association"][0] == "صلاح")
                                 جميعة الصلاح الإسلامية
                             @endif
-                        @endisset
+                        @endif
                     </td>
                     <td colspan="12" align="center" style="color: #000;border:0;">
                         <h1>جدول التعديلات الثابتة للموظفين لشهر : {{ $month }}</h1>

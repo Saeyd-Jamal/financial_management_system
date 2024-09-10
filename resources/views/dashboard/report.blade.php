@@ -12,7 +12,10 @@
             @csrf
             <div class="row">
                 <div class="form-group col-md-3">
-                    <x-form.input type="month" :value="$month" name="month" label="الشهر المطلوب" />
+                    <x-form.input type="month" :value="$month" name="month" label="الشهر المطلوب (الشهر الاول)" />
+                </div>
+                <div class="form-group col-md-3">
+                    <x-form.input type="month"  name="to_month" label="الى شهر" />
                 </div>
                 <div class="form-group col-md-3">
                     <label for="area">المنظقة</label>
@@ -147,13 +150,17 @@
                     <select class="custom-select" name="report_type" id="report_type" required>
                         <option  value="" disabled selected>حدد نوع الكشف</option>
                         <optgroup label="الكشوفات الأساسية">
-                        <option value="employees">كشف موظفين</option>
-                        <option value="salaries">كشف الرواتب</option>
-                        <option value="accounts">كشف حسابات البنك</option>
-                        <option value="employees_totals">كشف المستحقات والقروض</option>
-                        <option value="employees_fixed">كشف التعديلات</option>
-                        <option value="bank" >كشف الصرف</option>
-                        <option value="customization">كشف التخصيصات</option>
+                            <option value="employees">كشف موظفين</option>
+                            <option value="salaries">كشف الرواتب</option>
+                            <option value="accounts">كشف حسابات البنك</option>
+                            <option value="employees_totals">كشف المستحقات والقروض</option>
+                            <option value="employees_fixed">كشف التعديلات</option>
+                            <option value="bank" >كشف الصرف</option>
+                            <option value="customization">كشف التخصيصات</option>
+                        </optgroup>
+                        <optgroup label="كشوفات لموظف معين">
+                            <option value="employee_accounts">كشف الحساب</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="form-group col-md-3">

@@ -103,17 +103,16 @@
     @endphp
     <htmlpageheader name="page-header">
         <div style="padding: 5px 0">
-            @if(isset($filter["association"]))
-
-                @if ($filter["association"] == "المدينة")
+            @if(!isset($filter["association"][1]) && isset($filter["association"][0]))
+                @if ($filter["association"][0] == "المدينة")
                 <img src="{{ public_path('assets/images/headers/city_architecture.jpg') }}" style="max-width: 100%;" alt="">
-                @elseif ($filter["association"] == "حطين")
+                @elseif ($filter["association"][0] == "حطين")
                 <img src="{{ public_path('assets/images/headers/hetten.png') }}" style="max-width: 100%;" alt="">
-                @elseif ($filter["association"] == "الكويتي")
+                @elseif ($filter["association"][0] == "الكويتي")
                 <img src="{{ public_path('assets/images/headers/Kuwaiti.jpg') }}" style="max-width: 100%;" alt="">
-                @elseif ($filter["association"] == "يتيم")
+                @elseif ($filter["association"][0] == "يتيم")
                 <img src="{{ public_path('assets/images/headers/orphan.jpg') }}" style="max-width: 100%;" alt="">
-                @elseif ($filter["association"] == "صلاح")
+                @elseif ($filter["association"][0] == "صلاح")
                 <img src="{{ public_path('assets/images/headers/salah.png') }}" style="max-width: 100%;" alt="">
                 @endif
             @endif
@@ -133,7 +132,7 @@
                                     @if (isset($filter["$name"]))
                                     /
                                         @foreach ($filter["$name"] as $value)
-                                            <span> {{ $value }} + </span>
+                                            <span> {{ $value }} / </span>
                                         @endforeach
                                     @endif
                                 @endforeach

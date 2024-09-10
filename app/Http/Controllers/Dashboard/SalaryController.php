@@ -153,21 +153,18 @@ class SalaryController extends Controller
             $employees = Employee::get();
             $logRecords = [];
             $month = $request->month ?? Carbon::now()->format('Y-m');
-            $employee = Employee::find(537);
-            AddSalaryEmployee::addSalary($employee,$month);
-
-            // foreach ($employees as $employee) {
-            //     try{
-            //         LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$employee->id")->delete();
-            //         AddSalaryEmployee::addSalary($employee,$month);
-            //     }catch(Exception $e){
-            //         LogRecord::create([
-            //             'type' => 'errorSalary',
-            //             'related_id' => "employee_$employee->id",
-            //             'description' => 'خطأ في معالجة راتب الموظف : ' . $employee->name . '. الخطأ: ' . $e->getMessage(),
-            //         ]);
-            //     }
-            // }
+            foreach ($employees as $employee) {
+                try{
+                    LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$employee->id")->delete();
+                    AddSalaryEmployee::addSalary($employee,$month);
+                }catch(Exception $e){
+                    LogRecord::create([
+                        'type' => 'errorSalary',
+                        'related_id' => "employee_$employee->id",
+                        'description' => 'خطأ في معالجة راتب الموظف : ' . $employee->name . '. الخطأ: ' . $e->getMessage(),
+                    ]);
+                }
+            }
             $logRecords = LogRecord::where('type', 'errorSalary')->get()->pluck('description')->toArray();
             // الحصول على بداية ونهاية الشهر السابق
             $startOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
