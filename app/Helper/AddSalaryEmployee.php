@@ -265,9 +265,9 @@ class AddSalaryEmployee{
 
         //     if($secondary_salary < $advance_payment  ){
         //         $initial_salary = $initial_salary;
-        //         $secondary_salary = $initial_salary;
-        //         $gross_salary = $initial_salary;
-        //         $net_salary = $initial_salary;
+        //         $secondary_salary = $secondary_salary;
+        //         $gross_salary = $secondary_salary;
+        //         $net_salary = $secondary_salary;
         //     }else{
         //         $initial_salary = $advance_payment;
         //         $secondary_salary = $advance_payment;

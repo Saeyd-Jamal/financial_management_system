@@ -172,6 +172,9 @@
                 @foreach($salaries as $salary)
                     @php
                         $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
+                        if($salary->employee->workData->working_status == 'لا'){
+                            $fixedEntries = new  App\Models\FixedEntries();
+                        }
                     @endphp
                     <tr>
                         <td>{{$loop->iteration}}</td>
