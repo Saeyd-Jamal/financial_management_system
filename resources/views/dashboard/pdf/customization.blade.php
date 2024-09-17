@@ -123,10 +123,10 @@
         <table class="blueTable">
             <thead>
                 <tr>
-                    <td colspan="6" style="border:0;">
+                    <td colspan="7" style="border:0;">
                         <p>
                             <span>قسم المالية</span> /
-                            <span>جدول حسابات الموظفين</span>
+                            <span>جدول تخصيص الرواتب</span>
                             @if (isset($filter))
                                 @foreach ($filedsEmpolyees as $name)
                                     @if (isset($filter["$name"]))
@@ -141,31 +141,58 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="6" align="center" style="color: #000;border:0;">
-                        <h1>جدول حسابات الموظفين</h1>
+                    <td colspan="7" align="center" style="color: #000;border:0;">
+                        <h1>جدول تخصيص الرواتب لشهر {{ $month }}</h1>
                     </td>
                 </tr>
                 <tr style="background: #dddddd;">
                     <th>#</th>
-                    <th>الاسم</th>
-                    <th>البنك</th>
-                    <th>الفرع - رقم الفرع</th>
-                    <th>رقم الحساب</th>
-                    <th>الأساسي؟</th>
+                    <th>الجمعية</th>
+                    <th>التبعية</th>
+                    <th>مجال العمل</th>
+                    <th>مكان العمل</th>
+                    <th>المبلغ</th>
+                    {{-- <th>الإجمالي</th> --}}
+                    <th>صافي الراتب</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($accounts as $account)
+                @foreach ($workplaces as $workplace)
+                    @php
+                        $employees = \App\Models\Employee::query();
+                        $employees = $employees->whereHas('workData', function($query) use ($workplace) {
+                            $query->where('association',$workplace->association)->where('field_action',$workplace->field_action)->where('workplace',$workplace->workplace);
+                        });
+                        $salariesWork = \App\Models\Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
+                                ->where('salaries.month', '2024-08')
+                                ->join('employees', 'salaries.employee_id', '=', 'employees.id')
+                                ->join('work_data', 'salaries.employee_id', '=', 'work_data.employee_id')
+                                ->select('salaries.*','employees.*','work_data.*')
+                                ->get();
+                        $gross_salary = $salariesWork->sum('gross_salary');
+                        $net_salary = $salariesWork->sum('net_salary');
+                    @endphp
+                    @if ($salariesWork->sum('gross_salary') != 0)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $account->employee->name }}</td>
-                        <td>{{ $account->bank->name }}</td>
-                        <td>{{ $account->bank->branch . " - " . $account->bank->branch_number }}</td>
-                        <td>{{ $account->account_number }}</td>
-                        <td>{{ ($account->default == 1 ? "الأساسي" : "---") }}</td>
+                        <td>{{ $workplace->association }}</td>
+                        <td>{{ $salariesWork->first()->dependence ?? '' }}</td>
+                        <td>{{ $workplace->field_action }}</td>
+                        <td>{{ $workplace->workplace }}</td>
+                        <td>{{ $salariesWork->sum('gross_salary') }}</td>
+                        {{-- <td>{{ $salary->sum('net_salary') }}</td> --}}
+                        <td>{{ $salariesWork->sum('net_salary') }}</td>
                     </tr>
+                    @endif
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">الاجمالي</td>
+                    <td>{{ $salaries->sum('gross_salary') }}</td>
+                    <td>{{ $salaries->sum('net_salary') }}</td>
+                </tr>
+            </tfoot>
         </table>
         <htmlpagefooter name="page-footer">
             <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">

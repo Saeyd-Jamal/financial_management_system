@@ -46,6 +46,8 @@
                 _token: csrf_token,
             },
             success: function (response) {
+                $("#name").empty();
+                $("#name").text(response['name']);
                 $(".totals").empty();
                 $("#receivables_total").text(response['total_receivables']);
                 $("#savings_total").text(response['total_savings']);
@@ -53,23 +55,35 @@
         });
     });
 
-    $("#discount_type").on('change',function () {
+    $("#exchange_type").on('change',function () {
         let type = $(this).val();
         if(type == "receivables_discount"){
+            $("div.exchanges").slideUp();
             $("div#receivables").slideDown();
-            $("div#savings").slideUp();
         }
         if(type == "savings_discount"){
-            $("div#receivables").slideUp();
+            $("div.exchanges").slideUp();
             $("div#savings").slideDown();
         }
         if(type == "receivables_savings_discount"){
+            $("div.exchanges").slideUp();
             $("div#receivables").slideDown();
             $("div#savings").slideDown();
         }
+        if(type == "association_loan"){
+            $("div.exchanges").slideUp();
+            $("div#association_loan").slideDown();
+        }
+        if(type == "savings_loan"){
+            $("div.exchanges").slideUp();
+            $("div#savings_loan").slideDown();
+        }
+        if(type == "shekel_loan"){
+            $("div.exchanges").slideUp();
+            $("div#shekel_loan").slideDown();
+        }
         if(type == ""){
-            $("div#receivables").slideUp();
-            $("div#savings").slideUp();
+            $("div.exchanges").slideUp();
         }
     });
 

@@ -14,6 +14,10 @@ class Exchange extends Model
         'receivables_discount',
         'savings_discount',
         'discount_date',
+        'exchange_type',
+        'association_loan',
+        'savings_loan',
+        'shekel_loan',
         'notes',
         'username'
     ];

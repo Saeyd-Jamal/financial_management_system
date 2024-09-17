@@ -33,7 +33,11 @@
                                         <th>الموظف</th>
                                         <th>خصم المستحقات ش</th>
                                         <th>خصم الإدخارات $</th>
-                                        <th>تاريخ الخصم</th>
+                                        <th>قرض الجمعية</th>
+                                        <th>قرض الإدخار</th>
+                                        <th>قرض اللجنة</th>
+                                        <th>تاريخ الصرف</th>
+                                        <th>الملاحظات</th>
                                         <th>المستخدم</th>
                                         <th>حدث</th>
                                     </tr>
@@ -45,7 +49,11 @@
                                         <td>{{$exchange->employee->name}}</td>
                                         <td>{{$exchange->receivables_discount}}</td>
                                         <td>{{$exchange->savings_discount}}</td>
+                                        <td>{{$exchange->association_loan}}</td>
+                                        <td>{{$exchange->savings_loan}}</td>
+                                        <td>{{$exchange->shekel_loan}}</td>
                                         <td>{{$exchange->discount_date}}</td>
+                                        <td>{{$exchange->notes}}</td>
                                         <td>{{$exchange->username}}</td>
                                         <td>
                                             <button class="btn btn-sm dropdown-toggle more-horizontal" type="button"
@@ -55,6 +63,13 @@
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 {{-- <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                                     href="{{route('salaries.edit',$salary->id)}}">تعديل</a> --}}
+                                                @can('print', 'App\\Models\Exchange')
+                                                <form action="{{route('exchanges.printPdf',['id' => $exchange->id])}}" method="post" target="_blank">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
+                                                    href="#">طباعة</button>
+                                                </form>
+                                                @endcan
                                                 @can('delete', 'App\\Models\Exchange')
                                                 <form action="{{route('exchanges.destroy',$exchange->id)}}" method="post">
                                                     @csrf
@@ -100,35 +115,50 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div id="name">
+
+                                </div>
                             </div>
                             <div class="form-group p-1 col-6">
-                                <label for="discount_type">نوع الخصم</label>
-                                <select class="custom-select" name="discount_type" id="discount_type" required>
+                                <label for="exchange_type">نوع الصرف</label>
+                                <select class="custom-select" name="exchange_type" id="exchange_type" required>
                                     <option selected="" value="">إختر</option>
                                     <option value="receivables_discount">خصم المستحقات ش</option>
                                     <option value="savings_discount">خصم الإدخارات $</option>
                                     <option value="receivables_savings_discount">خصم المستحقات والإدخارات</option>
+                                    <option value="association_loan">قرض الجمعية ش</option>
+                                    <option value="savings_loan">قرض الإدخار $</option>
+                                    <option value="shekel_loan">قرض اللجنة ش</option>
                                 </select>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group p-3 col-4" id="receivables" style="display: none;">
+                            <div class="form-group p-3 col-4 exchanges" id="receivables" style="display: none;">
                                 <x-form.input type="number" min="0" value="0"  label="خصم المستحقات ش" name="receivables_discount" placeholder="0.." />
                                 <span class="totals" id="receivables_total">
                                     {{$totals['total_receivables'] ?? ''}}
                                 </span>
                             </div>
-                            <div class="form-group p-3 col-4" id="savings"  style="display: none;">
+                            <div class="form-group p-3 col-4 exchanges" id="savings"  style="display: none;">
                                 <x-form.input type="number" min="0" value="0"  label="خصم الإدخارات $" name="savings_discount" placeholder="0.." />
                                 <span class="totals" id="savings_total">
                                     {{$totals['total_savings']  ?? ''}}
                                 </span>
                             </div>
+                            <div class="form-group p-3 col-4 exchanges" id="association_loan"  style="display: none;">
+                                <x-form.input type="number" min="0" value="0"  label="صرف قرض الجمعية" name="association_loan" placeholder="0.." />
+                            </div>
+                            <div class="form-group p-3 col-4 exchanges" id="savings_loan"  style="display: none;">
+                                <x-form.input type="number" min="0" value="0"  label="صرف قرض الإدخار" name="savings_loan" placeholder="0.." />
+                            </div>
+                            <div class="form-group p-3 col-4 exchanges" id="shekel_loan"  style="display: none;">
+                                <x-form.input type="number" min="0" value="0"  label="صرف قرض اللجنة" name="shekel_loan" placeholder="0.." />
+                            </div>
                             <div class="form-group p-3 col-4">
-                                <x-form.input type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}"  label="تاريخ الخصم" name="discount_date"  />
+                                <x-form.input type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}"  label="تاريخ الصرف" name="discount_date"  />
                             </div>
                             <div class="form-group p-3 col-12">
-                                <label for="notes">ملاحظات حول الخصم</label>
+                                <label for="notes">ملاحظات حول الصرف</label>
                                 <textarea class="form-control" id="notes" name="notes" placeholder="....." rows="3"></textarea>
                             </div>
                         </div>

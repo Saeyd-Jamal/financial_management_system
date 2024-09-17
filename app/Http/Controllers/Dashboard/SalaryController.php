@@ -151,6 +151,7 @@ class SalaryController extends Controller
         DB::beginTransaction();
         try {
             $employees = Employee::get();
+
             $logRecords = [];
             $month = $request->month ?? Carbon::now()->format('Y-m');
             foreach ($employees as $employee) {

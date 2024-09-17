@@ -157,8 +157,19 @@
                     <th>#</th>
                     <th>الشهر</th>
                     <th>البيان</th>
-                    <th>المستحقات</th>
-                    <th>الإدخارات</th>
+                    <th colspan="3" align="center">المستحقات ش</th>
+                    <th colspan="3" align="center">الإدخارات $</th>
+                </tr>
+                <tr >
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="background: #dddddd;">الرصيد</th>
+                    <th style="background: #dddddd;">المستحق ش</th>
+                    <th style="background: #dddddd;">صرف له</th>
+                    <th style="background: #dddddd;">الرصيد</th>
+                    <th style="background: #dddddd;">الإدخار $</th>
+                    <th style="background: #dddddd;">صرف له</th>
                 </tr>
             </thead>
             <tbody>
@@ -172,8 +183,8 @@
                     <td>00</td>
                     <td></td>
                     <td>الرصيد السابق</td>
-                    <td>{{ floatval($total->total_receivables) - floatval($late_receivables) }}</td>
-                    <td>{{ floatval($total->total_savings) - floatval($total_savings) }}</td>
+                    <td colspan="3">{{ (floatval($total->total_receivables) ?? 0) - (floatval($late_receivables) ?? 0) }}</td>
+                    <td colspan="3">{{ (floatval($total->total_savings) ?? 0) - (floatval($total_savings) ?? 0) }}</td>
                 </tr>
                 @foreach($salaries as $salary)
                     @php
@@ -182,17 +193,42 @@
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td style="white-space: nowrap;">{{$salary->month ?? ''}}</td>
-                        <td>سند قيد</td>
+                        <td></td>
+                        <td></td>
                         <td>{{$salary->late_receivables ?? ''}}</td>
-                        <td>{{ number_format(($fixedEntries->savings_loan + (($salary->savings_rate + $salary->termination_service) / $USD)), 2) }}</td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ number_format((($fixedEntries->savings_loan ?? 0)+ ((($salary->savings_rate ?? 0) + ($salary->termination_service ?? 0)) / $USD)), 2) }}</td>
+                        <td></td>
                     </tr>
                 @endforeach
+                @if ($exchanges->isNotEmpty())
+                    <tr>
+                        @foreach($exchanges as $exchange)
+                            @if ($exchange->receivables_discount != 0 || $exchange->savings_discount != 0)
+                            <tr>
+                                <td>--</td>
+                                <td style="white-space: nowrap;">{{$exchange->discount_date ?? ''}}</td>
+                                <td>صرف</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{$exchange->receivables_discount}}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{$exchange->savings_discount}}</td>
+                            </tr>
+                            @endif
+                        @endforeach
+                    </tr>
+                @endif
                 <tr>
                     <td>00</td>
                     <td>---</td>
                     <td>الإجمالي</td>
                     <td>{{ $total->total_receivables_view }}</td>
+                    <td colspan="2"></td>
                     <td>{{ $total->total_savings_view }}</td>
+                    <td colspan="2"></td>
                 </tr>
             </tbody>
         </table>
@@ -227,15 +263,15 @@
                 </tr>
                 @foreach($salaries as $salary)
                     @php
-                        $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
+                        $fixedEntriesN = App\Models\FixedEntries::where('employee_id', $employee->id)->where('month', $salary->month)->first();
                     @endphp
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td style="white-space: nowrap;">{{$salary->month ?? ''}}</td>
-                        <td>سند قيد</td>
-                        <td>{{$fixedEntries->association_loan ?? ''}}</td>
-                        <td>{{$fixedEntries->savings_loan ?? ''}}</td>
-                        <td>{{$fixedEntries->shekel_loan ?? ''}}</td>
+                        <td></td>
+                        <td>{{$fixedEntriesN->association_loan ?? ''}}</td>
+                        <td>{{$fixedEntriesN->savings_loan ?? ''}}</td>
+                        <td>{{$fixedEntriesN->shekel_loan ?? ''}}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -249,35 +285,12 @@
             </tbody>
         </table>
     </div>
-    @if ($exchanges->isNotEmpty())
-    <div lang="ar">
-        <h3>كشف الصرف</h3>
-        <table class="blueTable">
-            <thead>
-                <tr  style="background: #dddddd;">
-                    <th>#</th>
-                    <th>تاريخ الخصم</th>
-                    <th>خصم المستحقات ش</th>
-                    <th>خصم الإدخارات $</th>
-                    <th>الملاحظات</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($exchanges as $exchange)
-                    <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>{{$exchange->discount_date}}</td>
-                        <td>{{$exchange->receivables_discount}}</td>
-                        <td>{{$exchange->savings_discount}}</td>
-                        <td>{{$exchange->notes}}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    @endif
-
-
+    <table width="100%" style="vertical-align: bottom; color: #000000; margin:30px 1em 10px; font-size: 14px">
+        <tr>
+            <td width="50%">الختم</td>
+            <td width="50%" align="center">التوقيع</td>
+        </tr>
+    </table>
     <htmlpagefooter name="page-footer">
         <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">
             <tr>

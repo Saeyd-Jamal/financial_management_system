@@ -6,6 +6,7 @@ use Alkoumi\LaravelArabicNumbers\Numbers;
 use App\Models\Bank;
 use App\Models\Constant;
 use App\Models\Currency;
+use App\Models\FixedEntries;
 use App\Models\LogRecord;
 use App\Models\ReceivablesLoans;
 use App\Models\Salary;
@@ -259,46 +260,70 @@ class AddSalaryEmployee{
         $gross_salary = $secondary_salary +$allowance_boys + $nature_work_increase + $administrative_allowance+ $scientific_qualification_allowance+ $transport + $extra_allowance+ $salary_allowance + $ex_addition + $mobile_allowance+ $termination_service;
 
 
+        /*
         // الراتب الشهري للموظفين الغير مداومين
-        // if($employee->workData->working_status == 'لا'){
-        //     $advance_payment = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
+        if($employee->workData->working_status == 'لا'){
+            $advance_payment = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
+            if($secondary_salary < $advance_payment  ){
+                $initial_salary = $initial_salary;
+                $secondary_salary = $secondary_salary;
+                $gross_salary = $secondary_salary;
+                $net_salary = $secondary_salary;
+            }else{
+                $initial_salary = $advance_payment;
+                $secondary_salary = $advance_payment;
+                $gross_salary = $advance_payment;
+                $net_salary = $advance_payment;
+            }
+            $amount_letters = Numbers::TafqeetMoney($net_salary,'ILS');
+            // حقول مصفرة
+            $percentage_allowance = 0;
+            $grade_Allowance = 0;
+            $allowance_boys = 0;
+            $nature_work_increase = 0;
+            $termination_service = 0;
+            $z_Income = 0;
+            $late_receivables = 0;
+            $total_discounts = 0;
+            $bank = 0;
+            $branch_number = 0;
+            $account_number = 0;
+            $resident_exemption = 0;
+            $annual_taxable_amount = 0;
+            $tax = 0;
+            $exemptions = 0;
+            $amount_tax = 0;
+            $savings_loan = 0;
+            $shekel_loan = 0;
+            $association_loan = 0;
+            $savings_rate = 0;
 
-        //     if($secondary_salary < $advance_payment  ){
-        //         $initial_salary = $initial_salary;
-        //         $secondary_salary = $secondary_salary;
-        //         $gross_salary = $secondary_salary;
-        //         $net_salary = $secondary_salary;
-        //     }else{
-        //         $initial_salary = $advance_payment;
-        //         $secondary_salary = $advance_payment;
-        //         $gross_salary = $advance_payment;
-        //         $net_salary = $advance_payment;
-        //     }
-
-        //     $amount_letters = Numbers::TafqeetMoney($net_salary,'ILS');
-
-        //     // حقول مصفرة
-        //     $percentage_allowance = 0;
-        //     $grade_Allowance = 0;
-        //     $allowance_boys = 0;
-        //     $nature_work_increase = 0;
-        //     $termination_service = 0;
-        //     $z_Income = 0;
-        //     $late_receivables = 0;
-        //     $total_discounts = 0;
-        //     $bank = 0;
-        //     $branch_number = 0;
-        //     $account_number = 0;
-        //     $resident_exemption = 0;
-        //     $annual_taxable_amount = 0;
-        //     $tax = 0;
-        //     $exemptions = 0;
-        //     $amount_tax = 0;
-        //     $savings_loan = 0;
-        //     $shekel_loan = 0;
-        //     $association_loan = 0;
-        //     $savings_rate = 0;
-        // }
+            // تصفير الخصم في التعديلات
+            $fixedEntries = FixedEntries::find($employee->fixedEntries->where('month',$month)->first() ? $employee->fixedEntries->where('month',$month)->first()->id : null);
+            if($fixedEntries != null){
+                $fixedEntries->update([
+                    "administrative_allowance" => 0,
+                    "scientific_qualification_allowance" => 0,
+                    "transport" => 0,
+                    "extra_allowance" => 0,
+                    "salary_allowance" => 0,
+                    "ex_addition" => 0,
+                    "mobile_allowance" => 0,
+                    "health_insurance" => 0,
+                    "f_Oredo" => 0,
+                    "association_loan" => 0,
+                    "tuition_fees" => 0,
+                    "voluntary_contributions" => 0,
+                    "savings_loan" => 0,
+                    "shekel_loan" => 0,
+                    "paradise_discount" => 0,
+                    "other_discounts" => 0,
+                    "proportion_voluntary" => 0,
+                    "savings_rate" => 0,
+                ]);
+            }
+        }
+        */
         DB::beginTransaction();
         try{
             $salaryOld = Salary::where('employee_id',$employee->id)->where('month',$month)->first();

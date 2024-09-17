@@ -773,378 +773,109 @@ class ReportController extends Controller
         }
 
         if($request->report_type == 'customization'){
-            return redirect()->back()->with('danger', 'التقرير لم يجهز');
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');
 
-            $workplaces = Workdata::select('association','dependence','type_appointment','field_action','workplace')->where('association','صلاح')->orderBy('association')->orderBy('dependence')->orderBy('field_action')->distinct()->pluck('workplace')->toArray();
-            $data = [
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'المقر العام'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'المقر/الهدايا'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'رفح',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع رفح'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'خانيونس',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع خانيونس'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'دير البلح',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع دير البلح'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'الزوايدة',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع الزوايدة'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المغازي',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع المغازي'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'البريج',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع البريج'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'غزة',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع غزة'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'جباليا',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'فرع جباليا'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'دير البلح',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'صالة دير البلح'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'جباليا',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'صالة جباليا'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'عمارة سعد'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'عمارة المدينة'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'البريج',
-                    'field_action' => 'تحلية',
-                    'type_appointment' => 'تحلية',
-                    'workplace' => 'البريج سيارة جحر الديك'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المغازي',
-                    'field_action' => 'تحلية',
-                    'type_appointment' => 'تحلية',
-                    'workplace' => 'المغازي سيارة مستبيشي'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'تحلية',
-                    'type_appointment' => 'تحلية',
-                    'workplace' => 'سيارة كساب'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'رفح',
-                    'field_action' => 'تحلية',
-                    'type_appointment' => 'تحلية',
-                    'workplace' => 'رفح سيارة 410'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'البريج',
-                    'field_action' => 'تعليم',
-                    'type_appointment' => 'تعليم',
-                    'workplace' => 'روضة حمدية'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المغازي',
-                    'field_action' => 'تعليم',
-                    'type_appointment' => 'تعليم',
-                    'workplace' => 'روضة بيت المقدس'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'خانيونس',
-                    'field_action' => 'تعليم',
-                    'type_appointment' => 'تعليم',
-                    'workplace' => 'روضة عبد الرحمن بن عوف'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'دير البلح',
-                    'field_action' => 'تعليم',
-                    'type_appointment' => 'تعليم',
-                    'workplace' => 'روضة شموع المستقبل'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'رفح',
-                    'field_action' => 'تعليم',
-                    'type_appointment' => 'تعليم',
-                    'workplace' => 'روضة القدس النموذجية'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'تعليم',
-                    'type_appointment' => 'تعليم',
-                    'workplace' => 'مدرسة الأحمد الخيرية'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'تعليم',
-                    'type_appointment' => 'تعليم',
-                    'workplace' => 'مدرسة خديجة'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'مستشفى يافا'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المقر',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'نسبة',
-                    'workplace' => 'مستشفى يافا'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المغازي',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'مركز الوسطى'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'المغازي',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'نسبة',
-                    'workplace' => 'مركز الوسطى'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'البريج',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'مركز بيسان'
-                ],
-                [
-                    'association' => 'صلاح',
-                    'dependence' => 'البريج',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'نسبة',
-                    'workplace' => 'مركز بيسان'
-                ],
-                [
-                    'association' => 'يتيم',
-                    'dependence' => 'المقر',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'المقر العام'
-                ],
-                [
-                    'association' => 'يتيم',
-                    'dependence' => 'المقر',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'المقر/الهدايا'
-                ],
-                [
-                    'association' => 'الكويتي',
-                    'dependence' => 'المقر',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'مركز الكويتي'
-                ],
-                [
-                    'association' => 'الكويتي',
-                    'dependence' => 'المقر',
-                    'field_action' => 'صحي',
-                    'type_appointment' => 'نسبة',
-                    'workplace' => 'مركز الكويتي'
-                ],
-                [
-                    'association' => 'المدينة',
-                    'dependence' => 'المقر',
-                    'field_action' => 'اداري',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'عمارة المدينة'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'الادارة'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'اليات 1'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'اليات 2'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'زراعة الإدارة'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'اداري',
-                    'workplace' => 'المشتل'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'اسماعيل صرصور'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'زياد ابو سويرح'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'عطية ابو عمرة'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'محمد الاسطل'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'مصلح العر'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'علي بشير'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'دار اليتيم - ساهر'
-                ],
-                [
-                    'association' => 'حطين',
-                    'dependence' => 'زراعة',
-                    'field_action' => 'زراعة',
-                    'type_appointment' => 'زراعي',
-                    'workplace' => 'دار اليتيم- عصام'
-                ],
-            ];
-            $employees = Employee::query();
+            $workplaces = Workdata::select('association', 'field_action', 'workplace');
+            if(isset($request->association)){
+                $workplaces = $workplaces->whereIn('association', $request->association);
+            }
+            if(isset($request->field_action)){
+                $workplaces =  $workplaces->whereIn('field_action', $request->field_action);
+            }
+            if(isset($request->workplace)){
+                $workplaces = $workplaces->whereIn('workplace', $request->workplace);
+            }
 
-            $employees = $employees->whereHas('workData', function($query) {
-                $query->where('association','حطين')->where('field_action','زراعة')->where('workplace','الادارة');
+            $workplaces = $workplaces->orderBy('association')
+                ->orderBy('field_action')
+                ->orderBy('workplace')
+                ->distinct()
+                ->get();
+
+            $salaries = Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
+                                ->where('salaries.month', '2024-08')
+                                ->join('employees', 'salaries.employee_id', '=', 'employees.id')
+                                ->join('work_data', 'salaries.employee_id', '=', 'work_data.employee_id')
+                                ->select('salaries.*','employees.*','work_data.*')
+                                ->get();
+
+            // دوال الموجوع اخر سطر في التقرير
+            $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
+                $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
+                return [
+                    "secondary_salary" => $salary->secondary_salary ?? '0',
+                    'allowance_boys' => $salary->allowance_boys ?? '0',
+                    'nature_work_increase' => $salary->nature_work_increase ?? '0',
+                    'administrative_allowance' => $fixedEntries->administrative_allowance ?? '0',
+                    'scientific_qualification_allowance' => $fixedEntries->scientific_qualification_allowance ?? '0',
+                    'transport' => $fixedEntries->transport ?? '0',
+                    'extra_allowance' => $fixedEntries->extra_allowance ?? '0',
+                    'salary_allowance' => $fixedEntries->salary_allowance ?? '0',
+                    'ex_addition' => $fixedEntries->ex_addition ?? '0',
+                    'mobile_allowance' => $fixedEntries->mobile_allowance ?? '0',
+                    'termination_service' => $salary->termination_service ?? '0',
+                    "gross_salary" => $salary->gross_salary?? 0,
+                    'health_insurance' => $fixedEntries->health_insurance ?? '0',
+                    'z_Income' => $salary->z_Income ?? '0',
+                    'savings_rate' => $fixedEntries->savings_rate ?? '0',
+                    'association_loan' => $fixedEntries->association_loan ?? '0',
+                    'savings_loan' => $fixedEntries->savings_loan ?? '0',
+                    'shekel_loan' => $fixedEntries->shekel_loan ?? '0',
+                    'late_receivables' => $salary->late_receivables ?? '0',
+                    'total_discounts' => $salary->total_discounts ?? '0',
+                    'net_salary' => $salary->net_salary ?? '0',
+                ];
             });
+            $salariesTotalArray = [
+                'secondary_salary' => collect($salariesTotal->pluck('secondary_salary')->toArray())->sum(),
+                'allowance_boys' => collect($salariesTotal->pluck('allowance_boys')->toArray())->sum(),
+                'nature_work_increase' => collect($salariesTotal->pluck('nature_work_increase')->toArray())->sum(),
+                'administrative_allowance' => collect($salariesTotal->pluck('administrative_allowance')->toArray())->sum(),
+                'scientific_qualification_allowance' => collect($salariesTotal->pluck('scientific_qualification_allowance')->toArray())->sum(),
+                'transport' => collect($salariesTotal->pluck('transport')->toArray())->sum(),
+                'extra_allowance' => collect($salariesTotal->pluck('extra_allowance')->toArray())->sum(),
+                'salary_allowance' => collect($salariesTotal->pluck('salary_allowance')->toArray())->sum(),
+                'ex_addition' => collect($salariesTotal->pluck('ex_addition')->toArray())->sum(),
+                'mobile_allowance' => collect($salariesTotal->pluck('mobile_allowance')->toArray())->sum(),
+                'termination_service' => collect($salariesTotal->pluck('termination_service')->toArray())->sum(),
+                'gross_salary' => collect($salariesTotal->pluck('gross_salary')->toArray())->sum(),
+                'health_insurance' => collect($salariesTotal->pluck('health_insurance')->toArray())->sum(),
+                'z_Income' => collect($salariesTotal->pluck('z_Income')->toArray())->sum(),
+                'savings_rate' => collect($salariesTotal->pluck('savings_rate')->toArray())->sum(),
+                'association_loan' => collect($salariesTotal->pluck('association_loan')->toArray())->sum(),
+                'savings_loan' => collect($salariesTotal->pluck('savings_loan')->toArray())->sum(),
+                'shekel_loan' => collect($salariesTotal->pluck('shekel_loan')->toArray())->sum(),
+                'late_receivables' => collect($salariesTotal->pluck('late_receivables')->toArray())->sum(),
+                'total_discounts' => collect($salariesTotal->pluck('total_discounts')->toArray())->sum(),
+                'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
+            ];
 
-            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
-                ->where('month', '2024-08')
-                ->sum('gross_salary');
-
-            dd($salaries);
-
+            $margin_top = 3;
+            if($request->association != ""){
+                $margin_top = 50;
+            }
+            if($request->association == "الكويتي" || $request->association == "يتيم"){
+                $margin_top = 35;
+            }
             if($request->export_type == 'view'){
-                $pdf = PDF::loadView('dashboard.pdf.customization',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
+                $pdf = PDF::loadView('dashboard.pdf.customization',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'workplaces' => $workplaces,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
                 [
                     'mode' => 'utf-8',
                     'default_font' => 'Arial',
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10
                 ]);
                 return $pdf->stream();
             }
         }
 
+
+
+
+        // كشف حساب للموظف
         if($request->report_type == 'employee_accounts'){
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');
@@ -1158,7 +889,6 @@ class ReportController extends Controller
 
             // دوال الموجوع اخر سطر في التقرير
             $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
-                $fixedEntries = $salary->employee->fixedEntries->where('month',$month)->first();
                 return [
                     'net_salary' => $salary->net_salary ?? '0',
                 ];
@@ -1181,7 +911,7 @@ class ReportController extends Controller
             // معاينة pdf
             if($request->export_type == 'view' || $request->export_type == 'export_excel'){
                 $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -1192,15 +922,175 @@ class ReportController extends Controller
             // تحميل الملف المصدر
             if($request->export_type == 'export_pdf'){
                 $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
                     'margin_bottom' => 10,
                 ]);
-                return $pdf->download('كشف الصرف_' . $time .'.pdf');
+                return $pdf->download('كشف حساب للموظف' . ' - ' . $employees->first()->name  . ' - ' .  $time .'.pdf');
             }
         }
+        // كشف رواتب للموظف
+        if($request->report_type == 'employee_salaries'){
+            $USD = Currency::where('code', 'USD')->first()->value;
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $to_month = $request->to_month ?? Carbon::now()->format('Y-m');
+            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
+
+            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                        ->whereBetween('month', [$month, $to_month])
+                        ->get();
+
+            // دوال الموجوع اخر سطر في التقرير
+            $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
+                $fixedEntries = $salary->employee->fixedEntries->where('month',$salary->month)->first();
+                return [
+                    "secondary_salary" => $salary->secondary_salary ?? '0',
+                    'allowance_boys' => $salary->allowance_boys ?? '0',
+                    'nature_work_increase' => $salary->nature_work_increase ?? '0',
+                    'administrative_allowance' => $fixedEntries->administrative_allowance ?? '0',
+                    'scientific_qualification_allowance' => $fixedEntries->scientific_qualification_allowance ?? '0',
+                    'transport' => $fixedEntries->transport ?? '0',
+                    'extra_allowance' => $fixedEntries->extra_allowance ?? '0',
+                    'salary_allowance' => $fixedEntries->salary_allowance ?? '0',
+                    'ex_addition' => $fixedEntries->ex_addition ?? '0',
+                    'mobile_allowance' => $fixedEntries->mobile_allowance ?? '0',
+                    'termination_service' => $salary->termination_service ?? '0',
+                    "gross_salary" => $salary->gross_salary?? 0,
+                    'health_insurance' => $fixedEntries->health_insurance ?? '0',
+                    'z_Income' => $salary->z_Income ?? '0',
+                    'savings_rate' => $fixedEntries->savings_rate ?? '0',
+                    'association_loan' => $fixedEntries->association_loan ?? '0',
+                    'savings_loan' => $fixedEntries->savings_loan ?? '0',
+                    'shekel_loan' => $fixedEntries->shekel_loan ?? '0',
+                    'late_receivables' => $salary->late_receivables ?? '0',
+                    'total_discounts' => $salary->total_discounts ?? '0',
+                    'net_salary' => $salary->net_salary ?? '0',
+                ];
+            });
+            $salariesTotalArray = [
+                'secondary_salary' => collect($salariesTotal->pluck('secondary_salary')->toArray())->sum(),
+                'allowance_boys' => collect($salariesTotal->pluck('allowance_boys')->toArray())->sum(),
+                'nature_work_increase' => collect($salariesTotal->pluck('nature_work_increase')->toArray())->sum(),
+                'administrative_allowance' => collect($salariesTotal->pluck('administrative_allowance')->toArray())->sum(),
+                'scientific_qualification_allowance' => collect($salariesTotal->pluck('scientific_qualification_allowance')->toArray())->sum(),
+                'transport' => collect($salariesTotal->pluck('transport')->toArray())->sum(),
+                'extra_allowance' => collect($salariesTotal->pluck('extra_allowance')->toArray())->sum(),
+                'salary_allowance' => collect($salariesTotal->pluck('salary_allowance')->toArray())->sum(),
+                'ex_addition' => collect($salariesTotal->pluck('ex_addition')->toArray())->sum(),
+                'mobile_allowance' => collect($salariesTotal->pluck('mobile_allowance')->toArray())->sum(),
+                'termination_service' => collect($salariesTotal->pluck('termination_service')->toArray())->sum(),
+                'gross_salary' => collect($salariesTotal->pluck('gross_salary')->toArray())->sum(),
+                'health_insurance' => collect($salariesTotal->pluck('health_insurance')->toArray())->sum(),
+                'z_Income' => collect($salariesTotal->pluck('z_Income')->toArray())->sum(),
+                'savings_rate' => collect($salariesTotal->pluck('savings_rate')->toArray())->sum(),
+                'association_loan' => collect($salariesTotal->pluck('association_loan')->toArray())->sum(),
+                'savings_loan' => collect($salariesTotal->pluck('savings_loan')->toArray())->sum(),
+                'shekel_loan' => collect($salariesTotal->pluck('shekel_loan')->toArray())->sum(),
+                'late_receivables' => collect($salariesTotal->pluck('late_receivables')->toArray())->sum(),
+                'total_discounts' => collect($salariesTotal->pluck('total_discounts')->toArray())->sum(),
+                'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
+            ];
+
+
+            $months = Salary::whereIn('employee_id', $employees->pluck('id'))
+                ->whereBetween('month', [$month, $to_month])
+                ->distinct()
+                ->pluck('month');
+
+            $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+            $endOfMonth = Carbon::createFromFormat('Y-m', $to_month)->endOfMonth();
+
+            // معاينة pdf
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_salaries',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                    'mode' => 'utf-8',
+                    'format' => 'A4-L',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->stream();
+            }
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                    'mode' => 'utf-8',
+                    'format' => 'A4-L',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->download('كشف رواتب للموظف' . ' - ' . $employees->first()->name  . ' - ' . $time .'.pdf');
+            }
+        }
+        // كشف مستحقات الموظف
+        if($request->report_type == 'employee_receivables_savings'){
+
+            $USD = Currency::where('code', 'USD')->first()->value;
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $to_month = $request->to_month ?? Carbon::now()->format('Y-m');
+            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
+
+            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                        ->whereBetween('month', [$month, $to_month])
+                        ->get();
+
+            $months = Salary::whereIn('employee_id', $employees->pluck('id'))
+                ->whereBetween('month', [$month, $to_month])
+                ->distinct()
+                ->pluck('month');
+
+            $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+            $endOfMonth = Carbon::createFromFormat('Y-m', $to_month)->endOfMonth();
+
+
+            $exchanges = Exchange::whereIn('employee_id', $employees->pluck('id'))
+                                ->whereBetween('discount_date', [$startOfMonth, $endOfMonth])
+                                ->get();
+
+            // معاينة pdf
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_receivables_savings',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                    'mode' => 'utf-8',
+                    'format' => 'A4',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->stream();
+            }
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_receivables_savings',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                    'mode' => 'utf-8',
+                    'format' => 'A5-L',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->download('كشف المستحقات للموظف' . ' - ' . $employees->first()->name  . ' - ' . $time .'.pdf');
+            }
+        }
+
+
     }
 
 }

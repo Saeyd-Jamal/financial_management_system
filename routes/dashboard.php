@@ -33,6 +33,7 @@ Route::group([
     Route::get('/fixed_entries/viewForm', [FixedEntriesController::class,'viewForm'])->name('fixed_entries.viewForm');
     Route::get('/fixed_entries/tableView', [FixedEntriesController::class,'tableView'])->name('fixed_entries.tableView');
 
+    Route::post('/exchanges/printPdf', [ExchangeController::class,'printPdf'])->name('exchanges.printPdf');
     Route::post('/exchanges/getTotals', [ExchangeController::class,'getTotals'])->name('exchanges.getTotals');
 
 

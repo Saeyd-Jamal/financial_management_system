@@ -160,6 +160,9 @@
                         </optgroup>
                         <optgroup label="كشوفات لموظف معين">
                             <option value="employee_accounts">كشف الحساب</option>
+                            <option value="employee_salaries">كشف الرواتب للموظف</option>
+                            <option value="employee_receivables_savings">كشف المستحقات والإدخارات</option>
+                            <option value="employee_loans">كشف القروض</option>
                         </optgroup>
                     </select>
                 </div>

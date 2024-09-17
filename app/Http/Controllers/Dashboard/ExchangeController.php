@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use App\Models\Exchange;
 use App\Models\ReceivablesLoans;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
+
 
 class ExchangeController extends Controller
 {
@@ -47,10 +50,13 @@ class ExchangeController extends Controller
         ]);
         Exchange::create($request->all());
         ReceivablesLoans::findOrFail($request->employee_id)
-        ->update([
-            'total_receivables' => DB::raw('total_receivables - '. ($request->receivables_discount )),
-            'total_savings' => DB::raw('total_savings - ' . $request->savings_discount),
-        ]);
+                ->update([
+                    'total_receivables' => DB::raw('total_receivables - '. ($request->receivables_discount )),
+                    'total_savings' => DB::raw('total_savings - ' . $request->savings_discount),
+                    'total_association_loan' => DB::raw('total_association_loan + ' . $request->association_loan),
+                    'total_savings_loan' => DB::raw('total_savings_loan + ' . $request->savings_loan),
+                    'total_shekel_loan' => DB::raw('total_shekel_loan + ' . $request->shekel_loan),
+                ]);
         return redirect()->route('exchanges.index')->with('success', 'تم اضافة صرف جديد');
     }
 
@@ -96,6 +102,26 @@ class ExchangeController extends Controller
 
     public function getTotals(Request $request){
         $totals = ReceivablesLoans::where('employee_id',$request->employeeId)->first();
+        $totals['name'] = Employee::findOrFail($request->employeeId)->name;
         return $totals;
     }
+
+    public function printPdf(Request $request)
+    {
+        $exchange = Exchange::findOrFail($request->id);
+        $margin_top = 3;
+        $pdf = PDF::loadView('dashboard.pdf.exchange',['exchange' => $exchange],[],[
+            'margin_left' => 3,
+            'margin_right' => 3,
+            'margin_top' => $margin_top,
+            'margin_bottom' => 10,
+            'mode' => 'utf-8',
+            'format' => 'A5-L',
+            'default_font_size' => 12,
+            'default_font' => 'Arial',
+        ]);
+        return $pdf->stream();
+
+    }
+
 }

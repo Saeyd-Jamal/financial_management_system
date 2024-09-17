@@ -33,7 +33,6 @@ return new class extends Migration
             $table->decimal('other_discounts', 10, 2)->default(0)->comment('خصومات أخرى');
             $table->decimal('proportion_voluntary', 10, 2)->default(0)->comment('تبرعات للحركة');
             $table->decimal('savings_5', 10, 2)->default(0.0)->comment('إدخار 5%');
-
             $table->unique(['employee_id','month']);
         });
     }
