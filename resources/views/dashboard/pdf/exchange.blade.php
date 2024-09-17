@@ -159,7 +159,6 @@
                         <img src="{{ public_path('assets/images/logos/orphan.jpg') }}" style="max-width: 50px; float: left; margin: 5px;" alt="">
                         @elseif ($exchange->employee->workData->association == "صلاح")
                         <img src="{{ public_path('assets/images/logos/salah.png') }}" style="max-width: 50px; float: left; margin: 0 5px;" alt="">
-                        {{-- <img src="{{ asset('assets/images/logos/salah.png') }}" style="max-width: 50px; float: left; margin: 0 5px;" alt=""> --}}
                         @endif
                     @endif
                 </div>

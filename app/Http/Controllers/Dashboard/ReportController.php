@@ -285,6 +285,7 @@ class ReportController extends Controller
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');
 
+            $employees = $this->filterEmployees($request->all())->get();
             $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
                 ->where('month', $month)
                 ->get();
@@ -424,7 +425,7 @@ class ReportController extends Controller
                                     'salaries.total_discounts',
                                     'salaries.net_salary'
                                 )
-                                ->orderBy('employees.id')
+                                ->orderBy('employees.name', 'asc')
                                 ->get();
 
                 $filename = 'سجلات رواتب الموظفين' . $time .'.xlsx';

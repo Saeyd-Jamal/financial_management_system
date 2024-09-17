@@ -191,10 +191,6 @@ class AddSalaryEmployee{
         if($employee->workData->state_effectiveness == "شهيد"){
             $termination_service = 0;
         }
-        if($employee->id == 134){
-            $termination_service = number_format(($secondary_salary+$nature_work_increase+$administrative_allowance+$salary_allowance)*0.1,2);
-        }
-
 
 
         $total_additions = ($allowance_boys + $nature_work_increase + $administrative_allowance + $scientific_qualification_allowance + $transport + $extra_allowance + $salary_allowance + $ex_addition + $mobile_allowance +$termination_service);
@@ -260,20 +256,22 @@ class AddSalaryEmployee{
         $gross_salary = $secondary_salary +$allowance_boys + $nature_work_increase + $administrative_allowance+ $scientific_qualification_allowance+ $transport + $extra_allowance+ $salary_allowance + $ex_addition + $mobile_allowance+ $termination_service;
 
 
-        /*
+
         // الراتب الشهري للموظفين الغير مداومين
         if($employee->workData->working_status == 'لا'){
             $advance_payment = Constant::where('type_constant','advance_payment_non_permanent')->first('value')->value;
+            $salary_allowance = ($fixedEntries != null) ? $fixedEntries->salary_allowance : 0;
+
             if($secondary_salary < $advance_payment  ){
                 $initial_salary = $initial_salary;
                 $secondary_salary = $secondary_salary;
-                $gross_salary = $secondary_salary;
-                $net_salary = $secondary_salary;
+                $gross_salary = $secondary_salary + $salary_allowance;
+                $net_salary = $gross_salary;
             }else{
                 $initial_salary = $advance_payment;
                 $secondary_salary = $advance_payment;
-                $gross_salary = $advance_payment;
-                $net_salary = $advance_payment;
+                $gross_salary = $advance_payment + $salary_allowance;
+                $net_salary = $gross_salary;
             }
             $amount_letters = Numbers::TafqeetMoney($net_salary,'ILS');
             // حقول مصفرة
@@ -306,7 +304,6 @@ class AddSalaryEmployee{
                     "scientific_qualification_allowance" => 0,
                     "transport" => 0,
                     "extra_allowance" => 0,
-                    "salary_allowance" => 0,
                     "ex_addition" => 0,
                     "mobile_allowance" => 0,
                     "health_insurance" => 0,
@@ -323,7 +320,7 @@ class AddSalaryEmployee{
                 ]);
             }
         }
-        */
+
         DB::beginTransaction();
         try{
             $salaryOld = Salary::where('employee_id',$employee->id)->where('month',$month)->first();
