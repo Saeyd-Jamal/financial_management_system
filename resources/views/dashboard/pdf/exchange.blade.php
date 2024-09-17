@@ -119,25 +119,62 @@
             color: #777;
         }
     </style>
+    <style>
+        .header-container {
+            overflow: hidden; /* لضمان أن يتم التحكم في العناصر العائمة بشكل صحيح */
+            padding: 5px 0;
+        }
+        .header-container p {
+            float: right; /* وضع النص على اليمين */
+            margin: 0;
+            font-size: 16px; /* ضبط حجم النص حسب الحاجة */
+        }
+    </style>
 
 </head>
 
 <body>
     <htmlpageheader name="page-header">
 
+
     </htmlpageheader>
-    <div>
-        <div>
-            <p>
-                <span>قسم المالية</span> /
-                <span>كشف الصرف للموظف</span>
-            </p>
-        </div>
+    <table width="100%" style="vertical-align: bottom; color: #000000; margin:0; font-size: 14px">
+        <tr>
+            <td width="50%" style=" vertical-align: top;">
+                <p style="display: inline; margin: 0">
+                    <span>قسم المالية</span> /
+                    <span>كشف الصرف للموظف</span>
+                </p>
+            </td>
+            <td width="50%" dir="ltr">
+                <div style="display: inline;">
+                    @if($exchange->employee->workData->association)
+                        @if ($exchange->employee->workData->association == "المدينة")
+                        <img src="{{ public_path('assets/images/logos/city_architecture.jpg') }}" style="max-width: 50px; float: left; margin: 5px;" alt="">
+                        @elseif ($exchange->employee->workData->association == "حطين")
+                        <img src="{{ public_path('assets/images/logos/hetten.png') }}" style="max-width: 50px; float: left; margin: 5px;" alt="">
+                        @elseif ($exchange->employee->workData->association == "الكويتي")
+                        <img src="{{ public_path('assets/images/logos/Kuwaiti.jpg') }}" style="max-width: 50px; float: left; margin: 5px;" alt="">
+                        @elseif ($exchange->employee->workData->association == "يتيم")
+                        <img src="{{ public_path('assets/images/logos/orphan.jpg') }}" style="max-width: 50px; float: left; margin: 5px;" alt="">
+                        @elseif ($exchange->employee->workData->association == "صلاح")
+                        <img src="{{ public_path('assets/images/logos/salah.png') }}" style="max-width: 50px; float: left; margin: 0 5px;" alt="">
+                        {{-- <img src="{{ asset('assets/images/logos/salah.png') }}" style="max-width: 50px; float: left; margin: 0 5px;" alt=""> --}}
+                        @endif
+                    @endif
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div style="margin-top: 10px;">
         <div align="center"  style="color: #000;border:0; width: 100%;">
             <div align="center" style="font-size: 25px; font-weight: bold">الموظف : {{ $exchange->employee->name }}</div>
             {{-- <span>من شهر {{ $month }} الي الشهر {{ $to_month }}</span> --}}
         </div>
     </div>
+    @php
+        // dd('here');
+    @endphp
     <div lang="ar" style="margin-top: 25px;">
         <div class="card">
             <div class="card-header" align="center">
@@ -214,10 +251,10 @@
             </div>
         </div>
     </div>
-    <table width="100%" style="vertical-align: bottom; color: #000000; margin:30px 1em 10px; font-size: 14px">
+    <table width="100%" style="vertical-align: bottom; color: #000000; margin:20px 1em 10px; font-size: 14px">
         <tr>
-            <td width="50%">الختم</td>
-            <td width="50%" align="center">التوقيع</td>
+            <td width="50%">توقيع الموظف</td>
+            <td width="50%" align="center">الإعتماد</td>
         </tr>
     </table>
     <htmlpagefooter name="page-footer">

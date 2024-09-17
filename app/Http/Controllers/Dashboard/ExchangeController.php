@@ -52,7 +52,7 @@ class ExchangeController extends Controller
         ReceivablesLoans::findOrFail($request->employee_id)
                 ->update([
                     'total_receivables' => DB::raw('total_receivables - '. ($request->receivables_discount )),
-                    'total_savings' => DB::raw('total_savings - ' . $request->savings_discount),
+                    'total_savings' => DB::raw('total_savings - ' . $request->savings_discount . ' - ' . $request->savings_loan),
                     'total_association_loan' => DB::raw('total_association_loan + ' . $request->association_loan),
                     'total_savings_loan' => DB::raw('total_savings_loan + ' . $request->savings_loan),
                     'total_shekel_loan' => DB::raw('total_shekel_loan + ' . $request->shekel_loan),
@@ -93,7 +93,10 @@ class ExchangeController extends Controller
         ReceivablesLoans::findOrFail($exchange->employee_id)
             ->update([
                 'total_receivables' => DB::raw('total_receivables + '. ($exchange->receivables_discount )),
-                'total_savings' => DB::raw('total_savings + ' . $exchange->savings_discount),
+                'total_savings' => DB::raw('total_savings + ' . $exchange->savings_discount . ' - ' . $exchange->savings_loan),
+                'total_association_loan' => DB::raw('total_association_loan - ' . $exchange->association_loan),
+                'total_savings_loan' => DB::raw('total_savings_loan - ' . $exchange->savings_loan),
+                'total_shekel_loan' => DB::raw('total_shekel_loan - ' . $exchange->shekel_loan),
             ]);
 
         $exchange->delete();
