@@ -164,7 +164,7 @@
                             $query->where('association',$workplace->association)->where('field_action',$workplace->field_action)->where('workplace',$workplace->workplace);
                         });
                         $salariesWork = \App\Models\Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
-                                ->where('salaries.month', '2024-08')
+                                ->where('salaries.month', $month)
                                 ->join('employees', 'salaries.employee_id', '=', 'employees.id')
                                 ->join('work_data', 'salaries.employee_id', '=', 'work_data.employee_id')
                                 ->select('salaries.*','employees.*','work_data.*')

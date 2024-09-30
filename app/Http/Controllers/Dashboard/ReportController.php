@@ -795,7 +795,7 @@ class ReportController extends Controller
                 ->get();
 
             $salaries = Salary::whereIn('salaries.employee_id', $employees->pluck('id'))
-                                ->where('salaries.month', '2024-08')
+                                ->where('salaries.month', $month)
                                 ->join('employees', 'salaries.employee_id', '=', 'employees.id')
                                 ->join('work_data', 'salaries.employee_id', '=', 'work_data.employee_id')
                                 ->select('salaries.*','employees.*','work_data.*')
@@ -1078,6 +1078,64 @@ class ReportController extends Controller
             if($request->export_type == 'export_pdf'){
                 $margin_top = 3;
                 $pdf = PDF::loadView('dashboard.pdf.employee.employee_receivables_savings',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                    'mode' => 'utf-8',
+                    'format' => 'A5-L',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->download('كشف المستحقات للموظف' . ' - ' . $employees->first()->name  . ' - ' . $time .'.pdf');
+            }
+        }
+
+        // كشف القروض الموظف
+        if($request->report_type == 'employee_loans'){
+
+            $USD = Currency::where('code', 'USD')->first()->value;
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $to_month = $request->to_month ?? Carbon::now()->format('Y-m');
+            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
+
+            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
+                        ->whereBetween('month', [$month, $to_month])
+                        ->get();
+
+            $months = Salary::whereIn('employee_id', $employees->pluck('id'))
+                ->whereBetween('month', [$month, $to_month])
+                ->distinct()
+                ->pluck('month');
+
+            $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+            $endOfMonth = Carbon::createFromFormat('Y-m', $to_month)->endOfMonth();
+
+
+            $exchanges = Exchange::whereIn('employee_id', $employees->pluck('id'))
+                                ->whereBetween('discount_date', [$startOfMonth, $endOfMonth])
+                                ->get();
+
+            // معاينة pdf
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_loans',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                    'mode' => 'utf-8',
+                    'format' => 'A4',
+                    'default_font_size' => 12,
+                    'default_font' => 'Arial',
+                ]);
+                return $pdf->stream();
+            }
+
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $margin_top = 3;
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_loans',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,

@@ -39,7 +39,7 @@ class FortifyServiceProvider extends ServiceProvider
                 if(Config::get('fortify.guard') == 'employee'){
                     return redirect()->intended('/em/home');
                 }
-                return redirect('/');
+                return redirect()->intended('/');
             }
         });
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
@@ -48,7 +48,7 @@ class FortifyServiceProvider extends ServiceProvider
                 if(Config::get('fortify.guard') == 'employee'){
                     return redirect('/em/login');
                 }
-                return redirect('/');
+                return redirect('/login');
             }
         });
     }
