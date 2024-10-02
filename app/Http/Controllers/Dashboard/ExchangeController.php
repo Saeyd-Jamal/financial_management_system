@@ -48,15 +48,25 @@ class ExchangeController extends Controller
         $request->merge([
             'username' => Auth::user()->name,
         ]);
-        Exchange::create($request->all());
-        ReceivablesLoans::findOrFail($request->employee_id)
+        DB::beginTransaction();
+        try{
+            Exchange::create($request->all());
+            ReceivablesLoans::where('employee_id',$request->employee_id)
                 ->update([
-                    'total_receivables' => DB::raw('total_receivables - '. ($request->receivables_discount )),
-                    'total_savings' => DB::raw('total_savings - ' . $request->savings_discount . ' - ' . $request->savings_loan),
-                    'total_association_loan' => DB::raw('total_association_loan + ' . $request->association_loan),
-                    'total_savings_loan' => DB::raw('total_savings_loan + ' . $request->savings_loan),
-                    'total_shekel_loan' => DB::raw('total_shekel_loan + ' . $request->shekel_loan),
+                    'total_receivables' => DB::raw('total_receivables - (' . ($request->receivables_discount) . ')'),
+                    'total_savings' => DB::raw('total_savings - (' . $request->savings_discount . ') - (' . $request->savings_loan . ')'),
+                    'total_association_loan' => DB::raw('total_association_loan + (' . $request->association_loan . ')'),
+                    'total_savings_loan' => DB::raw('total_savings_loan + (' . $request->savings_loan . ')'),
+                    'total_shekel_loan' => DB::raw('total_shekel_loan + (' . $request->shekel_loan . ')')
                 ]);
+
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return redirect()->back()->with('danger', $exception->getMessage());
+        }
+
+
         return redirect()->route('exchanges.index')->with('success', 'تم اضافة صرف جديد');
     }
 
@@ -90,7 +100,7 @@ class ExchangeController extends Controller
     public function destroy(Exchange $exchange)
     {
         $this->authorize('delete', Exchange::class);
-        ReceivablesLoans::findOrFail($exchange->employee_id)
+        ReceivablesLoans::where('employee_id',$exchange->employee_id)
             ->update([
                 'total_receivables' => DB::raw('total_receivables + '. ($exchange->receivables_discount )),
                 'total_savings' => DB::raw('total_savings + ' . $exchange->savings_discount . ' - ' . $exchange->savings_loan),
@@ -119,7 +129,7 @@ class ExchangeController extends Controller
             'margin_top' => $margin_top,
             'margin_bottom' => 10,
             'mode' => 'utf-8',
-            'format' => 'A5-L',
+            'format' => 'A4',
             'default_font_size' => 12,
             'default_font' => 'Arial',
         ]);

@@ -773,6 +773,7 @@ class ReportController extends Controller
             }
         }
 
+        // التخصيصات
         if($request->report_type == 'customization'){
             $USD = Currency::where('code', 'USD')->first()->value;
             $month = $request->month ?? Carbon::now()->format('Y-m');

@@ -245,29 +245,30 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" style="color: black;">
                 سبب الصرف : {{ $exchange->notes }}
             </div>
         </div>
     </div>
-    <table width="100%" style="vertical-align: bottom; color: #000000; margin:20px 1em 10px; font-size: 14px">
+    <table width="100%" style="vertical-align: bottom; color: #000000; margin:20px 1em 50px; font-size: 14px">
         <tr>
             <td width="50%">توقيع الموظف</td>
             <td width="50%" align="center">الإعتماد</td>
         </tr>
     </table>
+    <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">
+        <tr>
+            <td width="33%">{{Carbon\Carbon::now()->format('Y-m-d')}}</td>
+            <td width="33%" align="center"></td>
+            @auth
+                <td width="33%" style="text-align: left;">{{ Auth::user()->name }}</td>
+            @else
+                <td width="33%" style="text-align: left;">اسم المستخدم</td>
+            @endauth
+        </tr>
+    </table>
     <htmlpagefooter name="page-footer">
-        <table width="100%" style="vertical-align: bottom; color: #000000;  margin: 1em">
-            <tr>
-                <td width="33%">{DATE j-m-Y}</td>
-                <td width="33%" align="center">{PAGENO}/{nbpg}</td>
-                @auth
-                    <td width="33%" style="text-align: left;">{{ Auth::user()->name }}</td>
-                @else
-                    <td width="33%" style="text-align: left;">اسم المستخدم</td>
-                @endauth
-            </tr>
-        </table>
+
     </htmlpagefooter>
 
 </body>
