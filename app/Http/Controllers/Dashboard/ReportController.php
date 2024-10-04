@@ -230,6 +230,8 @@ class ReportController extends Controller
                     'المنشأة',
                     'المؤسسة',
                     'بيان الراتب',
+                    'نوع العقد',
+                    'عدد أيام العمل',
                 ];
                 $employees = $this->filterEmployees($request->all())
                                 ->join('work_data', 'work_data.employee_id', '=', 'employees.id')
@@ -272,6 +274,8 @@ class ReportController extends Controller
                                     'work_data.establishment',
                                     'work_data.foundation_E',
                                     'work_data.payroll_statement',
+                                    'work_data.contract_type',
+                                    'work_data.number_working_days',
                                 )
                                 ->get();
 

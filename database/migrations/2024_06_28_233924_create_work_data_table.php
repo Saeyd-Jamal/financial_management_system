@@ -36,6 +36,8 @@ return new class extends Migration
             $table->string('foundation_E')->comment('المؤسسة E');
             $table->string('salary_category')->nullable()->comment('فئة الراتب المستخدمة للنظام');
             $table->string('installation_new')->comment('التثبيت الجديد')->nullable();
+            $table->string('contract_type')->comment('نوع العقد')->nullable();
+            $table->string('number_working_days',50)->comment('عدد أيام العمل')->nullable();
             $table->timestamps();
         });
     }

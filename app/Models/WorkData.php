@@ -38,7 +38,9 @@ class WorkData extends Model
         'grade_allowance_ratio',
         'salary_category',
         'payroll_statement',
-        'installation_new'
+        'installation_new',
+        'contract_type',
+        'number_working_days'
     ];
 
     // Relationships

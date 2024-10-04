@@ -84,11 +84,12 @@ class EmployeeController extends Controller
         $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
         $foundation_E = WorkData::select('foundation_E')->distinct()->pluck('foundation_E')->toArray();
         $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
+        $contract_type = WorkData::select('contract_type')->distinct()->pluck('contract_type')->toArray();
 
         $employee = new Employee();
         $workData = new WorkData();
 
-        return view('dashboard.employees.create', compact('employee','workData',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement"));
+        return view('dashboard.employees.create', compact('employee','workData',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement","contract_type"));
     }
 
     /**
@@ -147,13 +148,14 @@ class EmployeeController extends Controller
         $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
         $foundation_E = WorkData::select('foundation_E')->distinct()->pluck('foundation_E')->toArray();
         $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
+        $contract_type = WorkData::select('contract_type')->distinct()->pluck('contract_type')->toArray();
 
         $btn_label = "تعديل";
         $workData = WorkData::where('employee_id', $employee->id)->first();
         if ($workData == null) {
             $workData = new WorkData();
         }
-        return view('dashboard.employees.edit', compact('employee','workData','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement"));
+        return view('dashboard.employees.edit', compact('employee','workData','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
     }
 
     /**
@@ -380,6 +382,8 @@ class EmployeeController extends Controller
             'المنشأة',
             'المؤسسة',
             'بيان الراتب',
+            'نوع العقد',
+            'عدد أيام العمل',
         ];
         $employees = $employees
                         ->join('work_data', 'work_data.employee_id', '=', 'employees.id')
@@ -422,6 +426,8 @@ class EmployeeController extends Controller
                             'work_data.establishment',
                             'work_data.foundation_E',
                             'work_data.payroll_statement',
+                            'work_data.contract_type',
+                            'work_data.number_working_days',
                         )
                         ->get();
 

@@ -92,7 +92,7 @@ class AddSalaryEmployee{
             // الحسابات
             $percentage_allowance = ($employee->workData->percentage_allowance != null) ? $employee->workData->percentage_allowance : 100; //نسبة علاوة من طبيعة العمل
             $initial_salary = SalaryScale::where('id',$employee->workData->allowance)->first()->{$employee->workData->grade}; // الراتب الأولي
-            if($employee->workData->field_action == 'صحة' && $employee->workData->type_appointment == 'مثبت'){
+            if($employee->workData->contract_type == 'صحة' && $employee->workData->type_appointment == 'مثبت'){
                 if($employee->scientific_qualification == 'بكالوريوس'){
                     $initial_salary = 900;
                 }

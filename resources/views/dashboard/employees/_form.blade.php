@@ -154,6 +154,7 @@
         </div>
     </div>
 
+
     <div class="form-group p-3 col-3">
         <x-form.input type="date" label="تاريخ العمل" :value="$workData->working_date"  name="working_date" required />
     </div>
@@ -172,6 +173,21 @@
         <datalist id="working_status_list">
             @foreach ($working_status as $working_status)
                 <option value="{{ $working_status }}">
+            @endforeach
+        </datalist>
+    </div>
+    <div class="form-group p-3 col-3">
+        <x-form.input label="عدد الأيام العمل"  :value="$employee->number_working_days" name="number_working_days" />
+        <datalist id="number_working_days">
+            <option value="جزئي">
+            <option value="يومي">
+        </datalist>
+    </div>
+    <div class="form-group p-3 col-md-3">
+        <x-form.input name="contract_type" placeholder="أدخل نوع العقد" :value="$workData->contract_type" label="نوع العقد" list="contract_type_list" />
+        <datalist id="contract_type_list">
+            @foreach ($contract_type as $contract_type)
+                <option value="{{ $contract_type }}">
             @endforeach
         </datalist>
     </div>

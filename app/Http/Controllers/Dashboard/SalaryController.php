@@ -150,8 +150,13 @@ class SalaryController extends Controller
         $this->authorize('create-all', Salary::class);
         DB::beginTransaction();
         try {
-            $employees = Employee::get();
 
+            // التجربة لموظف
+            // $employee = Employee::findOrFail($request->employee_id);
+            // $month = $request->month ?? Carbon::now()->format('Y-m');
+            // AddSalaryEmployee::addSalary($employee,$month);
+
+            $employees = Employee::get();
             $logRecords = [];
             $month = $request->month ?? Carbon::now()->format('Y-m');
             foreach ($employees as $employee) {
