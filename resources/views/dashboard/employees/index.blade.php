@@ -216,6 +216,11 @@
                 <div class="col-md-12">
                     <div class="card shadow">
                         <div class="card-body">
+                            <style>
+                                td,th{
+                                    padding: 4px 12px !important;
+                                }
+                            </style>
                             <!-- table -->
                             <table class="table table-bordered  table-hover">
                                 <thead>
@@ -273,7 +278,7 @@
                                 </tbody>
                             </table>
                             <div id="links_pages">
-                                {{ $employees->links() }}
+                                {{-- {{ $employees->links() }} --}}
                             </div>
                         </div>
                     </div>

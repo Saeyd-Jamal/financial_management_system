@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use Alkoumi\LaravelArabicNumbers\Numbers;
-use App\Exports\EmployeesDataExport;
-use App\Exports\EmployeesExport;
 use App\Exports\ModelExport;
 use App\Helper\AddSalaryEmployee;
 use App\Http\Controllers\Controller;
@@ -13,14 +10,14 @@ use App\Imports\EmployeesImport;
 use App\Models\Constant;
 use App\Models\Employee;
 use App\Models\Salary;
-use App\Models\SalaryScale;
 use App\Models\SpecificSalary;
-use App\Models\User;
 use App\Models\WorkData;
+use App\Models\ReceivablesLoans;
+use App\Models\Bank;
+use App\Models\BanksEmployees;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
@@ -54,7 +51,7 @@ class EmployeeController extends Controller
         $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
         $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
 
-        $employees = Employee::paginate(10);
+        $employees = Employee::get();
 
         return view('dashboard.employees.index', compact('employees',"areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement"));
     }
@@ -88,8 +85,13 @@ class EmployeeController extends Controller
 
         $employee = new Employee();
         $workData = new WorkData();
+        $totals = new ReceivablesLoans();
+        $banks = Bank::all();
 
-        return view('dashboard.employees.create', compact('employee','workData',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement","contract_type"));
+        $bank_employee = new BanksEmployees();
+
+
+        return view('dashboard.employees.create', compact('employee','workData','totals','banks','bank_employee',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement","contract_type"));
     }
 
     /**
@@ -97,17 +99,39 @@ class EmployeeController extends Controller
      */
     public function store(EmployeeRequset $request)
     {
+        dd($request->all());
         $this->authorize('create', Employee::class);
         $employee = Employee::create($request->all());
         $request->merge([
-            'employee_id' => $employee->id
+            'employee_id' => $employee->id,
+            'default' => 1
         ]);
         WorkData::create($request->all());
-        SpecificSalary::create([
-            'employee_id' => $employee->id,
-            'month' => '0000-00',
-            'salary' => $request->specificSalary
-        ]);
+
+        ReceivablesLoans::create($request->all());
+
+        BanksEmployees::create($request->all());
+
+
+        // الراتب المحدد
+        if($request->type_appointment == 'يومي'){
+            SpecificSalary::updateOrCreate([
+                'employee_id'=> $employee->id,
+                'month' => '0000-00',
+                ],[
+                'number_of_days' => $request->number_of_days,
+                'today_price' => $request->today_price,
+                'salary' => $request->specific_salary
+            ]);
+        }
+        if(in_array($request->type_appointment,['خاص','مؤقت','فصلي','رياض'])){
+            SpecificSalary::updateOrCreate([
+                'employee_id'=> $employee->id,
+                'month' => '0000-00',
+                ],[
+                'salary' => $request->specific_salary
+            ]);
+        }
         return redirect()->route('employees.index')->with('success', 'تم اضافة الموظف الجديد');
     }
 
@@ -155,7 +179,22 @@ class EmployeeController extends Controller
         if ($workData == null) {
             $workData = new WorkData();
         }
-        return view('dashboard.employees.edit', compact('employee','workData','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
+        $totals = ReceivablesLoans::where('employee_id', $employee->id)->first();
+        if ($totals == null) {
+            $totals = new ReceivablesLoans();
+        }
+        $banks = Bank::all();
+
+        $bank_employee = BanksEmployees::where('employee_id', $employee->id)->where('default', 1)->first();
+        if ($bank_employee == null) {
+            $bank_employee = BanksEmployees::where('employee_id', $employee->id)->first();
+        }
+        if ($bank_employee == null) {
+            $bank_employee = new BanksEmployees();
+        }
+
+
+        return view('dashboard.employees.edit', compact('employee','workData','totals','banks','bank_employee','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
     }
 
     /**
@@ -164,7 +203,6 @@ class EmployeeController extends Controller
     public function update(EmployeeRequset $request, Employee $employee)
     {
         $this->authorize('edit', Employee::class);
-
         // $request->validate([
         //     'employee_id' => [
         //         'required',
@@ -179,12 +217,21 @@ class EmployeeController extends Controller
 
 
         $request->merge([
-            'employee_id' => $employee->id
+            'employee_id' => $employee->id,
+            'default' => 1
         ]);
+
         WorkData::updateOrCreate([
             'employee_id' => $employee->id
         ], $request->all());
 
+        ReceivablesLoans::updateOrCreate([
+            'employee_id' => $employee->id
+        ], $request->all());
+
+        BanksEmployees::updateOrCreate([
+            'employee_id' => $employee->id
+        ], $request->all());
 
         // الراتب المحدد
         if($request->type_appointment == 'يومي'){
@@ -209,8 +256,6 @@ class EmployeeController extends Controller
         if($salary != null){
             AddSalaryEmployee::addSalary($employee);
         }
-
-
         return redirect()->route('employees.index')->with('success', 'تم تحديث بيانات الموظف المختار');
     }
     /**
@@ -272,7 +317,12 @@ class EmployeeController extends Controller
         foreach($filedsEmpolyees as $filed){
             $valInput = $request->post($filed);
             if($valInput != null || $valInput != ""){
-                $employees = Employee::where($filed,'LIKE',"{$valInput}%");
+                if($filed == 'name'){
+                    $valueS = str_replace('*', '%', $valInput);
+                    $employees = $employees->where('name','LIKE',"%{$valueS}%");
+                }else{
+                    $employees = Employee::where($filed,'LIKE',"{$valInput}%");
+                }
             }
         }
         foreach($filedsWork as $filed){
@@ -435,8 +485,6 @@ class EmployeeController extends Controller
         $filename = 'سجلات الموظفين' . $time .'.xlsx';
         return Excel::download(new ModelExport($employees,$headings), $filename);
     }
-
-
     // PDF Export
     public function viewPDF(Request $request)
     {

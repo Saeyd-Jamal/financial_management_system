@@ -23,6 +23,12 @@
                 aria-controls="state_effectiveness">
             حالة الفعالية المجهزة
         </button>
+        <button class="btn btn-info m-2"
+                type="button" data-toggle="collapse"
+                data-target="#termination_service" aria-expanded="false"
+                aria-controls="termination_service">
+            نسبة نهاية الخدمة
+        </button>
         <hr class="border border-danger border-2 opacity-50 w-100">
     </div>
 
@@ -116,6 +122,28 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </form>
+        <hr class="border border-danger border-2 opacity-50 w-100">
+    </div>
+    <div class="collapse multi-collapse" id="termination_service">
+        <form action="{{ route('constants.store') }}" method="post">
+            @csrf
+            <div class="row p-3">
+                <div class="form-group m-0 col-6 d-flex align-items-end">
+                    <label for="termination_service">نسبة نهاية الخدمة</label>
+                    <div class="col-4 input-group">
+                        <x-form.input required type="number" :value="$termination_service" min="0" name="termination_service" placeholder="1000" class="d-inline" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-end">
+                <button class="btn btn-success" type="submit">
+                    <i class="fe fe-check"></i>
+                </button>
             </div>
         </form>
         <hr class="border border-danger border-2 opacity-50 w-100">

@@ -178,14 +178,18 @@ class AddSalaryEmployee{
         $mobile_allowance = ($fixedEntries != null) ? $fixedEntries->mobile_allowance : 0;
 
 
+        // نسبة نهاية الخدمة
+        $termination_service_rate = Constant::where('type_constant','termination_service')->first('value') ? (Constant::where('type_constant','termination_service')->first('value')->value / 100) : 0.1;
+
         // نهاية الخدمة
-        $termination_service = $dual_function == null ?  number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*0.1,2) : 0;
+
+        $termination_service = $dual_function == null ?  number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*$termination_service_rate,2) : 0;
         if($employee->workData->type_appointment == 'نسبة' || $dual_function == "موظف"){
             $termination_service = 0;
         }
         if($employee->customizations->isNotEmpty() != null){
             if($employee->customizations->first()->termination_service != ''){
-                $termination_service = number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*($employee->customizations->first()->termination_service ?? 0.1),2) ?? 0;
+                $termination_service = number_format(($secondary_salary+$nature_work_increase+$administrative_allowance)*($employee->customizations->first()->termination_service ?? $termination_service_rate),2) ?? 0;
             }
         }
         if($employee->workData->state_effectiveness == "شهيد"){

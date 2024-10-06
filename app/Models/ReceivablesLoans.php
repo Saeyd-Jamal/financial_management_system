@@ -11,8 +11,16 @@ class ReceivablesLoans extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    
     protected $table = 'totals';
-    protected $guarded = [];
+
+    protected $fillable = [
+        'total_receivables',
+        'total_savings',
+        'total_association_loan',
+        'total_savings_loan',
+        'total_shekel_loan',
+    ];
 
 
     // Relationships

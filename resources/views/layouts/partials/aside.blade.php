@@ -17,12 +17,18 @@
             </a>
             <h1 class="h3 mt-2 nav-heading">{{ config('app.name') }}</h1>
         </div>
-        @can('view','App\\Models\Salary')
         <p class="text-muted nav-heading mt-4 mb-1">
-            <span>المالية</span>
+            <span>العام</span>
         </p>
-        @endcan
         <ul class="navbar-nav flex-fill w-100 mb-2">
+            @can('view','App\\Models\Employee')
+                <li class="nav-item w-100">
+                    <a class="nav-link" href="{{route('employees.index')}}">
+                        <i class="fe fe-users fe-16"></i>
+                        <span class="ml-3 item-text">الموظفين</span>
+                    </a>
+                </li>
+            @endcan
             @can('view','App\\Models\Salary')
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{route('salaries.index')}}">
@@ -44,7 +50,7 @@
         </ul>
         @can('view','App\\Models\FixedEntries')
         <p class="text-muted nav-heading mt-4 mb-1">
-            <span>ثوابت المالية</span>
+            <span>المالية</span>
         </p>
         @endcan
         <ul class="navbar-nav flex-fill w-100 mb-2">
@@ -127,20 +133,10 @@
             </li>
             @endcan
         </ul>
-        @can('view','App\\Models\Employee')
         <p class="text-muted nav-heading mt-4 mb-1">
             <span>البيانات</span>
         </p>
-        @endcan
         <ul class="navbar-nav flex-fill w-100 mb-2">
-            @can('view','App\\Models\Employee')
-                <li class="nav-item w-100">
-                    <a class="nav-link" href="{{route('employees.index')}}">
-                        <i class="fe fe-users fe-16"></i>
-                        <span class="ml-3 item-text">الموظفين</span>
-                    </a>
-                </li>
-            @endcan
             @can('view','App\\Models\Bank')
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{route('banks.index')}}">

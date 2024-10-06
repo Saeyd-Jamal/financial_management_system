@@ -281,6 +281,42 @@
 
 </div>
 
+
+<h2 class="h3">حساب البنك الأساسي</h2>
+<div class="row">
+    <div class="form-group p-3 col-3">
+        <label for="bank_id">البنك - الفرع</label>
+        <select class="custom-select" id="bank_id" name="bank_id" required>
+            <option @selected($bank_employee->bank_id == null)>عرض القيم المتوفرة</option>
+            @foreach ($banks as $bank)
+                <option value="{{$bank['id']}}" @selected($bank_employee->bank_id == $bank['id'])>{{$bank['name'] . " - " . $bank['branch'] }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group p-3 col-3">
+        <x-form.input minlength="9" maxlength="9" label="رقم الحساب" :value="$bank_employee->account_number"  name="account_number" placeholder="4000000" required/>
+    </div>
+</div>
+<h2 class="h3">قسم الإجماليات</h2>
+<div class="row">
+    <div class="form-group p-3 col-3">
+        <x-form.input type="number" step="0.01" label="إجمالي المستحقات" :value="$totals->total_receivables" name="total_receivables" placeholder="المستحقات الخاصة به"/>
+    </div>
+    <div class="form-group p-3 col-3">
+        <x-form.input type="number" step="0.01"  label="إجمالي الإدخارات" :value="$totals->total_savings" name="total_savings" placeholder="الإدخارات الخاصة به"/>
+    </div>
+    <div class="form-group p-3 col-3">
+        <x-form.input type="number" step="0.01" min="0" label="قرض الجمعية" :value="$totals->total_association_loan" name="total_association_loan" placeholder=""/>
+    </div>
+    <div class="form-group p-3 col-3">
+        <x-form.input type="number" step="0.01" min="0" label="قرض الإدخار $" :value="$totals->total_savings_loan" name="total_savings_loan" placeholder=""/>
+    </div>
+    <div class="form-group p-3 col-3">
+        <x-form.input type="number" step="0.01" min="0" label="قرض اللجنة" :value="$totals->total_shekel_loan" name="total_shekel_loan" placeholder=""/>
+    </div>
+</div>
+
+
 <div class="row align-items-center mb-2">
     <div class="col">
         <h2 class="h5 page-title"></h2>
