@@ -28,4 +28,4 @@
     <link rel="stylesheet" href="{{ asset('assets/css/app-dark.css') }}" id="darkTheme" disabled>
     @stack('styles')
 </head>
-<body class="vertical light rtl">
+<body class="horizontal light rtl">

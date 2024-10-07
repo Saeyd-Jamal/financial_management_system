@@ -1,7 +1,7 @@
 @include('layouts.partials.head')
 <div class="wrapper">
     @include('layouts.partials.nav')
-    @include('layouts.partials.aside')
+    {{-- @include('layouts.partials.aside') --}}
         <main role="main" class="main-content ">
             <div class="container-fluid">
                 <div class="col-12 {{$classC}}">

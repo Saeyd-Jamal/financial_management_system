@@ -228,8 +228,16 @@
                                         <th>#</th>
                                         <th>الاسم</th>
                                         <th>رقم الهوية</th>
-                                        <th>العمر</th>
+                                        <th>نوع التعين</th>
+                                        <th>الجمعية</th>
+                                        <th>مكان العمل</th>
+                                        <th>مجال العمل</th>
+                                        <th>عدد <br> أيام <br> العمل</th>
                                         <th>الحالة الزوجية</th>
+                                        <th>العلاوة</th>
+                                        <th>الدرجة</th>
+                                        <th>الحالة</th>
+                                        <th>العمر</th>
                                         <th>رقم الهاتف</th>
                                         <th>المنطقة</th>
                                         <th>المؤهل العلمي</th>
@@ -242,8 +250,16 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $employee->name }}</td>
                                             <td>{{ $employee->employee_id }}</td>
-                                            <td>{{ $employee->age }}</td>
+                                            <td>{{ $employee->workData->type_appointment }}</td>
+                                            <td>{{ $employee->workData->association }}</td>
+                                            <td>{{ $employee->workData->workplace }}</td>
+                                            <td>{{ $employee->workData->field_action }}</td>
+                                            <td>{{ $employee->workData->number_working_days }}</td>
                                             <td>{{ $employee->matrimonial_status }}</td>
+                                            <td>{{ $employee->workData->allowance }}</td>
+                                            <td>{{ $employee->workData->grade }}</td>
+                                            <td>{{ $employee->workData->state_effectiveness }}</td>
+                                            <td>{{ $employee->age }}</td>
                                             <td>{{ $employee->phone_number }}</td>
                                             <td>{{ $employee->area }}</td>
                                             <td>{{ $employee->scientific_qualification }}</td>

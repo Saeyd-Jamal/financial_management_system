@@ -1,26 +1,79 @@
 <div class="container-fluid">
+    <div class="row align-items-center mb-2">
+        <div class="col d-flex justify-content-start align-items-center">
+            <div class="">
+                <h2 class="mb-2 page-title">جدول رواتب الموظفين</h2>
+                <p class="card-text">هنا يتم عرض الرواتب الشهرية لكل موظف</p>
+            </div>
+            <div class="col-8">
+                <form method="post" id="filter" class="col-12">
+                    @csrf
+                    <div class="row">
+                        <div class="form-group col-3">
+                            <x-form.input type="month" label="حدد شهر معين" :value="$month" name="month" wire:model="filterArray.month" wire:input="filter"/>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <x-form.input name="name" label="اسم الموظف" placeholder="إملأ الاسم" wire:model="filterArray.name" wire:input="filter" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-auto">
+            {{-- @can('create', 'App\\Models\Salary')
+            <a class="btn btn-success" href="{{route('salaries.create')}}">
+                <i class="fe fe-plus"></i>
+            </a>
+            @endcan
+            <a class="btn btn-danger" href="{{route('salaries.trashed')}}">
+                <i class="fe fe-trash"></i>
+            </a> --}}
+            @can('view','App\\Models\Accreditation')
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AccreditationModal">
+                اعتماد الأشهر
+            </button>
+            @endcan
+            @can('create-all', 'App\\Models\Salary')
+                @if ($btn_download_salary == "active")
+                    <form action="{{route('salaries.createAllSalaries')}}" method="post" class="mt-2">
+                        @csrf
+                        <input type="hidden" name="month" value="{{$monthDownload}}" >
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fe fe-activity"></i>
+                            <span>تحميل جميع الرواتب لشهر {{$monthDownload}}</span>
+                        </button>
+                    </form>
+                @endif
+            @endcan
+            @can('delete-all', 'App\\Models\Salary')
+                @if ($btn_delete_salary == "active")
+                <form action="{{route('salaries.deleteAllSalaries')}}" method="post" class="mt-2">
+                    @csrf
+                    <input type="hidden" name="month" value="{{$monthDownload}}" >
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fe fe-activity"></i>
+                        <span>حذف جميع الرواتب  لشهر {{$monthDownload}}</span>
+                    </button>
+                </form>
+                @endif
+            @endcan
+        </div>
+    </div>
     @push('styles')
     <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
+
     @endpush
-    <div class="row">
-        <form method="post" id="filter" class="col-12">
-            @csrf
-            <div class="row">
-                <div class="form-group col-3">
-                    <x-form.input type="month" label="حدد شهر معين" :value="$month" name="month" wire:model="filterArray.month" wire:input="filter"/>
-                </div>
-                <div class="form-group col-md-3">
-                    <x-form.input name="name" label="اسم الموظف" placeholder="إملأ الاسم" wire:model="filterArray.name" wire:input="filter" />
-                </div>
-            </div>
-        </form>
-    </div>
     <div class="row my-4">
         <!-- Small table -->
         <div class="col-md-12">
             <div class="card shadow">
                 <div class="card-body"  id="table_box">
                     <!-- table -->
+                    <style>
+                        td, th {
+                            padding: 1px 9px !important;
+                        }
+                    </style>
                     <table class="table table-bordered  table-hover datatables text-dark"  id="dataTable-1">
                         <thead>
                             <tr>
@@ -58,7 +111,7 @@
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td style="white-space: nowrap;"   class="sticky">{{$salary->employee->name ?? ''}}</td>
-                                    <td>{{$salary->employee->workData->workplace ?? ''}}</td>
+                                    <td style="white-space: nowrap;">{{$salary->employee->workData->workplace ?? ''}}</td>
                                     <td>{{$salary->secondary_salary ?? ''}}</td>
                                     <td>{{$salary->allowance_boys ?? ''}}</td>
                                     <td>{{$salary->nature_work_increase ?? ''}}</td>

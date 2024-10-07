@@ -13,7 +13,10 @@ class TableSalaries extends Component
 {
     public $salaries;
     public $month;
+    public $monthDownload;
     public $USD;
+    public $btn_download_salary;
+    public $btn_delete_salary;
     public $filterArray = [
         'name' => '',
         'month' => '',
@@ -24,6 +27,14 @@ class TableSalaries extends Component
         $this->USD = Currency::where('code','USD')->first()->value;
         $this->month = Carbon::now()->format('Y-m');
         $this->filterArray['month'] = $this->month;
+    }
+
+    public function mount($salaries, $month,$monthDownload, $btn_download_salary, $btn_delete_salary){
+        $this->salaries = $salaries;
+        $this->month = $month;
+        $this->monthDownload = $monthDownload;
+        $this->btn_download_salary = $btn_download_salary;
+        $this->btn_delete_salary = $btn_delete_salary;
     }
 
     public function filter(Request $request = null){
