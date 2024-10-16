@@ -15,6 +15,7 @@ use App\Models\WorkData;
 use App\Models\ReceivablesLoans;
 use App\Models\Bank;
 use App\Models\BanksEmployees;
+use App\Models\Currency;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -99,7 +100,6 @@ class EmployeeController extends Controller
      */
     public function store(EmployeeRequset $request)
     {
-        dd($request->all());
         $this->authorize('create', Employee::class);
         $employee = Employee::create($request->all());
         $request->merge([
@@ -108,10 +108,13 @@ class EmployeeController extends Controller
         ]);
         WorkData::create($request->all());
 
+
         ReceivablesLoans::create($request->all());
 
-        BanksEmployees::create($request->all());
 
+        if($request->account_number != '' && $request->account_number != null){
+            BanksEmployees::create($request->all());
+        }
 
         // الراتب المحدد
         if($request->type_appointment == 'يومي'){
@@ -174,6 +177,17 @@ class EmployeeController extends Controller
         $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
         $contract_type = WorkData::select('contract_type')->distinct()->pluck('contract_type')->toArray();
 
+
+
+        $USD = Currency::where('code', 'USD')->first()->value;
+        $month = Carbon::now()->format('Y') . '-01';
+        $to_month = Carbon::now()->format('Y') . '-12';
+
+        $salaries = Salary::where('employee_id', $employee->id)
+                    ->whereBetween('month', [$month, $to_month])
+                    ->get();
+
+
         $btn_label = "تعديل";
         $workData = WorkData::where('employee_id', $employee->id)->first();
         if ($workData == null) {
@@ -194,7 +208,7 @@ class EmployeeController extends Controller
         }
 
 
-        return view('dashboard.employees.edit', compact('employee','workData','totals','banks','bank_employee','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
+        return view('dashboard.employees.edit', compact('employee','workData','totals','banks','bank_employee','salaries','USD','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
     }
 
     /**
@@ -225,14 +239,16 @@ class EmployeeController extends Controller
             'employee_id' => $employee->id
         ], $request->all());
 
-        ReceivablesLoans::updateOrCreate([
-            'employee_id' => $employee->id
-        ], $request->all());
+            ReceivablesLoans::updateOrCreate([
+                'employee_id' => $employee->id
+            ], $request->all());
 
-        BanksEmployees::updateOrCreate([
-            'employee_id' => $employee->id
-        ], $request->all());
+        if($request->account_number != '' && $request->account_number != null){
 
+            BanksEmployees::updateOrCreate([
+                'employee_id' => $employee->id
+            ], $request->all());
+        }
         // الراتب المحدد
         if($request->type_appointment == 'يومي'){
             SpecificSalary::updateOrCreate([

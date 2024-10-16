@@ -13,6 +13,7 @@ class Exchange extends Model
         'employee_id',
         'receivables_discount',
         'savings_discount',
+        'reward',
         'discount_date',
         'exchange_type',
         'association_loan',

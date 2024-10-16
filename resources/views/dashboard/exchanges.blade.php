@@ -1,6 +1,8 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded">
     @push('styles')
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
+
     @endpush
     <div class="row justify-content-center">
         <div class="col-12">
@@ -25,14 +27,31 @@
                 <div class="col-md-12">
                     <div class="card shadow">
                         <div class="card-body">
+                            <style>
+                                thead
+                                {
+                                    background: #383848 !important;
+                                }
+                                th
+                                {
+                                    /* color: #1E1E1E !important; */
+                                    padding: 12px 33px !important;
+                                }
+                                td{
+                                    padding: 3px 15px !important;
+                                    text-align: center;
+                                    /* color: #1E1E1E !important; */
+                                }
+                            </style>
                             <!-- table -->
-                            <table class="table table-bordered  table-hover datatables"  id="dataTable-1">
+                            <table class="table table-bordered  table-hover datatables"  id="dataTable-1" style="display: table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>الموظف</th>
+                                        <th style="white-space: nowrap;">الموظف</th>
                                         <th>خصم المستحقات ش</th>
                                         <th>خصم الإدخارات $</th>
+                                        <th>مكافأة مالية</th>
                                         <th>قرض الجمعية</th>
                                         <th>قرض الإدخار</th>
                                         <th>قرض اللجنة</th>
@@ -46,9 +65,10 @@
                                     @foreach($exchanges as $exchange)
                                     <tr class="exchange_select" data-id="{{$exchange->id}}">
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$exchange->employee->name}}</td>
+                                        <td style="white-space: nowrap;">{{$exchange->employee->name}}</td>
                                         <td>{{$exchange->receivables_discount}}</td>
                                         <td>{{$exchange->savings_discount}}</td>
+                                        <td>{{$exchange->reward}}</td>
                                         <td>{{$exchange->association_loan}}</td>
                                         <td>{{$exchange->savings_loan}}</td>
                                         <td>{{$exchange->shekel_loan}}</td>
@@ -116,7 +136,6 @@
                                     </div>
                                 </div>
                                 <div id="name">
-
                                 </div>
                             </div>
                             <div class="form-group p-1 col-6">
@@ -126,6 +145,7 @@
                                     <option value="receivables_discount">خصم المستحقات ش</option>
                                     <option value="savings_discount">خصم الإدخارات $</option>
                                     <option value="receivables_savings_discount">خصم المستحقات والإدخارات</option>
+                                    <option value="reward">مكافأة</option>
                                     <option value="association_loan">قرض الجمعية ش</option>
                                     <option value="savings_loan">قرض الإدخار $</option>
                                     <option value="shekel_loan">قرض اللجنة ش</option>
@@ -144,6 +164,9 @@
                                 <span class="totals" id="savings_total">
                                     {{$totals['total_savings']  ?? ''}}
                                 </span>
+                            </div>
+                            <div class="form-group p-3 col-4 exchanges" id="reward"  style="display: none;">
+                                <x-form.input type="number" min="0" value="0"  label="صرف مكافأة ش" name="reward" placeholder="0.." />
                             </div>
                             <div class="form-group p-3 col-4 exchanges" id="association_loan"  style="display: none;">
                                 <x-form.input type="number" min="0" value="0"  label="صرف قرض الجمعية" name="association_loan" placeholder="0.." />
@@ -235,8 +258,8 @@
             {
                 autoWidth: true,
                 "lengthMenu": [
-                [10, 20, 100, -1],
-                [10, 20, 100, "جميع"]
+                [20, -1],
+                [20, "جميع"]
                 ]
             });
         </script>

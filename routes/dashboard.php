@@ -31,7 +31,6 @@ Route::group([
     Route::post('/fixed_entries/getModalForm', [FixedEntriesController::class,'getModalForm'])->name('fixed_entries.getModalForm');
     Route::post('/fixed_entries/getModalFormLoan', [FixedEntriesController::class,'getModalFormLoan'])->name('fixed_entries.getModalFormLoan');
     Route::get('/fixed_entries/viewForm', [FixedEntriesController::class,'viewForm'])->name('fixed_entries.viewForm');
-    Route::get('/fixed_entries/tableView', [FixedEntriesController::class,'tableView'])->name('fixed_entries.tableView');
 
     Route::post('/exchanges/printPdf', [ExchangeController::class,'printPdf'])->name('exchanges.printPdf');
     Route::post('/exchanges/getTotals', [ExchangeController::class,'getTotals'])->name('exchanges.getTotals');

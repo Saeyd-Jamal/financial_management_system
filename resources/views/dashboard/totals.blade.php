@@ -1,6 +1,7 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded">
     @push('styles')
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
     @endpush
     <div class="row justify-content-center">
         <div class="col-12">
@@ -8,6 +9,7 @@
                 <div class="col">
                     <h2 class="mb-2 page-title">جدول الإجماليات</h2>
                     <p class="card-text">هنا يتم عرض جدول الإجماليات</p>
+                    <span class="btn btn-primary "> عدد الإجماليات للموظفين : {{$totals->count()}}</span>
                 </div>
                 <div class="col-auto">
                     @can('create', 'App\\Models\ReceivablesLoans')
@@ -25,12 +27,28 @@
                 <div class="col-md-12">
                     <div class="card shadow">
                         <div class="card-body">
+                            <style>
+                                thead
+                                {
+                                    background: #383848;
+                                }
+                                th
+                                {
+                                    /* color: #1E1E1E !important; */
+                                    padding: 12px 33px !important;
+                                }
+                                td{
+                                    padding: 3px 15px !important;
+                                    text-align: center;
+                                    /* color: #1E1E1E !important; */
+                                }
+                            </style>
                             <!-- table -->
-                            <table class="table table-bordered  table-hover datatables"  id="dataTable-1">
+                            <table class="table table-bordered  table-hover datatables"  id="dataTable-1"  style="display: table;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>الموظف</th>
+                                        <th class="text-left">الموظف</th>
                                         <th>إجمالي المستحقات</th>
                                         <th>إجمالي الإدخارات $</th>
                                         <th>إجمالي قرض الجمعية</th>
@@ -42,7 +60,7 @@
                                     @foreach($totals as $total)
                                     <tr class="total_select" data-id="{{$total->id}}">
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$total->employee->name}}</td>
+                                        <td  class="text-left">{{$total->employee->name}}</td>
                                         <td>{{$total->total_receivables_view}}</td>
                                         <td>{{$total->total_savings_view}}</td>
                                         <td>{{$total->total_association_loan_view}}</td>
@@ -220,8 +238,8 @@
             {
                 autoWidth: true,
                 "lengthMenu": [
-                [10, 20, 100, -1],
-                [10, 20, 100, "جميع"]
+                [-1],
+                ["جميع"]
                 ]
             });
         </script>

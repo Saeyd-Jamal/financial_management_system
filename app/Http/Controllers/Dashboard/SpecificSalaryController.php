@@ -19,6 +19,33 @@ class SpecificSalaryController extends Controller
         $this->thisMonth = Carbon::now()->format('Y-m') ;
     }
 
+    public function index(){
+        // خاص private
+        $employees_private = Employee::whereHas('workData', function ($query) {
+            $query->where('type_appointment', 'خاص');
+        })->get();
+        // رياض riyadh
+        $employees_riyadh = Employee::whereHas('workData', function ($query) {
+            $query->where('type_appointment', 'رياض');
+        })->get();
+        // فصلي fasle
+        $employees_fasle = Employee::whereHas('workData', function ($query) {
+            $query->where('type_appointment', 'فصلي');
+        })->get();
+        // مؤقت interim
+        $employees_interim = Employee::whereHas('workData', function ($query) {
+            $query->where('type_appointment', 'مؤقت');
+        })->get();
+        // يومي daily
+        $employees_daily = Employee::whereHas('workData', function ($query) {
+            $query->where('type_appointment', 'يومي');
+        })->get();
+
+
+        $month = '0000-00';
+        return view('dashboard.specific_salaries.index', compact('employees_private','employees_riyadh','employees_fasle','employees_interim','employees_daily','month'));
+
+    }
     // النسبة
     public function ratio(Request $request){
         $employees = Employee::whereHas('workData', function ($query) {
@@ -57,13 +84,6 @@ class SpecificSalaryController extends Controller
     }
 
     // خاص
-    public function private(Request $request){
-        $employees = Employee::whereHas('workData', function ($query) {
-            $query->where('type_appointment', 'خاص');
-        })->get();
-        $month = '0000-00';
-        return view('dashboard.specific_salaries.private', compact('employees','month'));
-    }
     public function privateCreate(Request $request){
         DB::beginTransaction();
         try {
@@ -84,13 +104,6 @@ class SpecificSalaryController extends Controller
     }
 
     // رياض
-    public function riyadh(Request $request){
-        $employees = Employee::whereHas('workData', function ($query) {
-            $query->where('type_appointment', 'رياض');
-        })->get();
-        $month = '0000-00';
-        return view('dashboard.specific_salaries.riyadh', compact('employees' ,'month'));
-    }
     public function riyadhCreate(Request $request){
         DB::beginTransaction();
         try {
@@ -111,13 +124,6 @@ class SpecificSalaryController extends Controller
     }
 
     // فصلي
-    public function fasle(Request $request){
-        $employees = Employee::whereHas('workData', function ($query) {
-            $query->where('type_appointment', 'فصلي');
-        })->get();
-        $month = '0000-00';
-        return view('dashboard.specific_salaries.fasle', compact('employees' ,'month'));
-    }
     public function fasleCreate(Request $request){
         DB::beginTransaction();
         try {
@@ -138,13 +144,6 @@ class SpecificSalaryController extends Controller
     }
 
     // مؤقت
-    public function interim(Request $request){
-        $employees = Employee::whereHas('workData', function ($query) {
-            $query->where('type_appointment', 'مؤقت');
-        })->get();
-        $month = '0000-00';
-        return view('dashboard.specific_salaries.interim', compact('employees' ,'month'));
-    }
     public function interimCreate(Request $request){
         DB::beginTransaction();
         try {
@@ -165,14 +164,6 @@ class SpecificSalaryController extends Controller
     }
 
     // اليومي
-
-    public function daily(Request $request){
-        $employees = Employee::whereHas('workData', function ($query) {
-            $query->where('type_appointment', 'يومي');
-        })->get();
-        $month = '0000-00';
-        return view('dashboard.specific_salaries.daily', compact('employees' ,'month'));
-    }
     public function dailyCreate(Request $request){
         DB::beginTransaction();
         try {

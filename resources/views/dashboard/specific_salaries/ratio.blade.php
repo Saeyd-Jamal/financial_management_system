@@ -1,6 +1,25 @@
 <x-front-layout>
     @push('styles')
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
+    <style>
+        thead
+        {
+            background: #383848 !important;
+        }
+        th
+        {
+            /* color: #1E1E1E !important; */
+            padding: 12px 33px !important;
+        }
+        td{
+            padding: 3px 15px !important;
+            /* color: #1E1E1E !important; */
+        }
+        input{
+            padding: 0px 11px !important;
+        }
+    </style>
     @endpush
     <div class="row align-items-center mb-2">
         <!-- Bordered table -->
@@ -10,12 +29,15 @@
                     <h2 class="mb-2 page-title">جدول رواتب الموظفين النسبة</h2>
                     <p class="card-text">يمكنك تعديل الرواتب الموظفين النسبة من هنا</p>
                 </div>
+                <div class="col-auto">
+                    <span class="btn btn-primary "> عدد الموظفين : {{$employees->count()}}</span>
+                </div>
             </div>
             <div class="card shadow">
                 <form action="{{route('specific_salaries.ratioCreate')}}" method="post">
                     @csrf
                 <div class="card-body">
-                    <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1">
+                    <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1" style="display: table">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -73,8 +95,8 @@
         {
             autoWidth: true,
             "lengthMenu": [
-            [10, 20, 100, -1],
-            [10, 20, 100, "جميع"]
+            [-1],
+            ["جميع"]
             ]
         });
         const app_link = "{{config('app.url')}}";

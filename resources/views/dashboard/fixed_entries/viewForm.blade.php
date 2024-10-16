@@ -41,9 +41,6 @@
                     <p class="card-text">هنا يتم عرض البيانات المدخلة الشهرية لكل موظف والتي تستخدم في الرواتب</p>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-info mb-2" href="{{ route('fixed_entries.tableView') }}">
-                        <i class="fe fe-grid"></i> عرض واجهة إكسيل
-                    </a>
                     {{-- <div class="form-group col-6 d-inline"> --}}
                         {{-- <input type="month" id="monthInputSearch" name="month" value="{{$monthNow}}" class="form-control"> --}}
                     {{-- </div> --}}
@@ -60,12 +57,28 @@
                 <div class="col-md-12">
                     <div class="card shadow">
                         <div class="card-body table-container" id="table_box">
+                            <style>
+                                thead
+                                {
+                                    background: #383848 !important;
+                                }
+                                th
+                                {
+                                    /* color: #1E1E1E !important; */
+                                    padding: 12px 33px !important;
+                                }
+                                td{
+                                    padding: 3px 15px !important;
+                                    text-align: center;
+                                    /* color: #1E1E1E !important; */
+                                }
+                            </style>
                             <!-- table -->
                             <table class="table table-bordered  table-hover datatables text-dark"  id="dataTable-1">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th style="white-space: nowrap;">الاسم <span style="    width: 115px; display: inline-block;"></span></th>
+                                        <th style="white-space: nowrap;">الاسم</th>
                                         <th>علاوة إدارية</th>
                                         <th>علاوة مؤهل علمي</th>
                                         <th>مواصلات</th>
@@ -206,8 +219,8 @@
             {
                 autoWidth: true,
                 "lengthMenu": [
-                [10, 20, 100, -1],
-                [10, 20, 100, "جميع"]
+                [15, 20, 100, -1],
+                [15, 20, 100, "جميع"]
                 ]
             });
         </script>

@@ -70,6 +70,10 @@
             $("div#receivables").slideDown();
             $("div#savings").slideDown();
         }
+        if(type == "reward"){
+            $("div.exchanges").slideUp();
+            $("div#reward").slideDown();
+        }
         if(type == "association_loan"){
             $("div.exchanges").slideUp();
             $("div#association_loan").slideDown();

@@ -1,6 +1,7 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
     @push('styles')
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
     @endpush
     <div class="row justify-content-center">
         <div class="col-12">
@@ -22,8 +23,24 @@
                 <div class="col-md-12">
                     <div class="card shadow">
                         <div class="card-body">
+                            <style>
+                                thead
+                                {
+                                    background: #383848 !important;
+                                }
+                                th
+                                {
+                                    /* color: #1E1E1E !important; */
+                                    padding: 12px 33px !important;
+                                }
+                                td{
+                                    padding: 3px 15px !important;
+                                    text-align: center;
+                                    /* color: #1E1E1E !important; */
+                                }
+                            </style>
                             <!-- table -->
-                            <table class="table  table-bordered  table-hover datatables" id="dataTable-1">
+                            <table class="table  table-bordered  table-hover datatables" id="dataTable-1" style="display: table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -83,8 +100,8 @@
         {
             autoWidth: true,
             "lengthMenu": [
-            [10, 20, 100, -1],
-            [10, 20, 100, "جميع"]
+            [-1],
+            ["جميع"]
             ]
         });
     </script>

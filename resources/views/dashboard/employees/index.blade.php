@@ -1,10 +1,14 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
+    @endpush
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="row align-items-center mb-2">
                 <div class="col">
                     <h2 class="mb-2 page-title">جدول الموظفين</h2>
                     <p class="card-text">هنا يتم عرض بيانات الموظفين الشخصية كاملة.</p>
+                    <span  class="btn btn-primary ">عدد الموظفين : {{ $employees->count() }}</span>
                 </div>
                 <div class="col-auto">
                     @can('create', 'App\\Models\Employee')
@@ -215,14 +219,14 @@
                 <!-- Small table -->
                 <div class="col-md-12">
                     <div class="card shadow">
-                        <div class="card-body">
+                        <div class="card-body p-0">
                             <style>
                                 td,th{
                                     padding: 4px 12px !important;
                                 }
                             </style>
                             <!-- table -->
-                            <table class="table table-bordered  table-hover">
+                            <table class="table table-bordered table-hover" id="dataTable-1" style="display: table;">
                                 <thead>
                                     <tr>
                                         <th>#</th>

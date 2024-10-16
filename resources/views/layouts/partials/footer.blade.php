@@ -213,6 +213,19 @@
     gtag('js', new Date());
     gtag('config', 'UA-56159088-1');
 </script>
+<script>
+    (function($) {
+        // Spinner
+        var spinner = function() {
+            setTimeout(function() {
+                if ($('#spinner').length > 0) {
+                    $('#spinner').removeClass('show');
+                }
+            }, 1);
+        };
+        spinner();
+    })(jQuery);
+</script>
 @stack('scripts')
 </body>
 </html>

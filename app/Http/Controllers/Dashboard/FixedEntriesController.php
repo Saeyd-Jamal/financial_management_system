@@ -105,25 +105,6 @@ class FixedEntriesController extends Controller
         $employees = Employee::get();
         return view('dashboard.fixed_entries.viewForm', compact('fixed_entries','monthNow','lastMonth','employees','year','month','title'));
     }
-    public function tableView(Request $request)
-    {
-        $this->authorize('view', FixedEntries::class);
-        // تغير الشهر
-        if($request->monthChange == true){
-            $fixed_entries = FixedEntries::with(['employee'])->where('month',$request->month)->get();
-            return $fixed_entries;
-        }
-        $year = $this->thisYear;
-        $month = $this->thisMonth;
-        $monthNow = $this->monthNow;
-
-        $lastAccreditations = Accreditation::latest()->first();
-        $lastMonth = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('m') : '07' ;
-
-        $fixed_entries = FixedEntries::with(['employee'])->where('month',$this->monthNow)->get();
-        $employees = Employee::get();
-        return view('dashboard.fixed_entries.tableView', compact('fixed_entries','monthNow','lastMonth','employees','year','month'));
-    }
 
     // public function viewForm(Request $request)
     // {

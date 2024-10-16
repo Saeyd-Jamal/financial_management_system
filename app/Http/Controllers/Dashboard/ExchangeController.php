@@ -108,7 +108,6 @@ class ExchangeController extends Controller
                 'total_savings_loan' => DB::raw('total_savings_loan - ' . $exchange->savings_loan),
                 'total_shekel_loan' => DB::raw('total_shekel_loan - ' . $exchange->shekel_loan),
             ]);
-
         $exchange->delete();
         return redirect()->route('exchanges.index')->with('danger', 'تم حذف الصرف قديم');
     }
@@ -134,7 +133,6 @@ class ExchangeController extends Controller
             'default_font' => 'Arial',
         ]);
         return $pdf->stream();
-
     }
 
 }

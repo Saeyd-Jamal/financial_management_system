@@ -183,6 +183,7 @@
                 {{ $exchange->exchange_type == 'association_loan' ? 'قرض جمعية 	ش' : '' }}
                 {{ $exchange->exchange_type == 'savings_loan' ? 'قرض إدخار $' : '' }}
                 {{ $exchange->exchange_type == 'shekel_loan' ? 'قرض لجنة  ش' : '' }}
+                {{ $exchange->exchange_type == 'reward' ? 'مكافأة مالية' : '' }}
             </div>
             <div class="card-body" >
                 <table class="blueTable">
@@ -190,6 +191,7 @@
                         $total = $exchange->employee->totals;
                     @endphp
                     <tbody>
+                        @if ($exchange->exchange_type != 'reward')
                         <tr>
                             <th style="background: #dddddd;">الرصيد السابق</th>
                             <td>
@@ -206,6 +208,7 @@
                                 @endif
                             </td>
                         </tr>
+                        @endif
                         <tr>
                             <th  style="background: #dddddd;">قيمة الصرف</th>
                             <td>
@@ -219,6 +222,8 @@
                                     {{ $exchange->savings_loan }}
                                 @elseif( $exchange->exchange_type == 'shekel_loan')
                                     {{ $exchange->shekel_loan }}
+                                @elseif( $exchange->exchange_type == 'reward')
+                                    {{ $exchange->reward }}
                                 @endif
                             </td>
                         </tr>
@@ -226,6 +231,7 @@
                             <th  style="background: #dddddd;">تاريخ الصرف</th>
                             <td>{{ $exchange->discount_date }}</td>
                         </tr>
+                        @if ($exchange->exchange_type != 'reward')
                         <tr>
                             <th  style="background: #dddddd;">الرصيد الحالي</th>
                             <td>
@@ -242,6 +248,8 @@
                                 @endif
                             </td>
                         </tr>
+                        @endif
+
                     </tbody>
                 </table>
             </div>

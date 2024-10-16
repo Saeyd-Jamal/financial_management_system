@@ -53,12 +53,8 @@
                         <span class="ml-lg-2">الرواتب المحددة</span><span class="sr-only">(current)</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dashboardDropdown">
+                        <a class="nav-link pl-lg-2" href="{{route('specific_salaries.index')}}"><span class="ml-1">الجميع</span></a>
                         <a class="nav-link pl-lg-2" href="{{route('specific_salaries.ratio')}}"><span class="ml-1">النسبة</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('specific_salaries.private')}}"><span class="ml-1">خاص</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('specific_salaries.riyadh')}}"><span class="ml-1">رياض</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('specific_salaries.fasle')}}"><span class="ml-1">فصلي</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('specific_salaries.daily')}}"><span class="ml-1">يومي</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('specific_salaries.interim')}}"><span class="ml-1">مؤقت</span></a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

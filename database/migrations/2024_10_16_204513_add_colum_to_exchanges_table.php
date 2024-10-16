@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rewards', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
-            $table->string('type');
-            $table->decimal('amount', 10, 2);
-            $table->timestamps();
+        Schema::table('exchanges', function (Blueprint $table) {
+            $table->decimal('reward', 10, 2)->default(0)->after('savings_discount');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rewards');
+        Schema::table('exchanges', function (Blueprint $table) {
+            $table->dropColumn('reward');
+        });
     }
 };
