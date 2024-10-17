@@ -222,6 +222,7 @@
                         <div class="card-body p-0">
                             <style>
                                 td,th{
+                                    color: #000 !important;
                                     padding: 4px 12px !important;
                                 }
                             </style>
