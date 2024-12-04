@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="row">
-        <form action="{{ route('employees.store', $employee->id) }}" method="post" class="col-12 mt-3">
+        <form action="{{ route('employees.store', $employee->id) }}" id="myForm" method="post" class="col-12 mt-3">
             @csrf
             @include('dashboard.employees._form')
         </form>

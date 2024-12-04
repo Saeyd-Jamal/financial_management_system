@@ -57,9 +57,9 @@ class SpecificSalaryController extends Controller
     public function getRatio(Request $request){
         $employees = Employee::with('specificSalaries', 'workData')->whereHas('workData', function ($query) {
             $query->where('type_appointment', 'نسبة');
-        })->get();
+        });
         $month = $request->month;
-        return $employees;
+        return $employees->get();
     }
     public function ratioCreate(Request $request){
         DB::beginTransaction();

@@ -54,11 +54,10 @@
                             }
                         </script>
                     @endcan
-                    <form id="filter-form">
-                        <div class="form-group col-md-12">
-                            <x-form.input class="employee_filter" name="name" placeholder="أدخل الاسم"
-                                label="اسم الموظف" />
-                        </div>
+                    <div class="form-group col-md-12">
+                        <x-form.input class="employee_filter name-filter" name="name" placeholder="أدخل الاسم"
+                            label="اسم الموظف" />
+                    </div>
                     <button style="display: none;" id="openModalShow" data-toggle="modal" data-target="#ModalShow">
                         Launch demo modal
                     </button>
@@ -213,8 +212,10 @@
                         @endforeach
                     </datalist>
                 </div>
+                <div class="col-12 d-flex justify-content-end">
+                    <input type="button" value="بحث" id="search" class="btn btn-primary">
+                </div>
             </div>
-            </form>
             <div class="row my-4">
                 <!-- Small table -->
                 <div class="col-md-12">

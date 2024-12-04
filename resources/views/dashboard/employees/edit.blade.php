@@ -57,81 +57,87 @@
             @csrf
             @method('PUT')
             @include("dashboard.employees._form")
-            <h2 class="h3 mb-3">رواتب السنة الحالية</h2>
-            <div class="container-fluid">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <style>
-                            th {
-                                text-align: center;
-                                color: #000 !important;
-                            }
-                        </style>
-                        <tr style="background: #dddddd;">
-                            <th>#</th>
-                            <th>الشهر</th>
-                            <th>الراتب <br> الاساسي</th>
-                            <th>علاوة <br> الأولاد</th>
-                            <th>علاوة <br> طبيعة <br> العمل</th>
-                            <th>علاوة <br> إدارية</th>
-                            <th>علاوة <br> مؤهل <br> علمي</th>
-                            <th>المواصلات</th>
-                            <th>بدل <br> إضافي <br> +-</th>
-                            <th>علاوة <br> أغراض <br> راتب</th>
-                            <th>إضافة <br> بأثر <br> رجعي</th>
-                            <th>علاوة <br> جوال</th>
-                            <th>نهاية <br> الخدمة</th>
-                            <th>إجمالي <br> الراتب</th>
-                            <th>تأمين <br> صحي</th>
-                            <th>ض.دخل</th>
-                            <th>إدخار 5%</th>
-                            <th>قرض <br> الجمعية</th>
-                            <th>قرض <br> الإدخار</th>
-                            <th>قرض <br> شيكل</th>
-                            <th>مستحقات <br> متأخرة</th>
-                            <th>إجمالي <br> الخصومات</th>
-                            <th>صافي <br> الراتب</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($salaries as $salary)
-                            @php
-                                $fixedEntries = App\Models\FixedEntries::where('employee_id',$salary->employee_id)->where('month',$salary->month)->first();
-                                $fixedEntries = $fixedEntries ?? new App\Models\FixedEntries();
-                                if($salary->employee->workData->working_status == 'لا'){
-                                    $fixedEntries = new  App\Models\FixedEntries();
-                                }
-                            @endphp
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td style="white-space: nowrap;">{{$salary->month ?? ''}}</td>
-                                <td>{{$salary->secondary_salary ?? ''}}</td>
-                                <td>{{$salary->allowance_boys ?? ''}}</td>
-                                <td>{{$salary->nature_work_increase ?? ''}}</td>
-                                <td>{{$fixedEntries->administrative_allowance ?? ''}}</td>
-                                <td>{{$fixedEntries->scientific_qualification_allowance ?? ''}}</td>
-                                <td>{{$fixedEntries->transport ?? ''}}</td>
-                                <td>{{$fixedEntries->extra_allowance ?? ''}}</td>
-                                <td>{{$fixedEntries->salary_allowance ?? ''}}</td>
-                                <td>{{$fixedEntries->ex_addition ?? ''}}</td>
-                                <td>{{$fixedEntries->mobile_allowance ?? ''}}</td>
-                                <td>{{$salary->termination_service ?? ''}}</td>
-                                <td>{{$salary->gross_salary }}</td>
-                                <td>{{$fixedEntries->health_insurance ?? ''}}</td>
-                                <td>{{$salary->z_Income ?? ''}}</td>
-                                <td>{{$fixedEntries->savings_rate ?? ''}}</td>
-                                <td>{{$fixedEntries->association_loan ?? ''}}</td>
-                                <td>{{$fixedEntries != null  ? $fixedEntries->savings_loan * $USD : ''}}</td>
-                                <td>{{$fixedEntries->shekel_loan ?? ''}}</td>
-                                <td>{{$salary->late_receivables ?? ''}}</td>
-                                <td>{{$salary->total_discounts ?? ''}}</td>
-                                <td style="color: #000; background: #dddddd; font-weight: bold;">{{$salary->net_salary ?? ''}}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+
         </form>
+
+        {{-- create model --}}
+        @can('create', 'App\\Models\Exchange')
+        <div class="modal fade" id="createExchange" tabindex="-2" role="dialog" aria-labelledby="createExchangeLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createExchangeLabel">إنشاء صرف جديد</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{route('exchanges.store')}}" method="post" class="col-12">
+                            @csrf
+                            <div class="row">
+                                <x-form.input type="hidden" name="employee_id" placeholder="0" value="{{$employee->id}}" readonly required />
+                                <div class="form-group p-1 col-6">
+                                    <label for="exchange_type">نوع الصرف</label>
+                                    <select class="custom-select" name="exchange_type" id="exchange_type" required>
+                                        <option selected="" value="">إختر</option>
+                                        <option value="receivables_discount">خصم المستحقات ش</option>
+                                        <option value="savings_discount">خصم الإدخارات $</option>
+                                        <option value="receivables_savings_discount">خصم المستحقات والإدخارات</option>
+                                        <option value="reward">مكافأة</option>
+                                        <option value="association_loan">قرض الجمعية ش</option>
+                                        <option value="savings_loan">قرض الإدخار $</option>
+                                        <option value="shekel_loan">قرض اللجنة ش</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group p-3 col-4 exchanges" id="receivables" style="display: none;">
+                                    <x-form.input type="number" min="0" value="0"  label="خصم المستحقات ش" name="receivables_discount" placeholder="0.." />
+                                    <span class="totals" id="receivables_total">
+                                        {{$totals['total_receivables'] ?? ''}}
+                                    </span>
+                                </div>
+                                <div class="form-group p-3 col-4 exchanges" id="savings"  style="display: none;">
+                                    <x-form.input type="number" min="0" value="0"  label="خصم الإدخارات $" name="savings_discount" placeholder="0.." />
+                                    <span class="totals" id="savings_total">
+                                        {{$totals['total_savings']  ?? ''}}
+                                    </span>
+                                </div>
+                                <div class="form-group p-3 col-4 exchanges" id="reward"  style="display: none;">
+                                    <x-form.input type="number" min="0" value="0"  label="صرف مكافأة ش" name="reward" placeholder="0.." />
+                                </div>
+                                <div class="form-group p-3 col-4 exchanges" id="association_loan"  style="display: none;">
+                                    <x-form.input type="number" min="0" value="0"  label="صرف قرض الجمعية" name="association_loan" placeholder="0.." />
+                                </div>
+                                <div class="form-group p-3 col-4 exchanges" id="savings_loan"  style="display: none;">
+                                    <x-form.input type="number" min="0" value="0"  label="صرف قرض الإدخار" name="savings_loan" placeholder="0.." />
+                                </div>
+                                <div class="form-group p-3 col-4 exchanges" id="shekel_loan"  style="display: none;">
+                                    <x-form.input type="number" min="0" value="0"  label="صرف قرض اللجنة" name="shekel_loan" placeholder="0.." />
+                                </div>
+                                <div class="form-group p-3 col-4">
+                                    <x-form.input type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}"  label="تاريخ الصرف" name="discount_date"  />
+                                </div>
+                                <div class="form-group p-3 col-12">
+                                    <label for="notes">ملاحظات حول الصرف</label>
+                                    <textarea class="form-control" id="notes" name="notes" placeholder="....." rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="row align-items-center mb-2">
+                                <div class="col">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">
+                                        {{$btn_label ?? "أضف"}}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endcan
     </div>
 
 </x-front-layout>

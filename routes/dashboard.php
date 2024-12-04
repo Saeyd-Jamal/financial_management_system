@@ -24,13 +24,11 @@ Route::group([
 ], function () {
     // outhers fields
     Route::get('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
-    Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
+    Route::post('/employees/uplodeImage', [EmployeeController::class,'uplodeImage'])->name('employees.uplodeImage');
     Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
 
-    Route::post('/fixed_entries/getFixedEntriesData', [FixedEntriesController::class,'getFixedEntriesData'])->name('fixed_entries.getFixedEntriesData');
-    Route::post('/fixed_entries/getModalForm', [FixedEntriesController::class,'getModalForm'])->name('fixed_entries.getModalForm');
-    Route::post('/fixed_entries/getModalFormLoan', [FixedEntriesController::class,'getModalFormLoan'])->name('fixed_entries.getModalFormLoan');
-    Route::get('/fixed_entries/viewForm', [FixedEntriesController::class,'viewForm'])->name('fixed_entries.viewForm');
+
+    Route::post('/fixed_entries/getData', [FixedEntriesController::class,'getData'])->name('fixed_entries.getData');
 
     Route::post('/exchanges/printPdf', [ExchangeController::class,'printPdf'])->name('exchanges.printPdf');
     Route::post('/exchanges/getTotals', [ExchangeController::class,'getTotals'])->name('exchanges.getTotals');
@@ -72,6 +70,7 @@ Route::group([
 
     // specific_salaries
     require __DIR__ . "/specific_salaries.php";
+    require __DIR__ . "/control-panel.php";
 
     Route::resources([
         'currencies' => CurrencyController::class,

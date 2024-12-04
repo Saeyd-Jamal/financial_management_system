@@ -1,9 +1,11 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
     @push('styles')
-    <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
-    <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/stickyTable.css') }}">
 
     <style>
+        table{
+            height: 100% !important;
+        }
         thead
         {
             background: #383848 !important;
@@ -52,14 +54,13 @@
                         </div>
                         <div class="col-auto">
                             <span class="btn btn-primary "> عدد الموظفين : {{$employees_private->count()}}</span>
-
                         </div>
                     </div>
                     <div class="card shadow">
                         <form action="{{route('specific_salaries.privateCreate')}}" method="post">
                             @csrf
                         <div class="card-body">
-                            <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1" style="display: table;">
+                            <table class="table table-bordered table-hover mb-0 sticky" id="table-private" style="display: table;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -71,6 +72,9 @@
                                 <tbody>
                                         <div class="row">
                                             <div class="col">
+                                                <div class="form-group col-md-4">
+                                                    <x-form.input type="search" name="name-private" class="name-search" data-table='private' label="اسم الموظف" />
+                                                </div>
                                             </div>
                                             <div class="col-auto">
                                                 {{-- @can('preparation', 'App\\Models\User') --}}
@@ -115,14 +119,13 @@
                         </div>
                         <div class="col-auto">
                             <span class="btn btn-primary "> عدد الموظفين : {{$employees_riyadh->count()}}</span>
-
                         </div>
                     </div>
                     <div class="card shadow">
                         <form action="{{route('specific_salaries.riyadhCreate')}}" method="post">
                             @csrf
                         <div class="card-body">
-                            <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1" style="display: table;">
+                            <table class="table table-bordered table-hover mb-0 sticky" id="table-riyadh" style="display: table;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -134,7 +137,9 @@
                                 <tbody>
                                         <div class="row">
                                             <div class="col">
-
+                                                <div class="form-group col-md-4">
+                                                    <x-form.input type="search" name="name-riyadh" class="name-search" data-table='riyadh' label="اسم الموظف" />
+                                                </div>
                                             </div>
                                             <div class="col-auto">
                                                 {{-- @can('preparation', 'App\\Models\User') --}}
@@ -185,7 +190,7 @@
                         <form action="{{route('specific_salaries.fasleCreate')}}" method="post">
                             @csrf
                         <div class="card-body">
-                            <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1" style="display: table;">
+                            <table class="table table-bordered table-hover mb-0 sticky" id="table-fasle" style="display: table;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -197,7 +202,9 @@
                                 <tbody>
                                         <div class="row">
                                             <div class="col">
-
+                                                <div class="form-group col-md-4">
+                                                    <x-form.input type="search" name="name-fasle" class="name-search" data-table='fasle' label="اسم الموظف" />
+                                                </div>
                                             </div>
                                             <div class="col-auto">
                                                 {{-- @can('preparation', 'App\\Models\User') --}}
@@ -248,7 +255,7 @@
                         <form action="{{route('specific_salaries.interimCreate')}}" method="post">
                             @csrf
                         <div class="card-body">
-                            <table class="table table-bordered table-hover mb-0 datatables" id="dataTable-1" style="display: table;">
+                            <table class="table table-bordered table-hover mb-0 sticky" id="table-interim" style="display: table;">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -261,6 +268,9 @@
 
                                         <div class="row">
                                             <div class="col">
+                                                <div class="form-group col-md-4">
+                                                    <x-form.input type="search" name="name-interim" class="name-search" data-table='interim' label="اسم الموظف" />
+                                                </div>
                                             </div>
                                             <div class="col-auto">
                                                 {{-- @can('preparation', 'App\\Models\User') --}}
@@ -312,7 +322,7 @@
                         <form action="{{route('specific_salaries.dailyCreate')}}" method="post">
                             @csrf
                         <div class="card-body">
-                            <table class="datatables table table-bordered table-hover mb-0 " style="box-sizing: border-box; display: table" id="dataTable-1" >
+                            <table class="sticky table table-bordered table-hover mb-0" style="box-sizing: border-box; display: table" id="table-daily" >
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -326,7 +336,9 @@
                                 <tbody>
                                         <div class="row">
                                             <div class="col">
-
+                                                <div class="form-group col-md-4">
+                                                    <x-form.input type="search" name="name-daily" class="name-search" data-table='daily' label="اسم الموظف" />
+                                                </div>
                                             </div>
                                             <div class="col-auto">
                                                 {{-- @can('preparation', 'App\\Models\User') --}}
@@ -376,17 +388,23 @@
         </div>
     </div>
     @push('scripts')
-    <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('assets/js/dataTables.bootstrap4.min.js')}}"></script>
-    <script>
-        $('#dataTable-1').DataTable(
-        {
-            autoWidth: true,
-            "lengthMenu": [
-            [-1],
-            ["جميع"]
-            ]
-        });
-    </script>
+        <script>
+            $(document).ready(function(){
+                // table-private , data-table="private"
+                $('.name-search').on('input', function () {
+                    let searchTerm = $(this).val().toLowerCase();
+                    let table = $(this).data('table');
+                    $('#table-'+table +' tbody tr').each(function() {
+                        let employeeName = $(this).find('td').eq(1).text().toLowerCase(); // البحث في العمود الأول
+                        if (employeeName.indexOf(searchTerm) === -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+
+            });
+        </script>
     @endpush
 </x-front-layout>

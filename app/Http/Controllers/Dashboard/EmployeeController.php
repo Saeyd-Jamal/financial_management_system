@@ -16,7 +16,9 @@ use App\Models\ReceivablesLoans;
 use App\Models\Bank;
 use App\Models\BanksEmployees;
 use App\Models\Currency;
+use App\Models\Exchange;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -101,41 +103,48 @@ class EmployeeController extends Controller
     public function store(EmployeeRequset $request)
     {
         $this->authorize('create', Employee::class);
-        $employee = Employee::create($request->all());
-        $request->merge([
-            'employee_id' => $employee->id,
-            'default' => 1
-        ]);
-        WorkData::create($request->all());
-
-
-        ReceivablesLoans::create($request->all());
-
-
-        if($request->account_number != '' && $request->account_number != null){
-            BanksEmployees::create($request->all());
-        }
-
-        // الراتب المحدد
-        if($request->type_appointment == 'يومي'){
-            SpecificSalary::updateOrCreate([
-                'employee_id'=> $employee->id,
-                'month' => '0000-00',
-                ],[
-                'number_of_days' => $request->number_of_days,
-                'today_price' => $request->today_price,
-                'salary' => $request->specific_salary
+        DB::beginTransaction();
+        try{
+            $employee = Employee::create($request->all());
+            $request->merge([
+                'employee_id' => $employee->id,
+                'default' => 1
             ]);
+            WorkData::create($request->all());
+
+            ReceivablesLoans::create($request->all());
+
+            if($request->account_number != '' && $request->account_number != null){
+                BanksEmployees::create($request->all());
+            }
+
+            // الراتب المحدد
+            if($request->type_appointment == 'يومي'){
+                SpecificSalary::updateOrCreate([
+                    'employee_id'=> $employee->id,
+                    'month' => '0000-00',
+                    ],[
+                    'number_of_days' => $request->number_of_days,
+                    'today_price' => $request->today_price,
+                    'salary' => $request->specific_salary
+                ]);
+            }
+            if(in_array($request->type_appointment,['خاص','مؤقت','فصلي','رياض'])){
+                SpecificSalary::updateOrCreate([
+                    'employee_id'=> $employee->id,
+                    'month' => '0000-00',
+                    ],[
+                    'salary' => $request->specific_salary
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('employees.index')->with('success', 'تم اضافة الموظف الجديد');
+        }catch(\Exception $e){
+            DB::rollBack();
+            return redirect()->route('employees.index')->with('danger', $e->getMessage());
         }
-        if(in_array($request->type_appointment,['خاص','مؤقت','فصلي','رياض'])){
-            SpecificSalary::updateOrCreate([
-                'employee_id'=> $employee->id,
-                'month' => '0000-00',
-                ],[
-                'salary' => $request->specific_salary
-            ]);
-        }
-        return redirect()->route('employees.index')->with('success', 'تم اضافة الموظف الجديد');
+
     }
 
     /**
@@ -188,6 +197,9 @@ class EmployeeController extends Controller
                     ->get();
 
 
+        $exchanges = Exchange::where('employee_id', $employee->id)
+                ->get();
+
         $btn_label = "تعديل";
         $workData = WorkData::where('employee_id', $employee->id)->first();
         if ($workData == null) {
@@ -208,7 +220,9 @@ class EmployeeController extends Controller
         }
 
 
-        return view('dashboard.employees.edit', compact('employee','workData','totals','banks','bank_employee','salaries','USD','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
+
+
+        return view('dashboard.employees.edit', compact('employee','workData','totals','banks','bank_employee','salaries','USD','exchanges','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
     }
 
     /**
@@ -227,52 +241,58 @@ class EmployeeController extends Controller
         //     'unique' => ' هذا الحقل (:attribute) مكرر يرجى التحقق'
         // ]);
 
-        $employee->update($request->all());
+        DB::beginTransaction();
+        try{
+            $employee->update($request->all());
 
 
-        $request->merge([
-            'employee_id' => $employee->id,
-            'default' => 1
-        ]);
+            $request->merge([
+                'employee_id' => $employee->id,
+                'default' => 1
+            ]);
 
-        WorkData::updateOrCreate([
-            'employee_id' => $employee->id
-        ], $request->all());
-
-            ReceivablesLoans::updateOrCreate([
+            WorkData::updateOrCreate([
                 'employee_id' => $employee->id
             ], $request->all());
 
-        if($request->account_number != '' && $request->account_number != null){
+                ReceivablesLoans::updateOrCreate([
+                    'employee_id' => $employee->id
+                ], $request->all());
 
-            BanksEmployees::updateOrCreate([
-                'employee_id' => $employee->id
-            ], $request->all());
+            if($request->account_number != '' && $request->account_number != null){
+
+                BanksEmployees::updateOrCreate([
+                    'employee_id' => $employee->id
+                ], $request->all());
+            }
+            // الراتب المحدد
+            if($request->type_appointment == 'يومي'){
+                SpecificSalary::updateOrCreate([
+                    'employee_id'=> $employee->id,
+                    'month' => '0000-00',
+                    ],[
+                    'number_of_days' => $request->number_of_days,
+                    'today_price' => $request->today_price,
+                    'salary' => $request->specific_salary
+                ]);
+            }
+            if(in_array($request->type_appointment,['خاص','مؤقت','فصلي','رياض'])){
+                SpecificSalary::updateOrCreate([
+                    'employee_id'=> $employee->id,
+                    'month' => '0000-00',
+                    ],[
+                    'salary' => $request->specific_salary
+                ]);
+            }
+            $salary = Salary::where('employee_id',$employee->id)->where('month',Carbon::now()->format('Y-m'))->first();
+            if($salary != null){
+                AddSalaryEmployee::addSalary($employee);
+            }
+            DB::commit();
+            return redirect()->route('employees.index')->with('success', 'تم تحديث بيانات الموظف المختار');
+        }catch(\Exception $e){
+            DB::rollBack();
         }
-        // الراتب المحدد
-        if($request->type_appointment == 'يومي'){
-            SpecificSalary::updateOrCreate([
-                'employee_id'=> $employee->id,
-                'month' => '0000-00',
-                ],[
-                'number_of_days' => $request->number_of_days,
-                'today_price' => $request->today_price,
-                'salary' => $request->specific_salary
-            ]);
-        }
-        if(in_array($request->type_appointment,['خاص','مؤقت','فصلي','رياض'])){
-            SpecificSalary::updateOrCreate([
-                'employee_id'=> $employee->id,
-                'month' => '0000-00',
-                ],[
-                'salary' => $request->specific_salary
-            ]);
-        }
-        $salary = Salary::where('employee_id',$employee->id)->where('month',Carbon::now()->format('Y-m'))->first();
-        if($salary != null){
-            AddSalaryEmployee::addSalary($employee);
-        }
-        return redirect()->route('employees.index')->with('success', 'تم تحديث بيانات الموظف المختار');
     }
     /**
      * Remove the specified resource from storage.
@@ -329,7 +349,7 @@ class EmployeeController extends Controller
             'payroll_statement'
         ];
 
-        $employees = new Employee();
+        $employees = Employee::query();
         foreach($filedsEmpolyees as $filed){
             $valInput = $request->post($filed);
             if($valInput != null || $valInput != ""){
@@ -349,7 +369,7 @@ class EmployeeController extends Controller
                 });
             }
         }
-        return $employees->get();
+        return $employees->with(['workData'])->get();
     }
 
     // Execl
@@ -550,5 +570,21 @@ class EmployeeController extends Controller
         $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  session('employees')]);
         session()->remove('employees');
         return $pdf->stream();
+    }
+
+    public function uplodeImage(Request $request){
+        dd($request->all());
+        $file = $request->file('file'); // احصل على الملف المرفوع
+
+        if ($file) {
+            // قم بتخزين الملف في المجلد الذي ترغب فيه
+            // $filePath = $file->store('uploads', 'public');
+
+            // إذا أردت إرجاع رابط الوصول للملف
+            // return response()->json(['filePath' => asset('storage/' . $filePath)], 200);
+            return response()->json(['filePath'], 200);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
     }
 }

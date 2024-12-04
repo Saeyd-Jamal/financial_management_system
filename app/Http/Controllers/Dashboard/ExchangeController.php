@@ -67,7 +67,7 @@ class ExchangeController extends Controller
         }
 
 
-        return redirect()->route('exchanges.index')->with('success', 'تم اضافة صرف جديد');
+        return redirect()->back()->with('success', 'تم اضافة صرف جديد');
     }
 
     /**

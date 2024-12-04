@@ -1,4 +1,21 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white flex-row border-bottom shadow">
+<style>
+    .navbar-light .navbar-nav .nav-item > .nav-link{
+        color: #fff;
+        transition: all 0.3s ease-in-out;
+    }
+    .navbar-light .navbar-nav .nav-item > .nav-link:hover {
+        color: #fff;
+        background-color: #303030 !important;
+    }
+    .dropdown-menu .nav-link,.dropdown-menu-right .nav-item > .nav-link{
+        color: #000 !important;
+    }
+    .dropdown-menu .nav-link:hover{
+        color: #fff !important;
+        background-color: #303030 !important;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark flex-row border-bottom shadow">
     <div class="container-fluid">
         <a class="navbar-brand mx-lg-1 mr-0"  href="{{ route('home') }}">
             <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 15%">
@@ -6,12 +23,19 @@
         <button class="navbar-toggler mt-2 mr-auto toggle-sidebar text-muted">
             <i class="fe fe-menu navbar-toggler-icon"></i>
         </button>
-        <div class="navbar-slide bg-white ml-lg-4" id="navbarSupportedContent">
+        <div class="navbar-slide bg-dark ml-lg-4" id="navbarSupportedContent">
             <a href="#" class="btn toggle-sidebar d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
                 <i class="fe fe-x"><span class="sr-only"></span></i>
             </a>
             <ul class="navbar-nav mr-auto">
-
+                {{-- @can('view','App\\Models\Employee') --}}
+                    {{-- <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="{{route('control-panel.index')}}">
+                            <i class="fe fe-home fe-16"></i>
+                            <span class="ml-3 item-text">لوحة التحكم</span>
+                        </a>
+                    </li> --}}
+                {{-- @endcan --}}
                 @can('view','App\\Models\Employee')
                     <li class="nav-item">
                         <a class="nav-link d-flex align-items-center" href="{{route('employees.index')}}">
@@ -82,26 +106,11 @@
                 </li>
             </ul>
         </div>
-        {{-- <form class="form-inline ml-md-auto d-none d-lg-flex searchform text-muted">
-            <input class="form-control mr-sm-2 bg-transparent border-0 pl-4 text-muted" type="search"
-                placeholder="Type something..." aria-label="Search">
-        </form> --}}
         <ul class="navbar-nav d-flex flex-row">
-            <li class="nav-item">
+            {{ $extra_nav ?? ''}}
+            {{-- <li class="nav-item">
                 <a class="nav-link text-muted my-2" href="./#" id="modeSwitcher" data-mode="light">
                     <i class="fe fe-sun fe-16"></i>
-                </a>
-            </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link text-muted my-2" href="./#" data-toggle="modal"
-                    data-target=".modal-shortcut">
-                    <i class="fe fe-grid fe-16"></i>
-                </a>
-            </li> --}}
-            {{-- <li class="nav-item nav-notif">
-                <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
-                    <i class="fe fe-bell fe-16"></i>
-                    <span class="dot dot-md bg-success"></span>
                 </a>
             </li> --}}
             <li class="nav-item dropdown ml-lg-0">
@@ -113,13 +122,12 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                     <li class="nav-item">
-                        <a class="nav-link pl-3" href="#">الملف الشخصي</a>
+                        {{-- <a class="nav-link pl-3" href="#">الملف الشخصي</a> --}}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link pl-3" href="#">Activities</a>
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
-                            <button type="submit" class="nav-link pl-3">تسجيل خروج</button>
+                            <button type="submit" class="nav-link pl-3 btn btn-nav">تسجيل خروج</button>
                         </form>
                     </li>
                 </ul>
