@@ -46,6 +46,12 @@
             }
         </style>
     @endpush
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="alert alert-danger alert-dismissible fade show" style="display: none;" id="alerts">
+            </div>
+        </div> <!-- /. col -->
+    </div>
     <div class="row align-items-center mb-2">
         <div class="col" style="position: relative">
             <h1 class="mb-2 page-title">إنشاء موظف جديد</h1>

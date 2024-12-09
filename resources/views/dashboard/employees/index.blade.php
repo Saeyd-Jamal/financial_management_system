@@ -231,6 +231,9 @@
                             <table class="table table-bordered table-hover" id="dataTable-1" style="display: table;">
                                 <thead>
                                     <tr>
+                                        @can('edit', 'App\\Models\Employee')
+                                        <th></th>
+                                        @endcan
                                         <th>#</th>
                                         <th>الاسم</th>
                                         <th>رقم الهوية</th>
@@ -247,12 +250,21 @@
                                         <th>رقم الهاتف</th>
                                         <th>المنطقة</th>
                                         <th>المؤهل العلمي</th>
-                                        <th>الحدث</th>
+                                        @can('delete', 'App\\Models\Employee')
+                                        <th></th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody id="table_employees">
                                     @foreach ($employees as $employee)
                                         <tr>
+                                            @can('edit', 'App\\Models\Employee')
+                                            <td>
+                                                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-sm btn-icon text-primary">
+                                                    <i class="fe fe-edit"></i>
+                                                </a>
+                                            </td>
+                                            @endcan
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $employee->name }}</td>
                                             <td>{{ $employee->employee_id }}</td>
@@ -269,32 +281,20 @@
                                             <td>{{ $employee->phone_number }}</td>
                                             <td>{{ $employee->area }}</td>
                                             <td>{{ $employee->scientific_qualification }}</td>
-                                            <td><button class="btn btn-sm dropdown-toggle more-horizontal"
-                                                    type="button" data-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                    <span class="text-muted sr-only">Action</span>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    {{-- <button class="dropdown-item showEmployee"
-                                                        data-id="{{ $employee->id }}"
-                                                        style="margin: 0.5rem -0.75rem; text-align: right;">عرض</button> --}}
-                                                    @can('edit', 'App\\Models\Employee')
-                                                        <a class="dropdown-item"
-                                                            style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                            href="{{ route('employees.edit', $employee->id) }}">تعديل</a>
-                                                    @endcan
-                                                    @can('delete', 'App\\Models\Employee')
-                                                        <form action="{{ route('employees.destroy', $employee->id) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="dropdown-item"
-                                                                style="margin: 0.5rem -0.75rem; text-align: right;"
-                                                                href="#">حذف</button>
-                                                        </form>
-                                                    @endcan
-                                                </div>
+                                            @can('delete', 'App\\Models\Employee')
+                                            <td>
+                                                <form id="delete_form_{{ $employee->id }}" action="{{ route('employees.destroy', $employee->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="button" class="btn btn-sm btn-icon text-danger delete_row"
+                                                        style="margin: 0.5rem -0.75rem; text-align: right;"
+                                                        href="#" data-id="{{ $employee->id }}">
+                                                        <i class="fe fe-trash-2"></i>
+                                                    </button>
+                                                </form>
                                             </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -316,5 +316,15 @@
         </script>
         <script src="{{ asset('js/getShowEmployee.js') }}"></script>
         <script src="{{ asset('js/filterEmployees.js') }}"></script>
+        <script>
+            $(document).ready(function() {
+                $('.delete_row').on('click', function(e) {
+                    let id = $(this).data('id');
+                    if (confirm('هل أنت متأكد من حذف العنصر؟')) {
+                        $('#delete_form_' + id).submit();
+                    }
+                })
+            })
+        </script>
     @endpush
 </x-front-layout>

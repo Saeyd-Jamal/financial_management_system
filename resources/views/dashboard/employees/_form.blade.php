@@ -430,7 +430,7 @@
                 </select>
             </div>
             <div class="form-group p-3 col-3">
-                <x-form.input minlength="9" maxlength="9" label="رقم الحساب" :value="$bank_employee->account_number"
+                <x-form.input maxlength="9" label="رقم الحساب" :value="$bank_employee->account_number"
                     name="account_number" placeholder="4000000" required />
             </div>
         </div>
@@ -719,15 +719,10 @@
                     name: {
                         required: true,
                         maxlength: 255,
-                        string: true
-                    },
-                    email: {
-                        email: true
                     }
                 },
                 messages: {
                     name: "يرجى إدخال اسم المستخدم",
-                    email: "يرجى إدخال بريد إلكتروني صالح"
                 }
             });
 
@@ -750,11 +745,10 @@
                 let isValid = true;
                 // تحقق من صحة النموذج
                 form.find('.tab-pane').each(function() {
-                    // if ($(this).hasClass('active')) {
-                    //     // التحقق من صحة الحقول في التاب الحالي فقط
-                    //     isValid = form.validate().form(); // تحقق من صحة النموذج
-                    // }
-                    isValid = true;
+                    if ($(this).hasClass('active')) {
+                        // التحقق من صحة الحقول في التاب الحالي فقط
+                        isValid = form.validate().form(); // تحقق من صحة النموذج
+                    }
                 });
 
                 // إذا كانت جميع الحقول صحيحة
@@ -769,9 +763,11 @@
                     // تغيير محتوى التاب الحالي
                     $('.tab-pane').removeClass('active fade').addClass('fade');
                     $('#menu' + tabIndex).removeClass('fade').addClass('active');
+                    $('#alerts').slideUp();
                 } else {
                     // إذا كانت هناك أخطاء، لا تواصل
-                    alert("يرجى تصحيح الأخطاء في النموذج قبل المتابعة.");
+                    $('#alerts').slideDown();
+                    $('#alerts').text("يرجى تصحيح الأخطاء في النموذج قبل المتابعة.");
                 }
             });
         });
