@@ -1,6 +1,6 @@
 <x-front-layout>
     @push('styles')
-    <link rel="stylesheet" href="css/select2.css">
+    <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
     @endpush
     <div class="row align-items-center mb-2">
         <div class="col">
@@ -161,8 +161,8 @@
                         <optgroup label="كشوفات لموظف معين">
                             <option value="employee_accounts">كشف الحساب</option>
                             <option value="employee_salaries">كشف الرواتب للموظف</option>
-                            <option value="employee_receivables_savings">كشف المستحقات والإدخارات</option>
-                            <option value="employee_loans">كشف القروض</option>
+                            {{-- <option value="employee_receivables_savings">كشف المستحقات والإدخارات</option> --}}
+                            {{-- <option value="employee_loans">كشف القروض</option> --}}
                         </optgroup>
                     </select>
                 </div>
@@ -266,11 +266,11 @@
     @push('scripts')
     <script>
         const csrf_token = "{{csrf_token()}}";
-        const app_link = "{{config('app.url')}}";
+        const app_link = "{{config('app.url')}}/";
     </script>
     <script src="{{asset('js/report.js')}}"></script>
     <script src="{{ asset('js/getEmployee.js') }}"></script>
-    <script src='js/select2.min.js'></script>
+    <script src='{{ asset('js/select2.min.js') }}'></script>
     <script>
         $('.select2-multi').select2(
         {

@@ -93,7 +93,7 @@
     @push('scripts')
     <script>
         $(document).ready(function(){
-            const app_link = "{{config('app.url')}}";
+            const app_link = "{{config('app.url')}}/";
             $('#month').on('input', function () {
                 let month = $('#month').val();
                 $.ajax({

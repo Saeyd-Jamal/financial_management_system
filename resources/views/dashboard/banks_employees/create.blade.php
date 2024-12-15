@@ -127,7 +127,7 @@
     @push('scripts')
         <script>
             const csrf_token = "{{csrf_token()}}";
-            const app_link = "{{config('app.url')}}";
+            const app_link = "{{config('app.url')}}/";
         </script>
         <script src="{{ asset('js/getEmployee.js') }}"></script>
     @endpush

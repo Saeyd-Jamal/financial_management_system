@@ -297,7 +297,7 @@
     <script src="{{asset('assets/js/ajax.min.js')}}"></script>
     <script>
         const csrf_token = "{{csrf_token()}}";
-        const app_link = "{{config('app.url')}}";
+        const app_link = "{{config('app.url')}}/";
     </script>
     <script src="{{asset('js/getShowSalaryScales.js')}}"></script>
 @endpush

@@ -60,7 +60,7 @@
                                     @foreach($totals as $total)
                                     <tr class="total_select" data-id="{{$total->id}}">
                                         <td>{{$loop->iteration}}</td>
-                                        <td  class="text-left">{{$total->employee->name}}</td>
+                                        <td  class="text-left">{{$total->employee->name ?? '--'}}</td>
                                         <td>{{$total->total_receivables_view}}</td>
                                         <td>{{$total->total_savings_view}}</td>
                                         <td>{{$total->total_association_loan_view}}</td>
@@ -223,7 +223,7 @@
         <script src="{{asset('assets/js/ajax.min.js')}}"></script>
         <script>
             const csrf_token = "{{csrf_token()}}";
-            const app_link = "{{config('app.url')}}";
+            const app_link = "{{config('app.url')}}/";
         </script>
         @can('create', 'App\\Models\ReceivablesLoans')
             <script src="{{ asset('js/getEmployee.js') }}"></script>

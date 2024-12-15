@@ -710,7 +710,7 @@
     <script src="{{ asset('js/formEmployee.js') }}"></script>
     <script src="{{ asset('js/exchange.js') }}"></script>
     <!-- Your custom script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js"></script>
+    <script src="{{asset('js/jquery.validate.min.js')}}"></script>
     <script>
         $(document).ready(function() {
             $.validator.messages.required = "هذا الحقل مطلوب";
