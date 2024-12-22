@@ -1,43 +1,10 @@
 <!-- Nav tabs -->
 @push('styles')
-    <style>
-        .drop-container {
-            position: relative;
-            display: flex;
-            gap: 10px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px dashed #555;
-            color: #444;
-            cursor: pointer;
-            transition: background .2s ease-in-out, border .2s ease-in-out;
-        }
-
-        .drop-container:hover {
-            background: #eee;
-            border-color: #111;
-        }
-
-        .drop-container:hover .drop-title {
-            color: #222;
-        }
-
-        .drop-title {
-            color: #444;
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            transition: color .2s ease-in-out;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('css/employeeForm.css')}}">
 @endpush
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#menu1" id="tab1">
+        <a class="nav-link active" data-toggle="tab" href="#menu1" id="tab1" disabled>
             البيانات الشخصية
         </a>
     </li>
@@ -187,15 +154,13 @@
             </div>
 
             {{-- حقول خاصة بالموظف الثابت --}}
-            <div class="row" id="proven"
-                @if ($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
+            <div class="row" id="proven" @if ($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
                 <div class="form-group p-3 col-3">
-                    <x-form.input type="number" label="درجة العلاوة من السلم" min="0" max="40"
-                        :value="$workData->allowance" name="allowance" placeholder="0" />
+                    <x-form.input type="number" class="required" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" />
                 </div>
                 <div class="form-group p-3 col-3">
                     <label for="grade">الدرجة في سلم الرواتب</label>
-                    <select class="custom-select" id="grade" name="grade" required>
+                    <select class="custom-select required" id="grade" name="grade">
                         <option value="" disabled>عرض القيم المتوفرة</option>
                         <option value="10" @selected($workData->grade == 10)>10</option>
                         <option value="9" @selected($workData->grade == 9)>9</option>
@@ -213,7 +178,7 @@
                     </select>
                 </div>
                 <div class="form-group p-3 col-3">
-                    <x-form.input type="number" label="نسبة علاوة درجة" step="0.01" :value="$workData->grade_allowance_ratio"
+                    <x-form.input type="number" class="required" label="نسبة علاوة درجة" step="0.01" :value="$workData->grade_allowance_ratio"
                         name="grade_allowance_ratio" placeholder="0.55" />
                 </div>
                 <div class="form-group p-3 col-3">
@@ -222,7 +187,7 @@
                 </div>
                 <div class="form-group p-3 col-3">
                     <label for="salary_category">فئة الراتب</label>
-                    <select class="custom-select" id="salary_category" name="salary_category">
+                    <select class="custom-select required" id="salary_category" name="salary_category">
                         <option value="" disabled>عرض القيم المتوفرة</option>
                         <option value="1" @selected($workData->salary_category == 1)>الأولى</option>
                         <option value="2" @selected($workData->salary_category == 2)>الثانية</option>
@@ -234,7 +199,7 @@
                 <div class="form-group p-3 col-3">
                     <label for="installation_new">هل هو مثبت جديد</label>
                     <select class="custom-select" id="installation_new" name="installation_new">
-                        <option value="null">عرض القيم المتوفرة</option>
+                        <option value="" @selected($workData->installation_new == null)>عرض القيم المتوفرة</option>
                         <option value="مثبت جديد" @selected($workData->installation_new == 'مثبت جديد')>مثبت جديد (العلاوة * 10)</option>
                         <option value="مثبت جديد2" @selected($workData->installation_new == 'مثبت جديد2')>مثبت جديد (العلاوة * 20)</option>
                     </select>
@@ -421,8 +386,8 @@
         <div class="row">
             <div class="form-group p-3 col-3">
                 <label for="bank_id">البنك - الفرع</label>
-                <select class="custom-select" id="bank_id" name="bank_id" required>
-                    <option @selected($bank_employee->bank_id == null)>عرض القيم المتوفرة</option>
+                <select class="custom-select" id="bank_id" name="bank_id">
+                    <option value="" @selected($bank_employee->bank_id == null)>عرض القيم المتوفرة</option>
                     @foreach ($banks as $bank)
                         <option value="{{ $bank['id'] }}" @selected($bank_employee->bank_id == $bank['id'])>
                             {{ $bank['name'] . ' - ' . $bank['branch'] }}</option>
@@ -431,7 +396,7 @@
             </div>
             <div class="form-group p-3 col-3">
                 <x-form.input maxlength="9" label="رقم الحساب" :value="$bank_employee->account_number"
-                    name="account_number" placeholder="4000000" required />
+                    name="account_number" placeholder="4000000" />
             </div>
         </div>
         <div class="row justify-content-end align-items-center mb-2">
@@ -673,103 +638,11 @@
 
 @push('scripts')
     <script>
-        let number_of_days = 0;
-        let today_price = 0;
-        $('.daily_fields').on('input', function() {
-            let name = $(this).data("name");
-            if (name == 'number_of_days') {
-                number_of_days = $(this).val();
-            }
-            if (name == 'today_price') {
-                today_price = $(this).val();
-            }
-            let total = number_of_days * today_price;
-            $("input[name='specificSalary']").val(total)
-        });
-    </script>
-    <script>
-        $("input[name='date_of_birth']").on("input", function() {
-            let date_of_birth = $("input[name='date_of_birth']").val();
-            let thisYear = new Date().getFullYear();
-            let year_of_birth = moment(date_of_birth).format('YYYY');
-            $("input[name='age']").val(thisYear - year_of_birth);
-            let futureDate = moment(date_of_birth, "YYYY-MM-DD").add(60, "years").format("YYYY-MM-DD");
-            $("input[name='date_retirement']").val(futureDate);
-        });
-        $("input[name='date_installation']").on("input", function() {
-            let thisYear = new Date().getFullYear();
-            let date_installation = moment($("input[name='date_installation']").val()).format('YYYY');
-            $("input[name='years_service']").val(thisYear - date_installation)
-        });
-    </script>
-    <script>
         const csrf_token = "{{ csrf_token() }}";
         const app_link = "{{ config('app.url') }}";
     </script>
-
-    <script src="{{ asset('js/formEmployee.js') }}"></script>
-    <script src="{{ asset('js/exchange.js') }}"></script>
     <!-- Your custom script -->
     <script src="{{asset('js/jquery.validate.min.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-            $.validator.messages.required = "هذا الحقل مطلوب";
-            $("#myForm").validate({
-                rules: {
-                    name: {
-                        required: true,
-                        maxlength: 255,
-                    }
-                },
-                messages: {
-                    name: "يرجى إدخال اسم المستخدم",
-                }
-            });
-
-            $('.prev').click(function() {
-                let tabIndex = $(this).data('num') - 1;
-                $('.nav-link').removeClass('active');
-
-                $('#tab' + (tabIndex)).addClass('active');
-
-                $('.tab-pane').removeClass('active fade');
-                $('.tab-pane').addClass('fade');
-
-                $('#menu' + (tabIndex)).removeClass('fade');
-                $('#menu' + (tabIndex)).addClass('active');
-            });
-            $('.next').click(function() {
-                // التحقق من صحة الحقول في التاب الحالي باستخدام jQuery Validation
-                let currentTab = $(this).closest('.tab-pane');
-                let form = $('#myForm'); // اختر النموذج بشكل عام
-                let isValid = true;
-                // تحقق من صحة النموذج
-                form.find('.tab-pane').each(function() {
-                    if ($(this).hasClass('active')) {
-                        // التحقق من صحة الحقول في التاب الحالي فقط
-                        isValid = form.validate().form(); // تحقق من صحة النموذج
-                    }
-                });
-
-                // إذا كانت جميع الحقول صحيحة
-                if (isValid) {
-                    // الانتقال إلى التاب التالي
-                    let tabIndex = $(this).data('num') + 1;
-
-                    // إزالة التفعيل من التابات السابقة
-                    $('.nav-link').removeClass('active');
-                    $('#tab' + tabIndex).addClass('active');
-
-                    // تغيير محتوى التاب الحالي
-                    $('.tab-pane').removeClass('active fade').addClass('fade');
-                    $('#menu' + tabIndex).removeClass('fade').addClass('active');
-                    $('#alerts').slideUp();
-                } else {
-                    // إذا كانت هناك أخطاء، لا تواصل
-                    $('#alerts').slideDown();
-                    $('#alerts').text("يرجى تصحيح الأخطاء في النموذج قبل المتابعة.");
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('js/formEmployee.js') }}"></script>
+    <script src="{{ asset('js/exchange.js') }}"></script>
 @endpush

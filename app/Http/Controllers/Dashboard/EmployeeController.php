@@ -269,22 +269,31 @@ class EmployeeController extends Controller
         DB::beginTransaction();
         try{
             $employee->update($request->all());
-
             $request->merge([
                 'employee_id' => $employee->id,
                 'default' => 1
             ]);
-
+            $workData = $request->all();
+            if($request->type_appointment != 'مثبت'){
+                $workData['allowance'] = null;
+                $workData['grade'] = null;
+                $workData['grade_allowance_ratio'] = null;
+                $workData['percentage_allowance'] = null;
+                $workData['salary_category'] = null;
+            }
+            if($request->type_appointment != 'يومي'){
+                $workData['number_of_days'] = null;
+                $workData['today_price'] = null;
+            }
             WorkData::updateOrCreate([
                 'employee_id' => $employee->id
-            ], $request->all());
+            ], $workData);
 
             ReceivablesLoans::updateOrCreate([
                 'employee_id' => $employee->id
             ], $request->all());
 
             if($request->account_number != '' && $request->account_number != null){
-
                 BanksEmployees::updateOrCreate([
                     'employee_id' => $employee->id
                 ], $request->all());
