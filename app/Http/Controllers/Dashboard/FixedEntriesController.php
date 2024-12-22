@@ -21,7 +21,9 @@ use Yajra\DataTables\Facades\DataTables;
 class FixedEntriesController extends Controller
 {
     use AuthorizesRequests;
+    public $monthNow;
     public function __construct(){
+        $this->monthNow = Carbon::now()->format('Y-m');
     }
     /**
      * Display a listing of the resource.
@@ -144,24 +146,24 @@ class FixedEntriesController extends Controller
                 'employee_id' => $id,
                 'month' => $month
             ],[
-                'administrative_allowance' => $request['administrative_allowance-'.$i],
-                'scientific_qualification_allowance' => $request['scientific_qualification_allowance-'.$i],
-                'transport' =>  $request['transport-'.$i],
-                'extra_allowance' =>  $request['extra_allowance-'.$i],
-                'salary_allowance' =>  $request['salary_allowance-'.$i],
-                'ex_addition' => $request['ex_addition-'.$i],
-                'mobile_allowance' => $request['mobile_allowance-'.$i],
-                'health_insurance' => $request['health_insurance-'.$i],
-                'f_Oredo' =>  $request['f_Oredo-'.$i],
-                'association_loan' => $request['association_loan-'.$i],
-                'tuition_fees' => $request['tuition_fees-'.$i],
-                'voluntary_contributions' => $request['voluntary_contributions-'.$i],
-                'savings_loan' => $request['savings_loan-'.$i],
-                'shekel_loan' =>  $request['shekel_loan-'.$i],
-                'paradise_discount' => $request['paradise_discount-'.$i],
-                'other_discounts' => $request['other_discounts-'.$i],
-                'proportion_voluntary' => $request['proportion_voluntary-'.$i],
-                'savings_rate' => $request['savings_rate-'.$i],
+                'administrative_allowance' => $request['administrative_allowance-'.$i] ?? 0,
+                'scientific_qualification_allowance' => $request['scientific_qualification_allowance-'.$i] ?? 0,
+                'transport' =>  $request['transport-'.$i] ?? 0,
+                'extra_allowance' =>  $request['extra_allowance-'.$i] ?? 0,
+                'salary_allowance' =>  $request['salary_allowance-'.$i] ?? 0,
+                'ex_addition' => $request['ex_addition-'.$i] ?? 0,
+                'mobile_allowance' => $request['mobile_allowance-'.$i] ?? 0,
+                'health_insurance' => $request['health_insurance-'.$i] ?? 0,
+                'f_Oredo' =>  $request['f_Oredo-'.$i] ?? 0,
+                'association_loan' => $request['association_loan-'.$i] ?? 0,
+                'tuition_fees' => $request['tuition_fees-'.$i] ?? 0,
+                'voluntary_contributions' => $request['voluntary_contributions-'.$i] ?? 0,
+                'savings_loan' => $request['savings_loan-'.$i] ?? 0,
+                'shekel_loan' =>  $request['shekel_loan-'.$i] ?? 0,
+                'paradise_discount' => $request['paradise_discount-'.$i] ?? 0,
+                'other_discounts' => $request['other_discounts-'.$i] ?? 0,
+                'proportion_voluntary' => $request['proportion_voluntary-'.$i] ?? 0,
+                'savings_rate' => $request['savings_rate-'.$i] ?? 0,
             ]);
         }
         $employee = Employee::findOrFail($id);
@@ -188,7 +190,7 @@ class FixedEntriesController extends Controller
 
     public function getData(Request $request){
         $id = $request->id;
-        $employee = Employee::with('workData')->findOrFail($id);
+        $employee = Employee::with(['workData','totals'])->findOrFail($id);
         return $employee;
     }
 }

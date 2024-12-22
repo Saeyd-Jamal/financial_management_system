@@ -7,11 +7,11 @@
                     <p class="card-text">هنا يتم عرض جدول سلم الرواتب المعتمد عليه</p>
                 </div>
                 <div class="col-auto">
-                    @can('create', 'App\\Models\SalaryScale')
+                    {{-- @can('create', 'App\\Models\SalaryScale')
                     <a type="button" class="btn btn-success text-white" data-toggle="modal" data-target="#createItem">
                         <i class="fe fe-plus f-16"></i>
                     </a>
-                    @endcan
+                    @endcan --}}
                     @can('edit', 'App\\Models\SalaryScale')
                     <a type="button" class="btn btn-info text-white" data-toggle="modal" data-target="#editItem">
                         <i class="fe fe-edit f-16"></i>

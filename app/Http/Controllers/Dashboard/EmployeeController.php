@@ -23,7 +23,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
-
+use Yajra\DataTables\Facades\DataTables;
 
 class EmployeeController extends Controller
 {
@@ -39,24 +39,50 @@ class EmployeeController extends Controller
     public function index()
     {
         $this->authorize('view', Employee::class);
-        $areas = Employee::select('area')->distinct()->pluck('area')->toArray();
-        $working_status = WorkData::select('working_status')->distinct()->pluck('working_status')->toArray();
-        $nature_work = WorkData::select('nature_work')->distinct()->pluck('nature_work')->toArray();
-        $type_appointment = WorkData::select('type_appointment')->distinct()->pluck('type_appointment')->toArray();
-        $field_action = WorkData::select('field_action')->distinct()->pluck('field_action')->toArray();
-        $matrimonial_status = Employee::select('matrimonial_status')->distinct()->pluck('matrimonial_status')->toArray();
-        $scientific_qualification = Employee::select('scientific_qualification')->distinct()->pluck('scientific_qualification')->toArray();
-        $state_effectiveness = WorkData::select('state_effectiveness')->distinct()->pluck('state_effectiveness')->toArray();
-        $association =  WorkData::select('association')->distinct()->pluck('association')->toArray();
-        $workplace = WorkData::select('workplace')->distinct()->pluck('workplace')->toArray();
-        $section = WorkData::select('section')->distinct()->pluck('section')->toArray();
-        $dependence = WorkData::select('dependence')->distinct()->pluck('dependence')->toArray();
-        $establishment = WorkData::select('establishment')->distinct()->pluck('establishment')->toArray();
-        $payroll_statement = WorkData::select('payroll_statement')->distinct()->pluck('payroll_statement')->toArray();
+        $request = request();
+        if($request->ajax()) {
+            $employees = Employee::with(['workData'])->get()->map(function ($employee) {
+                $employee->working_status = $employee->workData->working_status ?? '';
+                $employee->type_appointment = $employee->workData->type_appointment ?? '';
+                $employee->field_action = $employee->workData->field_action ?? '';
+                $employee->allowance = $employee->workData->allowance ?? '';
+                $employee->grade = $employee->workData->grade ?? '';
+                $employee->grade_allowance_ratio = $employee->workData->grade_allowance_ratio ?? '';
+                $employee->dual_function = $employee->workData->dual_function ?? '';
+                $employee->years_service = $employee->workData->years_service ?? '';
+                $employee->nature_work = $employee->workData->nature_work ?? '';
+                $employee->state_effectiveness = $employee->workData->state_effectiveness ?? '';
+                $employee->association = $employee->workData->association ?? '';
+                $employee->workplace = $employee->workData->workplace ?? '';
+                $employee->section = $employee->workData->section ?? '';
+                $employee->dependence = $employee->workData->dependence ?? '';
+                $employee->working_date = $employee->workData->working_date ?? '';
+                $employee->date_installation = $employee->workData->date_installation ?? '';
+                $employee->date_retirement = $employee->workData->date_retirement ?? '';
+                $employee->payroll_statement = $employee->workData->payroll_statement ?? '';
+                $employee->establishment = $employee->workData->establishment ?? '';
+                $employee->foundation_E = $employee->workData->foundation_E ?? '';
+                $employee->salary_category = $employee->workData->salary_category ?? '';
+                $employee->contract_type = $employee->workData->contract_type ?? '';
+                return $employee;
+            });
 
-        $employees = Employee::get();
+            // التصفية بناءً على التواريخ
+            if ($request->from_date != null && $request->to_date != null) {
+                $employees->whereBetween('date_of_birth', [$request->from_date, $request->to_date]);
+            }
+            return DataTables::of($employees)
+                    ->addIndexColumn()  // إضافة عمود الترقيم التلقائي
+                    ->addColumn('edit', function ($employee) {
+                        return $employee->id;
+                    })
+                    ->addColumn('delete', function ($employee) {
+                        return $employee->id;
+                    })
+                    ->make(true);
+        }
 
-        return view('dashboard.employees.index', compact('employees',"areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","payroll_statement"));
+        return view('dashboard.employees.index');
     }
 
     /**
@@ -240,11 +266,9 @@ class EmployeeController extends Controller
         // ],[
         //     'unique' => ' هذا الحقل (:attribute) مكرر يرجى التحقق'
         // ]);
-
         DB::beginTransaction();
         try{
             $employee->update($request->all());
-
 
             $request->merge([
                 'employee_id' => $employee->id,
@@ -255,9 +279,9 @@ class EmployeeController extends Controller
                 'employee_id' => $employee->id
             ], $request->all());
 
-                ReceivablesLoans::updateOrCreate([
-                    'employee_id' => $employee->id
-                ], $request->all());
+            ReceivablesLoans::updateOrCreate([
+                'employee_id' => $employee->id
+            ], $request->all());
 
             if($request->account_number != '' && $request->account_number != null){
 
@@ -284,6 +308,7 @@ class EmployeeController extends Controller
                     'salary' => $request->specific_salary
                 ]);
             }
+
             $salary = Salary::where('employee_id',$employee->id)->where('month',Carbon::now()->format('Y-m'))->first();
             if($salary != null){
                 AddSalaryEmployee::addSalary($employee);
@@ -292,6 +317,7 @@ class EmployeeController extends Controller
             return redirect()->route('employees.index')->with('success', 'تم تحديث بيانات الموظف المختار');
         }catch(\Exception $e){
             DB::rollBack();
+            throw $e;
         }
     }
     /**

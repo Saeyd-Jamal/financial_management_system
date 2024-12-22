@@ -31,6 +31,23 @@
             </div>
         </div> <!-- Bordered table -->
     </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="h5">إجمالي قرض الجمعية : </span>
+                <span id="association_loan_total" class="btn btn-warning h4 text-white mx-2"></span>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="h5">إجمالي قرض الإدخار : </span>
+                <span id="savings_loan_total" class="btn btn-warning h4 text-white  mx-2"></span>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="h5">إجمالي قرض اللجنة (الشيكل) : </span>
+                <span id="shekel_loan_total" class="btn btn-warning h4 text-white  mx-2"></span>
+            </div>
+
+        </div>
+    </div>
     <div class="d-flex justify-content-end" id="btns_form">
         <button aria-label="" type="button" class="btn btn-danger px-2" data-dismiss="modal" aria-hidden="true">
             <span aria-hidden="true">×</span>

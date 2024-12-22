@@ -223,7 +223,7 @@
                 <div class="form-group p-3 col-3">
                     <label for="salary_category">فئة الراتب</label>
                     <select class="custom-select" id="salary_category" name="salary_category">
-                        <option>عرض القيم المتوفرة</option>
+                        <option value="" disabled>عرض القيم المتوفرة</option>
                         <option value="1" @selected($workData->salary_category == 1)>الأولى</option>
                         <option value="2" @selected($workData->salary_category == 2)>الثانية</option>
                         <option value="3" @selected($workData->salary_category == 3)>الثالثة</option>
@@ -479,7 +479,7 @@
             </button>
         </div>
     </div>
-    <div class="tab-pane fade" id="menu5">
+    {{-- <div class="tab-pane fade" id="menu5">
         <div class="row">
 
         </div>
@@ -503,7 +503,7 @@
                 </div> <!-- .card -->
             </div> <!-- .col -->
         </div>
-    </div>
+    </div> --}}
     @if (isset($btn_label))
         {{-- <h2 class="h3">قسم الصرف</h2> --}}
         <div class="tab-pane fade" id="menu7">

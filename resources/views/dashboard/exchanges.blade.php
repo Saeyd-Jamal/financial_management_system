@@ -2,7 +2,6 @@
     @push('styles')
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.bootstrap4.css')}}">
     <link rel="stylesheet" href="{{ asset('css/funFixedView.css') }}">
-
     @endpush
     <div class="row justify-content-center">
         <div class="col-12">

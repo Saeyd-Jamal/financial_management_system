@@ -1,6 +1,6 @@
 <x-front-layout>
     @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.css') }}">
     @endpush
     <div class="row align-items-center mb-2">
         <div class="col">
@@ -270,7 +270,7 @@
     </script>
     <script src="{{asset('js/report.js')}}"></script>
     <script src="{{ asset('js/getEmployee.js') }}"></script>
-    <script src='{{ asset('js/select2.min.js') }}'></script>
+    <script src='{{ asset('assets/js/select2.min.js') }}'></script>
     <script>
         $('.select2-multi').select2(
         {

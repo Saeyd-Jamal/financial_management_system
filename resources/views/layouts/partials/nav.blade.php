@@ -15,7 +15,7 @@
         background-color: #303030 !important;
     }
 </style>
-<nav class="navbar navbar-expand-lg navbar-light bg-dark flex-row border-bottom shadow">
+<nav class="navbar navbar-expand-lg navbar-light bg-dark flex-row border-bottom shadow p-0">
     <div class="container-fluid">
         <a class="navbar-brand mx-lg-1 mr-0"  href="{{ route('home') }}">
             <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 15%">

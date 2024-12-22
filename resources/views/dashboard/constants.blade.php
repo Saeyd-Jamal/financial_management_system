@@ -6,7 +6,7 @@
             </div>
         </div>
     </x-slot:breadcrumbs>
-    <hr class="border border-danger border-2 opacity-50">
+    <hr class=" border-danger border-2 opacity-50">
 
 
     {{-- btns collapse --}}
@@ -29,7 +29,13 @@
                 aria-controls="termination_service">
             نسبة نهاية الخدمة
         </button>
-        <hr class="border border-danger border-2 opacity-50 w-100">
+        <button class="btn btn-info m-2"
+                type="button" data-toggle="collapse"
+                data-target="#termination_service" aria-expanded="false"
+                aria-controls="termination_service">
+            الفئات
+        </button>
+        <hr class="border-danger border-2 opacity-50 w-100">
     </div>
 
     {{-- contents --}}
@@ -82,7 +88,7 @@
                 </button>
             </div>
         </form>
-        <hr class="border border-danger border-2 opacity-50 w-100">
+        <hr class="border-danger border-2 opacity-50 w-100">
     </div>
     <div class="collapse multi-collapse" id="state_effectiveness">
         <form action="{{ route('constants.store') }}" method="post">
@@ -124,7 +130,7 @@
                 </div>
             </div>
         </form>
-        <hr class="border border-danger border-2 opacity-50 w-100">
+        <hr class="border-danger border-2 opacity-50 w-100">
     </div>
     <div class="collapse multi-collapse" id="termination_service">
         <form action="{{ route('constants.store') }}" method="post">
@@ -146,6 +152,6 @@
                 </button>
             </div>
         </form>
-        <hr class="border border-danger border-2 opacity-50 w-100">
+        <hr class="border-danger border-2 opacity-50 w-100">
     </div>
 </x-front-layout>
