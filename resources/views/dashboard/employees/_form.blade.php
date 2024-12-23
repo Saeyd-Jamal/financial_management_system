@@ -643,6 +643,6 @@
     </script>
     <!-- Your custom script -->
     <script src="{{asset('js/jquery.validate.min.js')}}"></script>
-    <script src="{{ asset('js/formEmployee.js') }}"></script>
+    <script src="{{ asset('js/formEmployee.js?v=0.1') }}"></script>
     <script src="{{ asset('js/exchange.js') }}"></script>
 @endpush

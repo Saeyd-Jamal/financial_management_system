@@ -402,9 +402,19 @@
                                         <td class="text-left">${value}</td>
                                     </tr>
                                 `);
+                                let staticEntry = data.find(entry => entry.month === "0000-00");
+                                let staticVal = 0;
+                                if(staticEntry){
+                                    staticVal = staticEntry[key];
+                                    if(staticVal == -1.00){
+                                        staticVal = '';
+                                    }
+                                }else{
+                                    staticVal = '';
+                                }
                                 $('#' + key + '_row').append(`
                                     <td>
-                                        <x-form.inputentry  month="0000-00" data-field="${key}" name="${key}-0000" class="const" />
+                                        <x-form.inputentry  month="0000-00" data-field="${key}" name="${key}-0000" value="${staticVal}" class="const" />
                                     </td>
                                 `);
                                 for (let i = 1; i <= 12; i++) {

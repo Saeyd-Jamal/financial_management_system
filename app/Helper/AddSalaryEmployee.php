@@ -168,15 +168,36 @@ class AddSalaryEmployee{
 
         // المدخلات الثابتة
         $fixedEntries = $employee->fixedEntries->where('month',$month)->first();
+        $fixedEntriesStatic = $employee->fixedEntries->where('month','0000-00')->first();
+        function fixedEntriesVal($fixedEntries,$fixedEntriesStatic,$filed){
+            $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
+            $val = 0;
 
-        $administrative_allowance = ($fixedEntries != null) ? $fixedEntries->administrative_allowance : 0;
-        $scientific_qualification_allowance = ($fixedEntries != null) ? $fixedEntries->scientific_qualification_allowance : 0;
-        $transport = ($fixedEntries != null) ? $fixedEntries->transport : 0;
-        $extra_allowance = ($fixedEntries != null) ?  $fixedEntries->extra_allowance : 0;
-        $salary_allowance = ($fixedEntries != null) ? $fixedEntries->salary_allowance : 0;
-        $ex_addition = ($fixedEntries != null) ? $fixedEntries->ex_addition : 0;
-        $mobile_allowance = ($fixedEntries != null) ? $fixedEntries->mobile_allowance : 0;
+            // $val = ($fixedEntriesStatic != null) ? ($fixedEntriesStatic[$filed] != -1 ? $fixedEntriesStatic[$filed]  : (($fixedEntries != null) ? $fixedEntries[$filed]  : 0)): (($fixedEntries != null) ? $fixedEntries[$filed]  : 0);
 
+            if($fixedEntriesStatic != null && $fixedEntriesStatic[$filed] != -1 ){
+                $val = $fixedEntriesStatic[$filed];
+            }else{
+                if($fixedEntries != null){
+                    $val = $fixedEntries[$filed];
+                }else{
+                    $val = 0;
+                }
+            }
+
+            if($filed == 'savings_loan'){
+                return $val * $USD;
+            }
+            return $val;
+        }
+
+        $administrative_allowance = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'administrative_allowance');
+        $scientific_qualification_allowance = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'scientific_qualification_allowance');
+        $transport = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'transport');
+        $extra_allowance = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'extra_allowance');
+        $salary_allowance = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'salary_allowance');
+        $ex_addition = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'ex_addition');
+        $mobile_allowance = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'mobile_allowance');
 
         // نسبة نهاية الخدمة
         $termination_service_rate = Constant::where('type_constant','termination_service')->first('value') ? (Constant::where('type_constant','termination_service')->first('value')->value / 100) : 0.1;
@@ -200,18 +221,17 @@ class AddSalaryEmployee{
         $total_additions = ($allowance_boys + $nature_work_increase + $administrative_allowance + $scientific_qualification_allowance + $transport + $extra_allowance + $salary_allowance + $ex_addition + $mobile_allowance +$termination_service);
 
         // الخصومات
-        $health_insurance = ($fixedEntries != null) ? $fixedEntries->health_insurance : 0;
-        $f_Oredo = $fixedEntries != null ? $fixedEntries->f_Oredo : 0;
-        $association_loan = $fixedEntries != null ? $fixedEntries->association_loan : 0;
-        $tuition_fees = $fixedEntries != null ? $fixedEntries->tuition_fees : 0;
-        $voluntary_contributions = $fixedEntries != null ? $fixedEntries->voluntary_contributions : 0;
-        $savings_loan = $fixedEntries != null ? ($fixedEntries->savings_loan * $USD)  : 0;
-        $shekel_loan = $fixedEntries != null ? $fixedEntries->shekel_loan : 0;
-        $paradise_discount = $fixedEntries != null ? $fixedEntries->paradise_discount : 0;
-        $other_discounts = $fixedEntries != null ? $fixedEntries->other_discounts : 0;
-        $proportion_voluntary = $fixedEntries != null ? $fixedEntries->proportion_voluntary : 0;
-        $savings_rate = $fixedEntries != null ? $fixedEntries->savings_rate : 0;
-
+        $health_insurance = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'health_insurance');
+        $f_Oredo = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'f_Oredo');
+        $association_loan = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'association_loan');
+        $tuition_fees = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'tuition_fees');
+        $voluntary_contributions = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'voluntary_contributions');
+        $savings_loan = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'savings_loan');
+        $shekel_loan = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'shekel_loan');
+        $paradise_discount = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'paradise_discount');
+        $other_discounts = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'other_discounts');
+        $proportion_voluntary = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'proportion_voluntary');
+        $savings_rate = fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'savings_rate');
 
         // إضافات للمبلغ الضريبية العملة شيكل
         $amount_tax = $working_status == "مداوم" || $working_status == "نعم"  ? ($secondary_salary + $nature_work_increase - $termination_service - $health_insurance - $savings_rate - $voluntary_contributions) / $USD : 0; // المبلغ الضريبي

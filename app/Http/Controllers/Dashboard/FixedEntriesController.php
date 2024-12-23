@@ -115,13 +115,15 @@ class FixedEntriesController extends Controller
     {
         $this->authorize('edit', FixedEntries::class);
         if($request->ajax()) {
-            $fixedEntries = FixedEntries::where('employee_id', $id)->first();
+            $fixedEntries = FixedEntries::where('employee_id', $id)->where('month', $this->monthNow)->first();
             $year = Carbon::parse($fixedEntries->month)->format('Y');
             $month_start  = Carbon::create($year, 1, 1)->format('Y-m');
             $month_end = Carbon::create($year, 12, 31)->format('Y-m');
 
             $filteredEntries = FixedEntries::where('employee_id', $id)
-                                ->whereBetween('month', [$month_start, $month_end])->get();
+                                ->whereBetween('month', [$month_start, $month_end])
+                                ->orWhere('month', '0000-00')
+                                ->get();
             return response()->json($filteredEntries);
         }
     }
@@ -132,45 +134,76 @@ class FixedEntriesController extends Controller
     public function update(FixedEntryRequest $request, $id)
     {
         $this->authorize('edit', FixedEntries::class);
-        $year = $request->header('year');
-        $month_last = Accreditation::orderBy('id', 'desc')->first() ? Accreditation::orderBy('id', 'desc')->first()->month : Carbon::now()->format('Y-m');
-        for ($i=1; $i <= 12; $i++) {
-            $monthlast = Carbon::parse($month_last)->format('m');
-            $i = $i < 10 ? '0'.$i : $i;
-            if($i <= $monthlast){
-                continue;
-            }
-            $month = $year.'-'.$i;
+        DB::beginTransaction();
+        try{
+            $year = $request->header('year');
+            $month_last = Accreditation::orderBy('id', 'desc')->first() ? Accreditation::orderBy('id', 'desc')->first()->month : Carbon::now()->format('Y-m');
+            for ($i=1; $i <= 12; $i++) {
+                $monthlast = Carbon::parse($month_last)->format('m');
+                $i = $i < 10 ? '0'.$i : $i;
+                if($i <= $monthlast){
+                    continue;
+                }
+                $month = $year.'-'.$i;
 
-            $fixedEntries = FixedEntries::updateOrCreate([
+                $fixedEntries = FixedEntries::updateOrCreate([
+                    'employee_id' => $id,
+                    'month' => $month
+                ],[
+                    'administrative_allowance' => $request['administrative_allowance-'.$i] ?? 0,
+                    'scientific_qualification_allowance' => $request['scientific_qualification_allowance-'.$i] ?? 0,
+                    'transport' =>  $request['transport-'.$i] ?? 0,
+                    'extra_allowance' =>  $request['extra_allowance-'.$i] ?? 0,
+                    'salary_allowance' =>  $request['salary_allowance-'.$i] ?? 0,
+                    'ex_addition' => $request['ex_addition-'.$i] ?? 0,
+                    'mobile_allowance' => $request['mobile_allowance-'.$i] ?? 0,
+                    'health_insurance' => $request['health_insurance-'.$i] ?? 0,
+                    'f_Oredo' =>  $request['f_Oredo-'.$i] ?? 0,
+                    'association_loan' => $request['association_loan-'.$i] ?? 0,
+                    'tuition_fees' => $request['tuition_fees-'.$i] ?? 0,
+                    'voluntary_contributions' => $request['voluntary_contributions-'.$i] ?? 0,
+                    'savings_loan' => $request['savings_loan-'.$i] ?? 0,
+                    'shekel_loan' =>  $request['shekel_loan-'.$i] ?? 0,
+                    'paradise_discount' => $request['paradise_discount-'.$i] ?? 0,
+                    'other_discounts' => $request['other_discounts-'.$i] ?? 0,
+                    'proportion_voluntary' => $request['proportion_voluntary-'.$i] ?? 0,
+                    'savings_rate' => $request['savings_rate-'.$i] ?? 0,
+                ]);
+            }
+            FixedEntries::updateOrCreate([
                 'employee_id' => $id,
-                'month' => $month
+                'month' => '0000-00',
             ],[
-                'administrative_allowance' => $request['administrative_allowance-'.$i] ?? 0,
-                'scientific_qualification_allowance' => $request['scientific_qualification_allowance-'.$i] ?? 0,
-                'transport' =>  $request['transport-'.$i] ?? 0,
-                'extra_allowance' =>  $request['extra_allowance-'.$i] ?? 0,
-                'salary_allowance' =>  $request['salary_allowance-'.$i] ?? 0,
-                'ex_addition' => $request['ex_addition-'.$i] ?? 0,
-                'mobile_allowance' => $request['mobile_allowance-'.$i] ?? 0,
-                'health_insurance' => $request['health_insurance-'.$i] ?? 0,
-                'f_Oredo' =>  $request['f_Oredo-'.$i] ?? 0,
-                'association_loan' => $request['association_loan-'.$i] ?? 0,
-                'tuition_fees' => $request['tuition_fees-'.$i] ?? 0,
-                'voluntary_contributions' => $request['voluntary_contributions-'.$i] ?? 0,
-                'savings_loan' => $request['savings_loan-'.$i] ?? 0,
-                'shekel_loan' =>  $request['shekel_loan-'.$i] ?? 0,
-                'paradise_discount' => $request['paradise_discount-'.$i] ?? 0,
-                'other_discounts' => $request['other_discounts-'.$i] ?? 0,
-                'proportion_voluntary' => $request['proportion_voluntary-'.$i] ?? 0,
-                'savings_rate' => $request['savings_rate-'.$i] ?? 0,
+                'administrative_allowance' => $request['administrative_allowance-0000'] ?? -01,
+                'scientific_qualification_allowance' => $request['scientific_qualification_allowance-0000'] ?? -01,
+                'transport' =>  $request['transport-0000'] ?? -01,
+                'extra_allowance' =>  $request['extra_allowance-0000'] ?? -01,
+                'salary_allowance' =>  $request['salary_allowance-0000'] ?? -01,
+                'ex_addition' => $request['ex_addition-0000'] ?? -01,
+                'mobile_allowance' => $request['mobile_allowance-0000'] ?? -01,
+                'health_insurance' => $request['health_insurance-0000'] ?? -01,
+                'f_Oredo' =>  $request['f_Oredo-0000'] ?? -01,
+                'association_loan' => $request['association_loan-0000'] ?? -01,
+                'tuition_fees' => $request['tuition_fees-0000'] ?? -01,
+                'voluntary_contributions' => $request['voluntary_contributions-0000'] ?? -01,
+                'savings_loan' => $request['savings_loan-0000'] ?? -01,
+                'shekel_loan' =>  $request['shekel_loan-0000'] ?? -01,
+                'paradise_discount' => $request['paradise_discount-0000'] ?? -01,
+                'other_discounts' => $request['other_discounts-0000'] ?? -01,
+                'proportion_voluntary' => $request['proportion_voluntary-0000'] ?? -01,
+                'savings_rate' => $request['savings_rate-0000'] ?? -01,
             ]);
+            $employee = Employee::findOrFail($id);
+            $salary = Salary::where('employee_id',$id)->where('month',Carbon::now()->format('Y-m'))->first();
+            if($salary != null){
+                AddSalaryEmployee::addSalary($employee,$this->monthNow);
+            }
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+            return response()->json(['error' => 'حدث خطأ ما']);
         }
-        $employee = Employee::findOrFail($id);
-        $salary = Salary::where('employee_id',$id)->where('month',Carbon::now()->format('Y-m'))->first();
-        if($salary != null){
-            AddSalaryEmployee::addSalary($employee,$this->monthNow);
-        }
+
         if($request->ajax()) {
             return response()->json(['success' => 'تم تحديث الثوابت بنجاح']);
         }
