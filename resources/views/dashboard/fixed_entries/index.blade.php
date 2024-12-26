@@ -434,9 +434,9 @@
                                             <x-form.inputentry value="${val}"  employee_id="${id}" field="${key}" month="${i}" name="${key}-${i}" />
                                         </td>
                                     `);
-                                    // if (i <= currentMonth) {
-                                    //     $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
-                                    // }
+                                    if (i <= currentMonth) {
+                                         $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
+                                    }
                                 }
                             });
                             $('#editEntries').modal('show');

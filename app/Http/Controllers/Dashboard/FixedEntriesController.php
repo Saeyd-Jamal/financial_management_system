@@ -148,9 +148,9 @@ class FixedEntriesController extends Controller
             for ($i=1; $i <= 12; $i++) {
                 $monthlast = Carbon::parse($month_last)->format('m');
                 $i = $i < 10 ? '0'.$i : $i;
-                // if($i <= $monthlast){
-                //     continue;
-                // }
+                if($i <= $monthlast){
+                    continue;
+                }
                 $month = $year.'-'.$i;
                 $fixedEntriesOld = FixedEntries::where('employee_id', $id)->where('month', $month)->first();
                 $fixedEntries = FixedEntries::updateOrCreate([
