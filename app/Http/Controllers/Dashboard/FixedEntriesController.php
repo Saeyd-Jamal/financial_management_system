@@ -116,14 +116,21 @@ class FixedEntriesController extends Controller
         $this->authorize('edit', FixedEntries::class);
         if($request->ajax()) {
             $fixedEntries = FixedEntries::where('employee_id', $id)->where('month', $this->monthNow)->first();
-            $year = Carbon::parse($fixedEntries->month)->format('Y');
-            $month_start  = Carbon::create($year, 1, 1)->format('Y-m');
-            $month_end = Carbon::create($year, 12, 31)->format('Y-m');
+            if($fixedEntries != null){
+                $year = Carbon::parse($fixedEntries->month)->format('Y');
+                $month_start  = Carbon::create($year, 1, 1)->format('Y-m');
+                $month_end = Carbon::create($year, 12, 31)->format('Y-m');
 
-            $filteredEntries = FixedEntries::where('employee_id', $id)
-                                ->whereBetween('month', [$month_start, $month_end])
-                                ->orWhere('month', '0000-00')
-                                ->get();
+                $filteredEntries = FixedEntries::
+                                    where('employee_id', $id)
+                                    ->where(function($query) use ($month_start, $month_end){
+                                        $query->whereBetween('month', [$month_start, $month_end])
+                                        ->orWhere('month', '0000-00');
+                                    })
+                                    ->get();
+            }else{
+                $filteredEntries = new FixedEntries();
+            }
             return response()->json($filteredEntries);
         }
     }
@@ -141,11 +148,11 @@ class FixedEntriesController extends Controller
             for ($i=1; $i <= 12; $i++) {
                 $monthlast = Carbon::parse($month_last)->format('m');
                 $i = $i < 10 ? '0'.$i : $i;
-                if($i <= $monthlast){
-                    continue;
-                }
+                // if($i <= $monthlast){
+                //     continue;
+                // }
                 $month = $year.'-'.$i;
-
+                $fixedEntriesOld = FixedEntries::where('employee_id', $id)->where('month', $month)->first();
                 $fixedEntries = FixedEntries::updateOrCreate([
                     'employee_id' => $id,
                     'month' => $month
@@ -168,6 +175,21 @@ class FixedEntriesController extends Controller
                     'other_discounts' => $request['other_discounts-'.$i] ?? 0,
                     'proportion_voluntary' => $request['proportion_voluntary-'.$i] ?? 0,
                     'savings_rate' => $request['savings_rate-'.$i] ?? 0,
+                ]);
+
+                $total = $fixedEntries->employee->totals;
+                $association_loan = $request['association_loan-'.$i] ?? 0;
+                $savings_loan = $request['savings_loan-'.$i] ?? 0;
+                $shekel_loan = $request['shekel_loan-'.$i] ?? 0;
+                if($fixedEntriesOld){
+                    $association_loan = $fixedEntriesOld->association_loan - $association_loan;
+                    $savings_loan = $fixedEntriesOld->savings_loan - $savings_loan;
+                    $shekel_loan = $fixedEntriesOld->shekel_loan - $shekel_loan;
+                }
+                $total->update([
+                    'total_association_loan' =>  ($total->total_association_loan + $association_loan) ?? 0,
+                    'total_savings_loan' => ($total->total_savings_loan + $savings_loan)  ?? 0,
+                    'total_shekel_loan' => ($total->total_shekel_loan + $shekel_loan) ?? 0,
                 ]);
             }
             FixedEntries::updateOrCreate([
@@ -201,7 +223,7 @@ class FixedEntriesController extends Controller
             DB::commit();
         }catch(\Exception $e){
             DB::rollBack();
-            return response()->json(['error' => 'حدث خطأ ما']);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
         if($request->ajax()) {

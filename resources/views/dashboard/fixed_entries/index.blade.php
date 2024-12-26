@@ -434,9 +434,9 @@
                                             <x-form.inputentry value="${val}"  employee_id="${id}" field="${key}" month="${i}" name="${key}-${i}" />
                                         </td>
                                     `);
-                                    if (i <= currentMonth) {
-                                        $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
-                                    }
+                                    // if (i <= currentMonth) {
+                                    //     $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
+                                    // }
                                 }
                             });
                             $('#editEntries').modal('show');
@@ -452,10 +452,10 @@
                     let association_loan_total = parseFloat($('#association_loan_total').text()) || 0;
                     let savings_loan_total = parseFloat($('#savings_loan_total').text()) || 0;
                     let shekel_loan_total = parseFloat($('#shekel_loan_total').text()) || 0;
-                    if(association_loan_total < 0 || savings_loan_total < 0 || shekel_loan_total < 0){
-                        alert('لا يمكن أن يكون إجمالي القروض أقل من الصفر يرجى التدقيق لخصم القروض');
-                        return;
-                    }
+                    // if(association_loan_total < 0 || savings_loan_total < 0 || shekel_loan_total < 0){
+                    //     alert('لا يمكن أن يكون إجمالي القروض أقل من الصفر يرجى التدقيق لخصم القروض');
+                    //     return;
+                    // }
                     $.ajax({
                         url: "{{ route('fixed_entries.update', ':id') }}".replace(':id', entry.id),
                         method: 'PUT',
