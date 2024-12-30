@@ -46,49 +46,121 @@
                 _token: csrf_token,
             },
             success: function (response) {
-                $("#name").empty();
-                $("#name").text(response['name']);
-                $(".totals").empty();
-                $("#receivables_total").text(response['total_receivables']);
-                $("#savings_total").text(response['total_savings']);
+                $("#employee_name").empty();
+                $("#employee_name").text(response['name']);
+                $('#employee_id').val(employee_id_select);
+                $(".totals").text('');
+                $('#total_receivables').text(response['total_receivables']);
+                $('#total_savings').text(response['total_savings']);
+                $('#total_association_loan').text(response['total_association_loan']);
+                $('#total_savings_loan').text(response['total_savings_loan']);
+                $('#total_shekel_loan').text(response['total_shekel_loan']);
             },
         });
     });
 
-    $("#exchange_type").on('change',function () {
-        let type = $(this).val();
-        if(type == "receivables_discount"){
-            $("div.exchanges").slideUp();
-            $("div#receivables").slideDown();
+    function exchange_type() {
+        let exchange_type = $("#exchange_type").val();
+        let inp = '';
+        $('#exchange_div').empty();
+        $('#total_savings_span').empty();
+        $('#total_receivables_span').empty();
+
+        if(exchange_type == 'receivables_discount'){
+            inp = `
+            <div class="form-group p-3 col-4" id="receivables_discount_div">
+                <label for="receivables_discount">قيمة المستحقات المخصومة</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${receivables_discount}" id="receivables_discount" name="receivables_discount" required placeholder="قيمة المستحقات المخصومة"/>
+                <span class="warning text-danger" id="receivables_discount_span_warning"></span>
+            </div>
+            `;
         }
-        if(type == "savings_discount"){
-            $("div.exchanges").slideUp();
-            $("div#savings").slideDown();
+        if(exchange_type == 'savings_discount'){
+            inp = `
+            <div class="form-group p-3 col-4" id="savings_discount_div">
+                <label for="savings_discount">قيمة الإدخارات المخصومة $</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${savings_discount}" id="savings_discount" name="savings_discount" required placeholder="قيمة الإدخارات المخصومة"/>
+                <span class="warning text-danger" id="savings_discount_span_warning"></span>
+            </div>
+            `;
         }
-        if(type == "receivables_savings_discount"){
-            $("div.exchanges").slideUp();
-            $("div#receivables").slideDown();
-            $("div#savings").slideDown();
+        if(exchange_type == 'association_loan'){
+            inp = `
+            <div class="form-group p-3 col-4" id="association_loan_div">
+                <label for="association_loan">قيمة القرض الجمعية ش</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${association_loan}" id="association_loan" name="association_loan" required placeholder="قيمة القرض الجمعية"/>
+            </div>
+            `;
         }
-        if(type == "reward"){
-            $("div.exchanges").slideUp();
-            $("div#reward").slideDown();
+        if(exchange_type == 'savings_loan'){
+            inp = `
+            <div class="form-group p-3 col-4" id="savings_loan_div">
+                <label for="savings_loan">قيمة القرض الإدخار $</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${savings_loan}" id="savings_loan" name="savings_loan" required placeholder="قيمة القرض الإدخار"/>
+            </div>
+            `;
         }
-        if(type == "association_loan"){
-            $("div.exchanges").slideUp();
-            $("div#association_loan").slideDown();
+        if(exchange_type == 'shekel_loan'){
+            inp = `
+            <div class="form-group p-3 col-4" id="shekel_loan_div">
+                <label for="shekel_loan">قيمة القرض اللجنة ش</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${shekel_loan}" id="shekel_loan" name="shekel_loan" required placeholder="قيمة القرض اللجنة"/>
+            </div>
+            `;
         }
-        if(type == "savings_loan"){
-            $("div.exchanges").slideUp();
-            $("div#savings_loan").slideDown();
+        if(exchange_type == 'reward'){
+            inp = `
+            <div class="form-group p-3 col-4" id="reward_div">
+                <label for="reward">قيمة المكافأة المالية</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${reward}" id="reward" name="reward" required placeholder="قيمة المكافأة المالية"/>
+            </div>
+            `;
         }
-        if(type == "shekel_loan"){
-            $("div.exchanges").slideUp();
-            $("div#shekel_loan").slideDown();
+
+        $('#exchange_div').append(inp);
+    };
+
+    exchange_type();
+    $("#exchange_type").on('change',exchange_type);
+
+    $(document).on('input', '#receivables_discount , #savings_discount, #association_loan, #savings_loan, #shekel_loan', function () {
+        let name = $(this).attr('name');
+        if(name == 'receivables_discount'){
+            let total_receivables = parseFloat($('#total_receivables').text());
+            let receivables_discount = $('#receivables_discount').val();
+            $('#total_receivables_span').text(`(${(total_receivables - receivables_discount).toFixed(2)})`);
+            if(receivables_discount > total_receivables){
+                $('#receivables_discount_span_warning').text('قيمة خصم المستحقات أكثر من المستحقات الإجمالية لديه يمكن الخصم لكن سيكون على الموظف سالب')
+            }else{
+                $('#receivables_discount_span_warning').text('')
+            }
         }
-        if(type == ""){
-            $("div.exchanges").slideUp();
+        if(name == 'savings_discount'){
+            let total_savings = parseFloat($('#total_savings').text());
+            let savings_discount = $('#savings_discount').val();
+            $('#total_savings_span').text(`(${(total_savings - savings_discount).toFixed(2)})`);
+            if(savings_discount > total_savings){
+                $('#savings_discount_span_warning').text('قيمة خصم الإدخارات أكثر من الإدخارات الإجمالية لديه يمكن الخصم لكن سيكون على الموظف سالب')
+            }else{
+                $('#savings_discount_span_warning').text('')
+            }
+        }
+        if(name == 'association_loan'){
+            let total_association_loan = parseFloat($('#total_association_loan').text());
+            let association_loan = parseFloat($('#association_loan').val());
+            $('#total_association_loan_span').text(`(${(total_association_loan + association_loan).toFixed(2)})`);
+        }
+        if(name == 'savings_loan'){
+            let total_savings_loan = parseFloat($('#total_savings_loan').text());
+            let savings_loan = parseFloat($('#savings_loan').val());
+            $('#total_savings_loan_span').text(`(${(total_savings_loan + savings_loan).toFixed(2)})`);
+        }
+        if(name == 'shekel_loan'){
+            let total_shekel_loan = parseFloat($('#total_shekel_loan').text());
+            let shekel_loan = parseFloat($('#shekel_loan').val());
+            $('#total_shekel_loan_span').text(`(${(total_shekel_loan + shekel_loan).toFixed(2)})`);
         }
     });
+
 
 })(jQuery);

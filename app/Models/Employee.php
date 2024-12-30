@@ -60,6 +60,10 @@ class Employee extends User
     {
         return $this->hasMany(FixedEntries::class,'employee_id');
     }
+    public function loans() :HasMany
+    {
+        return $this->hasMany(Loan::class,'employee_id');
+    }
     public function exchanges() :HasMany
     {
         return $this->hasMany(Exchange::class,'employee_id');

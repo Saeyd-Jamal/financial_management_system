@@ -24,11 +24,8 @@ return new class extends Migration
             $table->decimal('mobile_allowance', 10, 2)->default(0)->comment('علاوة جوال');
             $table->decimal('health_insurance', 10, 2)->default(0)->comment('تأمين صحي');
             $table->decimal('f_Oredo', 10, 2)->default(0)->comment('فاتورة الوطنية');
-            $table->decimal('association_loan', 10, 2)->default(0)->comment('قرض الجمعية');
             $table->decimal('tuition_fees', 10, 2)->default(0)->comment('رسوم دراسية');
             $table->decimal('voluntary_contributions', 10, 2)->default(0)->comment('تبرعات');
-            $table->decimal('savings_loan', 10, 2)->default(0)->comment('قرض إدخار');
-            $table->decimal('shekel_loan', 10, 2)->default(0)->comment('قرض شيكل');
             $table->decimal('paradise_discount', 10, 2)->default(0)->comment('خصم اللجنة');
             $table->decimal('other_discounts', 10, 2)->default(0)->comment('خصومات أخرى');
             $table->decimal('proportion_voluntary', 10, 2)->default(0)->comment('تبرعات للحركة');

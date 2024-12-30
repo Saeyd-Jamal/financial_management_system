@@ -36,9 +36,23 @@ class AddSalaryEmployee{
                 $val = 0;
             }
         }
+        return $val;
+    }
+    public static function loanVal($loans,$loansStatic,$filed){
+        $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
+        $val = 0;
 
+        if($loansStatic != null && $loansStatic[$filed] != -1 ){
+            $val = $loansStatic[$filed] ?? 0;
+        }else{
+            if($loans != null){
+                $val = $loans[$filed] ?? 0;
+            }else{
+                $val = 0;
+            }
+        }
         if($filed == 'savings_loan'){
-            return $val * $USD;
+            return ($val * $USD) ?? 0;
         }
         return $val;
     }
@@ -52,7 +66,6 @@ class AddSalaryEmployee{
         $state_effectiveness = Constant::where('type_constant','state_effectiveness')->get()? Constant::where('type_constant','state_effectiveness')->get()->pluck('value')->toArray()  : [];
 
         $USD = Currency::where('code','USD')->first('value')->value ?? 3.5;
-
 
         // موظف غير فعال ام لا
         if(!in_array($employee->workData->state_effectiveness,$state_effectiveness)){
@@ -89,6 +102,7 @@ class AddSalaryEmployee{
         }else{
             $advance_payment = 0;
         }
+
 
 
         //  البنك المتعامل معه
@@ -201,6 +215,7 @@ class AddSalaryEmployee{
         $ex_addition = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'ex_addition');
         $mobile_allowance = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'mobile_allowance');
 
+
         // نسبة نهاية الخدمة
         $termination_service_rate = Constant::where('type_constant','termination_service')->first('value') ? (Constant::where('type_constant','termination_service')->first('value')->value / 100) : 0.1;
 
@@ -225,15 +240,20 @@ class AddSalaryEmployee{
         // الخصومات
         $health_insurance = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'health_insurance');
         $f_Oredo = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'f_Oredo');
-        $association_loan = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'association_loan');
         $tuition_fees = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'tuition_fees');
         $voluntary_contributions = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'voluntary_contributions');
-        $savings_loan = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'savings_loan');
-        $shekel_loan = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'shekel_loan');
+
         $paradise_discount = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'paradise_discount');
         $other_discounts = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'other_discounts');
         $proportion_voluntary = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'proportion_voluntary');
         $savings_rate = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'savings_rate');
+
+        // القروض
+        $loans = $employee->loans->where('month',$month)->first();
+        $loansStatic = $employee->loans->where('month','0000-00')->first();
+        $association_loan = AddSalaryEmployee::loanVal($loans,$loansStatic,'association_loan');
+        $savings_loan = AddSalaryEmployee::loanVal($loans,$loansStatic,'savings_loan');
+        $shekel_loan = AddSalaryEmployee::loanVal($loans,$loansStatic,'shekel_loan');
 
         // إضافات للمبلغ الضريبية العملة شيكل
         $amount_tax = $working_status == "مداوم" || $working_status == "نعم"  ? ($secondary_salary + $nature_work_increase - $termination_service - $health_insurance - $savings_rate - $voluntary_contributions) / $USD : 0; // المبلغ الضريبي
@@ -276,7 +296,7 @@ class AddSalaryEmployee{
         $amount_letters = Numbers::TafqeetMoney($net_salary,'ILS'); // المبلغ بالنص
 
         // قرض الإدخار
-        $savings_loan = $fixedEntries != null ? $fixedEntries->savings_loan : 0;
+        $savings_loan = $savings_loan = AddSalaryEmployee::loanVal($loans,$loansStatic,'savings_loan') / $USD;
 
         // إجمالي الراتب الاخير الخاص ببرنامج الإكسيل فقط للعرض
         $gross_salary = $secondary_salary +$allowance_boys + $nature_work_increase + $administrative_allowance+ $scientific_qualification_allowance+ $transport + $extra_allowance+ $salary_allowance + $ex_addition + $mobile_allowance+ $termination_service;
@@ -350,9 +370,9 @@ class AddSalaryEmployee{
         DB::beginTransaction();
         try{
             $salaryOld = Salary::where('employee_id',$employee->id)->where('month',$month)->first();
-            Salary::updateOrCreate([
+            $salary = Salary::updateOrCreate([
                 'employee_id' => $employee->id,
-                'month' => ($month),
+                'month' => $month,
             ],[
                 'percentage_allowance' => $percentage_allowance,
                 'initial_salary' => $initial_salary,
@@ -433,6 +453,7 @@ class AddSalaryEmployee{
             DB::commit();
         }catch(\Exception $e){
             DB::rollBack();
+            throw $e;
             return redirect()->back()->with('danger', 'حذث هنالك خطأ بالإدخال يرجى مراجعة المهندس');
         }
     }

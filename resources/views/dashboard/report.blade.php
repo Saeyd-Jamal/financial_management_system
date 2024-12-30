@@ -4,7 +4,7 @@
     @endpush
     <div class="row align-items-center mb-2">
         <div class="col">
-            <h2 class="h5 page-title">إنتاج التقارير</h2>
+            <h2 class="">إنتاج التقارير</h2>
         </div>
     </div>
     <div class="row justify-content-between">
@@ -17,6 +17,9 @@
                 <div class="form-group col-md-3">
                     <x-form.input type="month"  name="to_month" label="الى شهر" />
                 </div>
+            </div>
+            <h3 class="h5">التخصيصات</h3>
+            <div class="row">
                 <div class="form-group col-md-3">
                     <label for="area">المنظقة</label>
                     <select name="area[]" id="area" class="form-control select2-multi" multiple>
@@ -144,7 +147,9 @@
                         @endforeach
                     </select>
                 </div>
-                {{-- إضافات --}}
+            </div>
+            <h3 class="h5">أومر التصدير</h3>
+            <div class="row">
                 <div class="form-group col-md-3">
                     <label for="report_type">نوع الكشف</label>
                     <select class="custom-select" name="report_type" id="report_type" required>
@@ -174,7 +179,7 @@
                         <option value="export_excel">Excel</option>
                     </select>
                 </div>
-                <div class="form-group p-3 col-4">
+                <div class="form-group col-4">
                     <label for="gender">إختيار موظف معين</label>
                     <div class="input-group mb-3">
                         <x-form.input name="employee_id" placeholder="0"/>

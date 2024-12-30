@@ -474,9 +474,11 @@
         <div class="tab-pane fade" id="menu7">
             <div class="row justify-content-end">
                 <div class="form-group p-3">
-                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createExchange">
-                        صرف جديد <i class="fe fe-plus"></i>
-                    </button>
+                    @can('create', 'App\\Models\Exchange')
+                    <a href="{{ route('exchanges.create') }}" class="btn btn-info">
+                        <i class="fe fe-plus"></i> إضافة صرف جديد
+                    </a>
+                    @endcan
                 </div>
             </div>
             <div class="row">
@@ -643,6 +645,6 @@
     </script>
     <!-- Your custom script -->
     <script src="{{asset('js/jquery.validate.min.js')}}"></script>
-    <script src="{{ asset('js/formEmployee.js?v=0.1') }}"></script>
+    <script src="{{ asset('js/formEmployee.js?v=0.2') }}"></script>
     <script src="{{ asset('js/exchange.js') }}"></script>
 @endpush

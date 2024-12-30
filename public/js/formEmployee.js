@@ -130,7 +130,7 @@
             $('#alerts').text("يرجى تصحيح الأخطاء في النموذج قبل المتابعة.");
         }
     });
-    $('.nav-link').click(function(event) {
+    $('.nav-tabs .nav-item .nav-link').click(function(event) {
         let form = $('#myForm'); // اختر النموذج بشكل عام
         let isValid = true;
         // تحقق من صحة النموذج

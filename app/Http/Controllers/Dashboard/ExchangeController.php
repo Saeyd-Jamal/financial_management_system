@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Exchange;
 use App\Models\ReceivablesLoans;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
-
+use Yajra\DataTables\Facades\DataTables;
 
 class ExchangeController extends Controller
 {
@@ -22,13 +23,38 @@ class ExchangeController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view', Exchange::class);
-        $exchanges = Exchange::with(['employee'])->get();
+
+        if($request->ajax()) {
+            $exchanges = Exchange::with('employee')->get();
+            return DataTables::of($exchanges)
+                    ->addIndexColumn()  // إضافة عمود الترقيم التلقائي
+                    ->addColumn('edit', function ($exchange) {
+                        return $exchange->id;
+                    })
+                    ->addColumn('name', function ($exchange) {
+                        return $exchange->employee->name;
+                    })
+                    ->addColumn('association', function ($exchange) {
+                        return $exchange->employee->workData->association;
+                    })
+                    ->addColumn('workplace', function ($exchange) {
+                        return $exchange->employee->workData->workplace;
+                    })
+                    ->addColumn('print', function ($exchange) {
+                        return $exchange->id;
+                    })
+                    ->addColumn('delete', function ($exchange) {
+                        return $exchange->id;
+                    })
+                    ->make(true);
+        }
         $employee_id = $request->query('employee_id');
         $totals = [];
         if($employee_id != null){
             $totals = ReceivablesLoans::where('employee_id',$employee_id)->first();
         }
-        return view('dashboard.exchanges', compact('exchanges','employee_id','totals'));
+        $employee_names = Employee::all('id','name');
+        return view('dashboard.exchanges.index', compact('employee_id','totals','employee_names'));
     }
 
     /**
@@ -36,7 +62,11 @@ class ExchangeController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Exchange::class);
+        $exchange = new Exchange();
+        $exchange->employee = new Employee();
+        $exchange->discount_date = Carbon::now()->format('Y-m-d');
+        return view('dashboard.exchanges.create',compact('exchange'));
     }
 
     /**
@@ -51,14 +81,16 @@ class ExchangeController extends Controller
         DB::beginTransaction();
         try{
             Exchange::create($request->all());
-            ReceivablesLoans::where('employee_id',$request->employee_id)
-                ->update([
-                    'total_receivables' => DB::raw('total_receivables - (' . ($request->receivables_discount) . ')'),
-                    'total_savings' => DB::raw('total_savings - (' . $request->savings_discount . ') - (' . $request->savings_loan . ')'),
-                    'total_association_loan' => DB::raw('total_association_loan + (' . $request->association_loan . ')'),
-                    'total_savings_loan' => DB::raw('total_savings_loan + (' . $request->savings_loan . ')'),
-                    'total_shekel_loan' => DB::raw('total_shekel_loan + (' . $request->shekel_loan . ')')
-                ]);
+
+            ReceivablesLoans::updateOrCreate([
+                'employee_id' => $request->employee_id,
+            ],[
+                'total_receivables' => DB::raw('total_receivables - (' . ($request->receivables_discount ?? 0) . ')'),
+                'total_savings' => DB::raw('total_savings - (' . ($request->savings_discount ?? 0) . ') - (' . ($request->savings_loan ?? 0) . ')'),
+                'total_association_loan' => DB::raw('total_association_loan + (' . ($request->association_loan ?? 0) . ')'),
+                'total_savings_loan' => DB::raw('total_savings_loan + (' . ($request->savings_loan ?? 0) . ')'),
+                'total_shekel_loan' => DB::raw('total_shekel_loan + (' . ($request->shekel_loan ?? 0) . ')'),
+            ]);
 
             DB::commit();
         }catch (\Exception $exception){
@@ -66,8 +98,10 @@ class ExchangeController extends Controller
             return redirect()->back()->with('danger', $exception->getMessage());
         }
 
-
-        return redirect()->back()->with('success', 'تم اضافة صرف جديد');
+        if($request->ajax()) {
+            return response()->json(['success' => 'تم تحديث الثوابت بنجاح']);
+        }
+        return redirect()->route('exchanges.index')->with('success', 'تم اضافة صرف جديد');
     }
 
     /**
@@ -81,9 +115,9 @@ class ExchangeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Exchange $exchange)
+    public function edit(Request $request, Exchange $exchange)
     {
-        //
+
     }
 
     /**
@@ -103,7 +137,7 @@ class ExchangeController extends Controller
         ReceivablesLoans::where('employee_id',$exchange->employee_id)
             ->update([
                 'total_receivables' => DB::raw('total_receivables + '. ($exchange->receivables_discount )),
-                'total_savings' => DB::raw('total_savings + ' . $exchange->savings_discount . ' - ' . $exchange->savings_loan),
+                'total_savings' => DB::raw('total_savings + ' . $exchange->savings_discount . ' + ' . $exchange->savings_loan),
                 'total_association_loan' => DB::raw('total_association_loan - ' . $exchange->association_loan),
                 'total_savings_loan' => DB::raw('total_savings_loan - ' . $exchange->savings_loan),
                 'total_shekel_loan' => DB::raw('total_shekel_loan - ' . $exchange->shekel_loan),
@@ -118,21 +152,26 @@ class ExchangeController extends Controller
         return $totals;
     }
 
-    public function printPdf(Request $request)
-    {
-        $exchange = Exchange::findOrFail($request->id);
-        $margin_top = 3;
-        $pdf = PDF::loadView('dashboard.pdf.exchange',['exchange' => $exchange],[],[
-            'margin_left' => 3,
-            'margin_right' => 3,
-            'margin_top' => $margin_top,
-            'margin_bottom' => 10,
+    public function printPdf(Request $request,$id){
+        $year = $request->year ?? Carbon::now()->year;
+        // $employee = Employee::with(['totals','exchanges'])->find($id);
+        $exchange = Exchange::with('employee')->findOrFail($id);
+        $margin_top = 30;
+        if($exchange->employee->workData->association == 'صلاح' || $exchange->employee->workData->association == 'حطين'){
+            $margin_top = 45;
+        }
+        $pdf = PDF::loadView('dashboard.pdf.employee.employee_exchange',['exchange' => $exchange,'employee' => $exchange->employee,'year' => $year],[],
+        [
             'mode' => 'utf-8',
             'format' => 'A4',
             'default_font_size' => 12,
             'default_font' => 'Arial',
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => $margin_top ,
+            'margin_bottom' => 0,
         ]);
-        return $pdf->stream();
+        $time = Carbon::now();
+        return $pdf->stream('تقرير الصرف للموظف : ' . $exchange->employee->name .'  _ '.$time.'.pdf');
     }
-
 }

@@ -46,11 +46,11 @@
     @php
         $fields = [
             'type_appointment' => 'نوع التعيين',
-            'field_action' => 'الإجراء الميداني',
-            'allowance' => 'البدل',
+            'field_action' => 'مجال العمل',
+            'allowance' => 'العلاوة',
             'grade' => 'الدرجة',
-            'grade_allowance_ratio' => 'نسبة بدل الدرجة',
-            'dual_function' => 'وظيفة مزدوجة',
+            'grade_allowance_ratio' => 'نسبة علاوة درجة',
+            'dual_function' => 'مزدوج الوظيفة',
             'years_service' => 'سنوات الخدمة',
             'nature_work' => 'طبيعة العمل',
             'state_effectiveness' => 'حالة الفعالية',
@@ -61,11 +61,11 @@
             'working_date' => 'تاريخ العمل',
             'date_installation' => 'تاريخ التثبيت',
             'date_retirement' => 'تاريخ التقاعد',
-            'payroll_statement' => 'بيان الرواتب',
-            'establishment' => 'المؤسسة',
+            'payroll_statement' => 'بيان الراتب',
+            'establishment' => 'المنشأة',
             'foundation_E' => 'المؤسسة E',
             'salary_category' => 'فئة الراتب',
-            'contract_type' => 'نوع العقد'
+            'contract_type' => 'نوع العقد',
         ];
     @endphp
 
@@ -447,7 +447,9 @@
                         { data: 'field_action', name: 'field_action', orderable: false},
                         { data: 'allowance', name: 'allowance', orderable: false},
                         { data: 'grade', name: 'grade', orderable: false},
-                        { data: 'grade_allowance_ratio', name: 'grade_allowance_ratio', orderable: false},
+                        { data: 'grade_allowance_ratio', name: 'grade_allowance_ratio', orderable: false, render: function(data, type, row) {
+                            return formatNumber(data * 100,0) + '%';
+                        }},
                         { data: 'dual_function', name: 'dual_function', orderable: false},
                         { data: 'years_service', name: 'years_service', orderable: false},
                         { data: 'nature_work', name: 'nature_work', orderable: false},

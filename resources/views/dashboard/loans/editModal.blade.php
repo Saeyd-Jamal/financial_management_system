@@ -9,7 +9,7 @@
                         <thead class="bg-dark">
                             <tr>
                                 <th>التعديل</th>
-                                <th>ثابت</th>
+                                <th>دفعة شهرية</th>
                                 <th>يناير</th>
                                 <th>فبراير</th>
                                 <th>مارس</th>
@@ -24,12 +24,28 @@
                                 <th>ديسمبر</th>
                             </tr>
                         </thead>
-                        <tbody id="fixed_entries_tbody">
+                        <tbody id="loans_tbody">
                         </tbody>
                     </table>
                 </div>
             </div>
         </div> <!-- Bordered table -->
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="h5">إجمالي قرض الجمعية : </span>
+                <x-form.input name="association_loan_total" style="width: 80px; padding: 0 5px;" type="number" step="0.01" min="0" />
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="h5">إجمالي قرض الإدخار : </span>
+                <x-form.input name="savings_loan_total" style="width: 80px; padding: 0 5px;" type="number" step="0.01" min="0" />
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="h5">إجمالي قرض اللجنة (الشيكل) : </span>
+                <x-form.input name="shekel_loan_total" style="width: 80px; padding: 0 5px;" type="number" step="0.01" min="0" />
+            </div>
+        </div>
     </div>
     <div class="d-flex justify-content-end" id="btns_form">
         <button aria-label="" type="button" class="btn btn-danger px-2" data-dismiss="modal" aria-hidden="true">

@@ -11,9 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
-use Yajra\DataTables\Facades\DataTables;
 
-class ExchangeController extends Controller
+
+class ExchangeController11 extends Controller
 {
     use AuthorizesRequests;
     /**
@@ -22,35 +22,13 @@ class ExchangeController extends Controller
     public function index(Request $request)
     {
         $this->authorize('view', Exchange::class);
-
-        if($request->ajax()) {
-            $exchanges = Exchange::with('employee')->get();
-            return DataTables::of($exchanges)
-                    ->addIndexColumn()  // إضافة عمود الترقيم التلقائي
-                    ->addColumn('edit', function ($exchange) {
-                        return $exchange->id;
-                    })
-                    ->addColumn('name', function ($exchange) {
-                        return $exchange->employee->name;
-                    })
-                    ->addColumn('association', function ($exchange) {
-                        return $exchange->employee->workData->association;
-                    })
-                    ->addColumn('print', function ($exchange) {
-                        return $exchange->id;
-                    })
-                    ->addColumn('delete', function ($exchange) {
-                        return $exchange->id;
-                    })
-                    ->make(true);
-        }
+        $exchanges = Exchange::with(['employee'])->get();
         $employee_id = $request->query('employee_id');
         $totals = [];
         if($employee_id != null){
             $totals = ReceivablesLoans::where('employee_id',$employee_id)->first();
         }
-        $employee_names = Employee::all('id','name');
-        return view('dashboard.exchanges.index', compact('employee_id','totals','employee_names'));
+        return view('dashboard.exchanges', compact('exchanges','employee_id','totals'));
     }
 
     /**
@@ -85,15 +63,10 @@ class ExchangeController extends Controller
             DB::commit();
         }catch (\Exception $exception){
             DB::rollBack();
-            if($request->ajax()) {
-                return response()->json(['error' => $exception->getMessage()], 500);
-            }
             return redirect()->back()->with('danger', $exception->getMessage());
         }
 
-        if($request->ajax()) {
-            return response()->json(['success' => 'تم تحديث الثوابت بنجاح']);
-        }
+
         return redirect()->back()->with('success', 'تم اضافة صرف جديد');
     }
 
@@ -108,15 +81,9 @@ class ExchangeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, Exchange $exchange)
+    public function edit(Exchange $exchange)
     {
-        if($request->ajax()) {
-            $exchange = Exchange::with('employee')->findOrFail($exchange->id);
-            $employee = Employee::with('totals')->findOrFail($exchange->employee_id);
-            $exchange['name'] = $employee->name;
-            $exchange['totals'] = $employee->totals;
-            return response()->json($exchange);
-        }
+        //
     }
 
     /**
@@ -151,7 +118,7 @@ class ExchangeController extends Controller
         return $totals;
     }
 
-    public function printPdf(Request $request, $id)
+    public function printPdf(Request $request,$id)
     {
         $exchange = Exchange::findOrFail($id);
         $margin_top = 3;

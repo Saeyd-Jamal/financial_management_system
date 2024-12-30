@@ -94,7 +94,6 @@
                                 </th>
                                 <th>
                                     <span>مكان العمل</span>
-
                                 </th>
                                 <th>علاوة إدارية</th>
                                 <th>علاوة مؤهل علمي</th>
@@ -111,9 +110,6 @@
                                 <th>خصومات الإخرى</th>
                                 <th>تبرعات للحركة</th>
                                 <th>إدخار 5%</th>
-                                <th>قرض جمعية </th>
-                                <th>قرض الإدخار</th>
-                                <th>قرض اللجنة</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -138,9 +134,6 @@
                                 <td class='text-white' id="total_17" data-field="other_discounts"></td>
                                 <td class='text-white' id="total_18" data-field="proportion_voluntary"></td>
                                 <td class='text-white' id="total_19" data-field="savings_rate"></td>
-                                <td class='text-white' id="total_20" data-field="association_loan"></td>
-                                <td class='text-white' id="total_21" data-field="savings_loan"></td>
-                                <td class='text-white' id="total_22" data-field="shekel_loan"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -273,15 +266,6 @@
                         { data: 'fixedEntriesView', name: 'fixedEntriesView', orderable: false, render: function(data, type, row) {
                             return  formatData(data,'savings_rate');
                         }},
-                        { data: 'fixedEntriesView', name: 'fixedEntriesView', orderable: false, render: function(data, type, row) {
-                            return  formatData(data,'association_loan');
-                        }},
-                        { data: 'fixedEntriesView', name: 'fixedEntriesView', orderable: false, render: function(data, type, row) {
-                            return  formatData(data,'savings_loan');
-                        }},
-                        { data: 'fixedEntriesView', name: 'fixedEntriesView', orderable: false, render: function(data, type, row) {
-                            return  formatData(data,'shekel_loan');
-                        }},
                     ],
                     columnDefs: [
                         { targets: 1, searchable: false, orderable: false } // تعطيل الفرز والبحث على عمود الترقيم
@@ -304,7 +288,7 @@
                         // count_allocations 1
                         let rowCount = display.length;
 
-                        for (let i = 5; i < 23; i++) {
+                        for (let i = 5; i < 20; i++) {
                             let total = api
                                 .column(i, { page: 'current' })
                                 .data()
@@ -368,9 +352,6 @@
                     'other_discounts'  : 'خصومات أخرى',
                     'proportion_voluntary'  : 'تبرعات للحركة',
                     'savings_rate'  : 'إدخار 5%	',
-                    'association_loan'  : 'قرض الجمعية',
-                    'savings_loan'  : 'قرض إدخار',
-                    'shekel_loan'  : 'قرض شيكل',
                 };
                 function editEntriesForm(id) {
                     $.ajax({
@@ -383,11 +364,7 @@
                         success: function (response) {
                             entry.id = response.id;
                             entry.name = response.name;
-                            entry.totals = response.totals;
                             $('#employee_name').text(entry.name);
-                            $('#association_loan_total').text(formatNumber(entry.totals.total_association_loan,2));
-                            $('#savings_loan_total').text(formatNumber(entry.totals.total_savings_loan,2));
-                            $('#shekel_loan_total').text(formatNumber(entry.totals.total_shekel_loan,2));
                         }
                     });
                     $.ajax({
@@ -449,13 +426,6 @@
                 }
                 $(document).on('click', '#update', function () {
                     let formData = $('#editForm').serialize(); // جمع بيانات النموذج في سلسلة بيانات
-                    let association_loan_total = parseFloat($('#association_loan_total').text()) || 0;
-                    let savings_loan_total = parseFloat($('#savings_loan_total').text()) || 0;
-                    let shekel_loan_total = parseFloat($('#shekel_loan_total').text()) || 0;
-                    // if(association_loan_total < 0 || savings_loan_total < 0 || shekel_loan_total < 0){
-                    //     alert('لا يمكن أن يكون إجمالي القروض أقل من الصفر يرجى التدقيق لخصم القروض');
-                    //     return;
-                    // }
                     $.ajax({
                         url: "{{ route('fixed_entries.update', ':id') }}".replace(':id', entry.id),
                         method: 'PUT',
@@ -486,30 +456,6 @@
                         }
 
                     }
-                });
-                $(document).on('input', 'input[field="association_loan"], #association_loan-0000', function () {
-                    let total = 0;
-                    $('input[field="association_loan"]:not([disabled])').each(function() {
-                        total += parseFloat($(this).val()) || 0;
-                    });
-                    let totalFinal = entry.totals.total_association_loan - total;
-                    $('#association_loan_total').text(formatNumber(totalFinal,2));
-                });
-                $(document).on('input', 'input[field="savings_loan"], #savings_loan-0000', function () {
-                    let total = 0;
-                    $('input[field="savings_loan"]:not([disabled])').each(function() {
-                        total += parseFloat($(this).val()) || 0;
-                    });
-                    let totalFinal = entry.totals.total_savings_loan - total;
-                    $('#savings_loan_total').text(formatNumber(totalFinal,2));
-                });
-                $(document).on('input', 'input[field="shekel_loan"], #shekel_loan-0000', function () {
-                    let total = 0;
-                    $('input[field="shekel_loan"]:not([disabled])').each(function() {
-                        total += parseFloat($(this).val()) || 0;
-                    });
-                    let totalFinal = entry.totals.total_shekel_loan - total;
-                    $('#shekel_loan_total').text(formatNumber(totalFinal,2));
                 });
             });
         </script>

@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="col-auto">
-                                @can('preparation', 'App\\Models\SpecificSalary')
+                                @can('create', 'App\\Models\SpecificSalary')
                                 <button class="btn btn-info mb-2" type="submit">
                                     <i class="fe fe-download"></i>
                                     <span>حفظ الرواتب</span>

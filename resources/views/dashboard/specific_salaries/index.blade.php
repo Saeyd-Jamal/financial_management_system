@@ -77,12 +77,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                {{-- @can('preparation', 'App\\Models\User') --}}
+                                                @can('create', 'App\\Models\SpecificSalary')
                                                 <button class="btn btn-info mb-2" type="submit">
                                                     <i class="fe fe-download"></i>
                                                     <span>حفظ الرواتب</span>
                                                 </button>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </div>
                                         </div>
                                         @foreach ($employees_private as $employee)
@@ -142,12 +142,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                {{-- @can('preparation', 'App\\Models\User') --}}
+                                                @can('create', 'App\\Models\SpecificSalary')
                                                 <button class="btn btn-info mb-2" type="submit">
                                                     <i class="fe fe-download"></i>
                                                     <span>حفظ الرواتب</span>
                                                 </button>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </div>
                                         </div>
                                         @foreach ($employees_riyadh as $employee)
@@ -207,12 +207,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                {{-- @can('preparation', 'App\\Models\User') --}}
+                                                @can('create', 'App\\Models\SpecificSalary')
                                                 <button class="btn btn-info mb-2" type="submit">
                                                     <i class="fe fe-download"></i>
                                                     <span>حفظ الرواتب</span>
                                                 </button>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </div>
                                         </div>
                                         @foreach ($employees_fasle as $employee)
@@ -273,12 +273,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                {{-- @can('preparation', 'App\\Models\User') --}}
+                                                @can('create', 'App\\Models\SpecificSalary')
                                                 <button class="btn btn-info mb-2" type="submit">
                                                     <i class="fe fe-download"></i>
                                                     <span>حفظ الرواتب</span>
                                                 </button>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </div>
                                         </div>
                                         @foreach ($employees_interim as $employee)
@@ -341,12 +341,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                {{-- @can('preparation', 'App\\Models\User') --}}
+                                                @can('create', 'App\\Models\SpecificSalary')
                                                 <button class="btn btn-info mb-2" type="submit">
                                                     <i class="fe fe-download"></i>
                                                     <span>حفظ الرواتب</span>
                                                 </button>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </div>
                                         </div>
                                         @foreach ($employees_daily as $employee)

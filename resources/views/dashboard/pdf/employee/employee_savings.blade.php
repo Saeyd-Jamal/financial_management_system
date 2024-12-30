@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="utf-8" />
-    <title>كشف {{ $name_loan }}</title>
+    <title>كشف إدخارات</title>
     <style>
         *{
             margin: 0;
@@ -100,7 +99,23 @@
         }
     </style>
 </head>
+@php
+    function getField($employee,$year,$month){
+        // $val = $employee->salaries->where('month',$year . '-' . $month)->first() ? $employee->salaries->where('month',$year . '-' . $month)->first()[$field] : 0;
+        $val = 0;
+        if($employee->salaries->where('month',$year . '-' . $month)->first()) {
+            // ($savings_loan + (($savings_rate + $termination_service) / $USD ))
+            $savings_loan = $employee->salaries->where('month',$year . '-' . $month)->first()->savings_loan ?? 0;
+            $savings_rate = $employee->salaries->where('month',$year . '-' . $month)->first()->savings_rate ?? 0;
+            $termination_service = $employee->salaries->where('month',$year . '-' . $month)->first()->termination_service ?? 0;
+            $USD = App\Models\Currency::where('name','USD')->first()->value ?? 1;
 
+            $val = $savings_loan + (($savings_rate + $termination_service) / $USD);
+        }
+
+        return $val;
+    }
+@endphp
 <body>
     <htmlpageheader name="page-header">
         @if ($employee->workData->association == "المدينة")
@@ -123,78 +138,74 @@
                     <p style="margin-bottom: 0;">{{Carbon\Carbon::now()->format('Y-m-d')}}</p>
                 </div>
             </div>
-            <h3 class="personal-info-title" style="margin-bottom: 2em; ">كشف صرف {{ $name_loan }} للموظف : "{{ $employee->name }}"  لسنة : {{ $year }} </h3>
+            <h3 class="personal-info-title" style="margin-bottom: 2em; ">كشف الإدخارات للموظف : {{ $employee->name }} لسنة : {{ $year }} </h3>
             <div class="table-responsive">
                 <table class="table">
                     <tbody>
                         <tr>
                             <td class="head_td">يناير :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '01')->first() ? $employee->loans->where('month',$year . '-' . '01')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'01') }}
                             </td>
                             <td class="head_td gender-label"> يوليه :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '07')->first() ? $employee->loans->where('month',$year . '-' . '07')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'07') }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">فبراير :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '02')->first() ? $employee->loans->where('month',$year . '-' . '02')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'02') }}
                             </td>
                             <td class="head_td gender-label"> أغسطس :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '08')->first() ? $employee->loans->where('month',$year . '-' . '08')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'08') }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">مارس :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '03')->first() ? $employee->loans->where('month',$year . '-' . '03')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'03') }}
                             </td>
                             <td class="head_td gender-label"> سبتمبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '09')->first() ? $employee->loans->where('month',$year . '-' . '09')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'09') }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">أبريل :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '04')->first() ? $employee->loans->where('month',$year . '-' . '04')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'04') }}
                             </td>
                             <td class="head_td gender-label"> أكتوبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '10')->first() ? $employee->loans->where('month',$year . '-' . '10')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'10') }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">مايو :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '05')->first() ? $employee->loans->where('month',$year . '-' . '05')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'05') }}
                             </td>
                             <td class="head_td gender-label"> نوفمبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '11')->first() ? $employee->loans->where('month',$year . '-' . '11')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'11') }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">يونيو :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '06')->first() ? $employee->loans->where('month',$year . '-' . '06')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'06') }}
                             </td>
                             <td class="head_td gender-label"> ديسمبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '12')->first() ? $employee->loans->where('month',$year . '-' . '12')->first()[$field] : 0 }}
+                                {{ getField($employee,$year,'12') }}
                             </td>
                         </tr>
                         <tr>
-                            <td class="head_td"> الرصيد السابق :</td>
-                            <td class="data_td wide-cell">
-                                {{ $previous_balance ?? 0 }}
-                            </td>
-                            <td class="head_td gender-label" >الإجمالي العام : :&nbsp;</td>
-                            <td class="data_td medium-cell">
-                                {{ $employee->totals[$total_field] ?? 0 }}
+                            <td class="head_td" colspan="1">الإجمالي العام :</td>
+                            <td class="data_td wide-cell" colspan="3">
+                                {{ $employee->totals->total_savings ?? 0 }}
                             </td>
                         </tr>
                     </tbody>

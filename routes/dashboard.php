@@ -9,9 +9,12 @@ use App\Http\Controllers\Dashboard\CustomizationController;
 use App\Http\Controllers\Dashboard\EmployeeController;
 use App\Http\Controllers\Dashboard\ExchangeController;
 use App\Http\Controllers\Dashboard\FixedEntriesController;
+use App\Http\Controllers\Dashboard\LoanController;
+use App\Http\Controllers\Dashboard\ReceivableController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\SalaryController;
 use App\Http\Controllers\Dashboard\SalaryScaleController;
+use App\Http\Controllers\Dashboard\SavingController;
 use App\Http\Controllers\Dashboard\TotalController;
 use App\Http\Controllers\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
@@ -29,8 +32,9 @@ Route::group([
 
 
     Route::post('/fixed_entries/getData', [FixedEntriesController::class,'getData'])->name('fixed_entries.getData');
+    Route::post('/loans/getData', [LoanController::class,'getData'])->name('loans.getData');
 
-    Route::post('/exchanges/printPdf', [ExchangeController::class,'printPdf'])->name('exchanges.printPdf');
+
     Route::post('/exchanges/getTotals', [ExchangeController::class,'getTotals'])->name('exchanges.getTotals');
 
 
@@ -51,12 +55,14 @@ Route::group([
     Route::get('employees/exportExcel', [EmployeeController::class,'export'])->name('employees.exportExcel');
     Route::post('banks_employees/importExcel', [BanksEmployeesController::class,'import'])->name('banks_employees.importExcel');
     Route::get('banks_employees/exportExcel', [BanksEmployeesController::class,'export'])->name('banks_employees.exportExcel');
-    Route::post('totals/importExcel', [TotalController::class,'import'])->name('totals.importExcel');
-    Route::get('totals/exportExcel', [TotalController::class,'export'])->name('totals.exportExcel');
 
     // PDF Export
     Route::post('employees/view_pdf', [EmployeeController::class, 'viewPDF'])->name('employees.view_pdf');
-    Route::post('salaries/view_pdf', [SalaryController::class, 'viewPDF'])->name('salaries.view_pdf');
+    Route::post('salaries/{salary}/view_pdf', [SalaryController::class, 'viewPDF'])->name('salaries.view_pdf');
+    Route::post('receivables/{receivable}/view_pdf', [ReceivableController::class, 'print'])->name('receivables.view_pdf');
+    Route::post('savings/{saving}/view_pdf', [SavingController::class, 'print'])->name('savings.view_pdf');
+    Route::post('loans/{loan}/view_pdf', [LoanController::class, 'print'])->name('loans.view_pdf');
+    Route::post('exchanges/{exchange}/printPdf', [ExchangeController::class,'printPdf'])->name('exchanges.printPdf');
 
     // sections seystem
     Route::get('/constants', [ConstantController::class,'index'])->name('constants.index');
@@ -79,12 +85,14 @@ Route::group([
         'banks_employees' => BanksEmployeesController::class,
         'fixed_entries' => FixedEntriesController::class,
         'salary_scales' => SalaryScaleController::class,
-        'totals' => TotalController::class,
         'salaries' => SalaryController::class,
         'users' => UserController::class,
         'exchanges' => ExchangeController::class,
         'customizations' => CustomizationController::class,
         'accreditations' => AccreditationController::class,
+        'receivables' => ReceivableController::class,
+        'savings' => SavingController::class,
+        'loans' => LoanController::class,
         // 'roles' => RoleController::class,
     ]);
 });

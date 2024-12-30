@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>كشف {{ $name_loan }}</title>
+    <title>كشف مستحقات</title>
     <style>
         *{
             margin: 0;
@@ -123,78 +123,74 @@
                     <p style="margin-bottom: 0;">{{Carbon\Carbon::now()->format('Y-m-d')}}</p>
                 </div>
             </div>
-            <h3 class="personal-info-title" style="margin-bottom: 2em; ">كشف صرف {{ $name_loan }} للموظف : "{{ $employee->name }}"  لسنة : {{ $year }} </h3>
+            <h3 class="personal-info-title" style="margin-bottom: 2em; ">كشف مستحقات للموظف : {{ $employee->name }} لسنة : {{ $year }} </h3>
             <div class="table-responsive">
                 <table class="table">
                     <tbody>
                         <tr>
                             <td class="head_td">يناير :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '01')->first() ? $employee->loans->where('month',$year . '-' . '01')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '01')->first() ? $employee->salaries->where('month',$year . '-' . '01')->first()->late_receivables : 0 }}
                             </td>
                             <td class="head_td gender-label"> يوليه :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '07')->first() ? $employee->loans->where('month',$year . '-' . '07')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '07')->first() ? $employee->salaries->where('month',$year . '-' . '07')->first()->late_receivables : 0 }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">فبراير :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '02')->first() ? $employee->loans->where('month',$year . '-' . '02')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '02')->first() ? $employee->salaries->where('month',$year . '-' . '02')->first()->late_receivables : 0 }}
                             </td>
                             <td class="head_td gender-label"> أغسطس :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '08')->first() ? $employee->loans->where('month',$year . '-' . '08')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '08')->first() ? $employee->salaries->where('month',$year . '-' . '08')->first()->late_receivables : 0 }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">مارس :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '03')->first() ? $employee->loans->where('month',$year . '-' . '03')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '03')->first() ? $employee->salaries->where('month',$year . '-' . '03')->first()->late_receivables : 0 }}
                             </td>
                             <td class="head_td gender-label"> سبتمبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '09')->first() ? $employee->loans->where('month',$year . '-' . '09')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '09')->first() ? $employee->salaries->where('month',$year . '-' . '09')->first()->late_receivables : 0 }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">أبريل :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '04')->first() ? $employee->loans->where('month',$year . '-' . '04')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '04')->first() ? $employee->salaries->where('month',$year . '-' . '04')->first()->late_receivables : 0 }}
                             </td>
                             <td class="head_td gender-label"> أكتوبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '10')->first() ? $employee->loans->where('month',$year . '-' . '10')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '10')->first() ? $employee->salaries->where('month',$year . '-' . '10')->first()->late_receivables : 0 }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">مايو :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '05')->first() ? $employee->loans->where('month',$year . '-' . '05')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '05')->first() ? $employee->salaries->where('month',$year . '-' . '05')->first()->late_receivables : 0 }}
                             </td>
                             <td class="head_td gender-label"> نوفمبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '11')->first() ? $employee->loans->where('month',$year . '-' . '11')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '11')->first() ? $employee->salaries->where('month',$year . '-' . '11')->first()->late_receivables : 0 }}
                             </td>
                         </tr>
                         <tr>
                             <td class="head_td">يونيو :</td>
                             <td class="data_td wide-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '06')->first() ? $employee->loans->where('month',$year . '-' . '06')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '06')->first() ? $employee->salaries->where('month',$year . '-' . '06')->first()->late_receivables : 0 }}
                             </td>
                             <td class="head_td gender-label"> ديسمبر :&nbsp;</td>
                             <td class="data_td medium-cell">
-                                {{ $employee->loans->where('month',$year . '-' . '12')->first() ? $employee->loans->where('month',$year . '-' . '12')->first()[$field] : 0 }}
+                                {{ $employee->salaries->where('month',$year . '-' . '12')->first() ? $employee->salaries->where('month',$year . '-' . '12')->first()->late_receivables : 0 }}
                             </td>
                         </tr>
                         <tr>
-                            <td class="head_td"> الرصيد السابق :</td>
-                            <td class="data_td wide-cell">
-                                {{ $previous_balance ?? 0 }}
-                            </td>
-                            <td class="head_td gender-label" >الإجمالي العام : :&nbsp;</td>
-                            <td class="data_td medium-cell">
-                                {{ $employee->totals[$total_field] ?? 0 }}
+                            <td class="head_td" colspan="1">الإجمالي العام :</td>
+                            <td class="data_td wide-cell" colspan="3">
+                                {{ $employee->totals->total_receivables ?? 0 }}
                             </td>
                         </tr>
                     </tbody>

@@ -54,14 +54,6 @@
         </p>
         @endcan
         <ul class="navbar-nav flex-fill w-100 mb-2">
-            @can('view','App\\Models\ReceivablesLoans')
-            <li class="nav-item w-100">
-                <a class="nav-link" href="{{route('totals.index')}}">
-                    <i class="fe fe-trello fe-16"></i>
-                    <span class="ml-3 item-text">المستحقات والقروض</span>
-                </a>
-            </li>
-            @endcan
             @can('view','App\\Models\FixedEntries')
             <li class="nav-item w-100">
                 <a class="nav-link" href="{{route('fixed_entries.index')}}">

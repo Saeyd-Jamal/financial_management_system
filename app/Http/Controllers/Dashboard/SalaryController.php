@@ -20,36 +20,102 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
 
 class SalaryController extends Controller
 {
     use AuthorizesRequests;
+    protected $monthNameAr;
+
+    public function __construct(){
+        // مصفوفة لأسماء الأشهر باللغة العربية
+        $this->monthNameAr = [
+            '01' => 'يناير',
+            '02' => 'فبراير',
+            '03' => 'مارس',
+            '04' => 'أبريل',
+            '05' => 'مايو',
+            '06' => 'يونيو',
+            '07' => 'يوليو',
+            '08' => 'أغسطس',
+            '09' => 'سبتمبر',
+            '10' => 'أكتوبر',
+            '11' => 'نوفمبر',
+            '12' => 'ديسمبر'
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $this->authorize('view', Salary::class);
+        $request = request();
+        $month = $request->month ?? Carbon::now()->format('Y-m');
+        $employee_ids = Salary::where('month', $month)->get('employee_id');
+
+        $employees = Employee::with(['workData','loans','fixedEntries','salaries'])->whereIn('id',$employee_ids)->get()->map(function ($employee) use ($month) {
+            $fixedEntries = $employee->fixedEntries->where('month', $month)->first();
+            $salaries = $employee->salaries->where('month', $month)->first();
+            $employee->association = $employee->workData->association ?? '';
+            $employee->workplace = $employee->workData->workplace ?? '';
+            $employee->allowance = $employee->workData->allowance ?? '';
+            $employee->grade = $employee->workData->grade ?? '';
+            $employee->initial_salary = $salaries->initial_salary ?? 0;
+            $employee->grade_Allowance = $salaries->grade_Allowance ?? 0;
+            $employee->secondary_salary = $salaries->secondary_salary ?? 0;
+            $employee->allowance_boys = $salaries->allowance_boys ?? 0;
+            $employee->nature_work_increase = $salaries->nature_work_increase ?? 0;
+            $employee->administrative_allowance = $fixedEntries->administrative_allowance ?? 0;
+            $employee->scientific_qualification_allowance = $fixedEntries->scientific_qualification_allowance ?? 0;
+            $employee->transport = $fixedEntries->transport ?? 0;
+            $employee->extra_allowance = $fixedEntries->extra_allowance ?? 0;
+            $employee->salary_allowance = $fixedEntries->salary_allowance ?? 0;
+            $employee->ex_addition = $fixedEntries->ex_addition ?? 0;
+            $employee->mobile_allowance = $fixedEntries->mobile_allowance ?? 0;
+            $employee->termination_service = $salaries->termination_service ?? 0;
+            $employee->gross_salary = $salaries->gross_salary ?? 0;
+            $employee->health_insurance = $fixedEntries->health_insurance ?? 0;
+            $employee->z_Income = $salaries->z_Income ?? 0;
+            $employee->savings_rate = $salaries->savings_rate ?? 0;
+            $employee->association_loan = $salaries->association_loan ?? 0;
+            $employee->savings_loan = $salaries->savings_loan ?? 0;
+            $employee->shekel_loan = $salaries->shekel_loan ?? 0;
+            $employee->late_receivables = $salaries->late_receivables ?? 0;
+            $employee->total_discounts = $salaries->total_discounts ?? 0;
+            $employee->net_salary = $salaries->net_salary ?? 0;
+            $employee->account_number = $salaries->account_number ?? '';
+            return $employee;
+        });
+        if($request->ajax()) {
+            return DataTables::of($employees)
+                    ->addIndexColumn()  // إضافة عمود الترقيم التلقائي
+                    ->addColumn('edit', function ($employee) {
+                        return $employee->id;
+                    })
+                    ->addColumn('print', function ($employee) {
+                        return $employee->id;
+                    })
+                    ->make(true);
+        }
+
         $accreditations = Accreditation::get();
         $lastAccreditations = Accreditation::latest()->first();
-
-
-        $month  = Carbon::now()->format('Y-m');
         $monthDownload = ($lastAccreditations  != null) ? Carbon::parse($lastAccreditations->month)->addMonth()->format('Y-m') : '2024-07' ;
-        $USD = Currency::where('code', 'USD')->first()->value;
-        $salaries = Salary::where('month', $monthDownload)->get();
-
-        $btn_download_salary = null;
-        $employess = Employee::all();
-        foreach ($employess as $employee) {
+        $btn_download_salary = $employee_ids->isNotEmpty() ? "active" : null;
+        if($employees->isEmpty()) {
+            $btn_download_salary = "active";
+        }
+        foreach ($employees as $employee) {
             $salary = Salary::where('employee_id', $employee->id)->where('month', $monthDownload)->first();
-            if($salary == null){
+            if ($salary == null) {
                 $btn_download_salary = "active";
+                break;
             }
         }
-        $btn_delete_salary = $salaries->isNotEmpty() ? "active" : null;
+        $btn_delete_salary = $employee_ids->isNotEmpty() ? "active" : null;
 
-        return view('dashboard.salaries.index', compact('salaries','btn_download_salary','btn_delete_salary','accreditations','USD','month','monthDownload'));
+        return view('dashboard.salaries.index',compact('month','monthDownload','accreditations','btn_download_salary','btn_delete_salary'));
     }
 
     /**
@@ -152,7 +218,7 @@ class SalaryController extends Controller
         try {
 
             // التجربة لموظف
-            // $employee = Employee::findOrFail($request->employee_id);
+            // $employee = Employee::findOrFail(1);
             // $month = $request->month ?? Carbon::now()->format('Y-m');
             // AddSalaryEmployee::addSalary($employee,$month);
 
@@ -200,10 +266,10 @@ class SalaryController extends Controller
             foreach ($salaries as $salary) {
                 try{
                     $USD = Currency::where('code', 'USD')->first()->value;
-                    $fixedEntries = $salary->employee->fixedEntries->where('month', $salary->month)->first();
+                    $loans = $salary->employee->loans->where('month', $salary->month)->first();
                     // إجمالي الإدخارات (تم وضع معادلته سابقا لوجود مشكلة بالحسبة)
-                    $savings_loan = ($fixedEntries != null) ? $fixedEntries->savings_loan : 0;
-                    $savings_rate = ($fixedEntries != null) ? $fixedEntries->savings_rate : 0;
+                    $savings_loan = ($loans != null) ? $loans->savings_loan : 0;
+                    $savings_rate = ($loans != null) ? $loans->savings_rate : 0;
                     $termination_service = $salary->termination_service ?? 0;
 
                     $total_savings = $savings_loan + (($savings_rate + $termination_service) / $USD );
@@ -214,8 +280,8 @@ class SalaryController extends Controller
                         'total_receivables' => DB::raw('total_receivables - '. ($salary->late_receivables )),
                         'total_savings' => DB::raw('total_savings - ' . $total_savings),
                         'total_savings_loan' => DB::raw('total_savings_loan + '.$savings_loan),
-                        'total_shekel_loan' => DB::raw('total_shekel_loan + '.($fixedEntries->shekel_loan ?? 0)),
-                        'total_association_loan' => DB::raw('total_association_loan + '.($fixedEntries->association_loan ?? 0))
+                        'total_shekel_loan' => DB::raw('total_shekel_loan + '.($loans->shekel_loan ?? 0)),
+                        'total_association_loan' => DB::raw('total_association_loan + '.($loans->association_loan ?? 0))
                     ]);
                     $salary->forceDelete();
                     LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$salary->employee_id")->delete();
@@ -235,5 +301,31 @@ class SalaryController extends Controller
     public function getSalariesMonth(Request $request){
         $salaries = Salary::with('employee')->where('month', $request->month)->get();
         return $salaries;
+    }
+
+    public function viewPDF(Request $request,$id){
+        $month = $request->month ?? Carbon::now()->format('Y-m');
+        $year = Carbon::parse($month)->format('Y');
+        $monthAr = $this->monthNameAr[Carbon::parse($month)->format('m')];
+        $employee = Employee::with(['totals','salaries','fixedEntries','workData'])->find($id);
+        $fixedEntries = $employee->fixedEntries->where('month', $month)->first();
+        $salaries = $employee->salaries->where('month', $month)->first();
+        $margin_top = 30;
+        if($employee->workData->association == 'صلاح' || $employee->workData->association == 'حطين'){
+            $margin_top = 45;
+        }
+        $pdf = PDF::loadView('dashboard.pdf.employee.employee_salary',['employee' => $employee,'fixedEntries' => $fixedEntries,'salaries' => $salaries,'month' => $month,'year' => $year, 'monthAr' => $monthAr],[],
+        [
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'default_font_size' => 12,
+            'default_font' => 'Arial',
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => $margin_top ,
+            'margin_bottom' => 0,
+        ]);
+        $time = Carbon::now();
+        return $pdf->stream('تقرير مستحقات للموظف : ' . $employee->name .'  _ '.$time.'.pdf');
     }
 }

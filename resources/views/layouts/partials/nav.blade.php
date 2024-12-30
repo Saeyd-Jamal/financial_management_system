@@ -65,12 +65,25 @@
                         <span class="ml-lg-2">المالية</span><span class="sr-only">(current)</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dashboardDropdown">
-                        <a class="nav-link pl-lg-2" href="{{route('totals.index')}}"><span class="ml-1">المستحقات والقروض</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('fixed_entries.index')}}"><span class="ml-1">التعديلات</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('exchanges.index')}}"><span class="ml-1">الصرف</span></a>
-                        <a class="nav-link pl-lg-2" href="{{route('customizations.index')}}"><span class="ml-1">التخصيص</span></a>
+                        @can('view','App\\Models\ReceivablesLoans')
+                            <a class="nav-link pl-lg-2" href="{{route('receivables.index')}}"><span class="ml-1">المستحقات</span></a>
+                            <a class="nav-link pl-lg-2" href="{{route('savings.index')}}"><span class="ml-1">الإدخارات</span></a>
+                        @endcan
+                        @can('view','App\\Models\Loan')
+                            <a class="nav-link pl-lg-2" href="{{route('loans.index')}}"><span class="ml-1">القروض</span></a>
+                        @endcan
+                        @can('view','App\\Models\FixedEntries')
+                            <a class="nav-link pl-lg-2" href="{{route('fixed_entries.index')}}"><span class="ml-1">التعديلات</span></a>
+                        @endcan
+                        @can('view','App\\Models\Exchange')
+                            <a class="nav-link pl-lg-2" href="{{route('exchanges.index')}}"><span class="ml-1">الصرف</span></a>
+                        @endcan
+                        @can('view','App\\Models\Customization')
+                            <a class="nav-link pl-lg-2" href="{{route('customizations.index')}}"><span class="ml-1">التخصيص</span></a>
+                        @endcan
                     </div>
                 </li>
+                @can('view','App\\Models\SpecificSalary')
                 <li class="nav-item dropdown">
                     <a href="#" id="dashboardDropdown" class="dropdown-toggle nav-link" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -81,15 +94,22 @@
                         <a class="nav-link pl-lg-2" href="{{route('specific_salaries.ratio')}}"><span class="ml-1">النسبة</span></a>
                     </div>
                 </li>
+                @endcan
                 <li class="nav-item dropdown">
                     <a href="#" id="dashboardDropdown" class="dropdown-toggle nav-link" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="ml-lg-2">البيانات</span><span class="sr-only">(current)</span>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dashboardDropdown">
+                        @can('view','App\\Models\Bank')
                         <a class="nav-link pl-lg-2" href="{{route('banks.index')}}"><span class="ml-1">البنوك</span></a>
+                        @endcan
+                        @can('view','App\\Models\BanksEmployees')
                         <a class="nav-link pl-lg-2" href="{{route('banks_employees.index')}}"><span class="ml-1">حسابات الموظفين</span></a>
+                        @endcan
+                        @can('view','App\\Models\SalaryScale')
                         <a class="nav-link pl-lg-2" href="{{route('salary_scales.index')}}"><span class="ml-1">سلم الرواتب</span></a>
+                        @endcan
                     </div>
                 </li>
                 <li class="nav-item dropdown more">
@@ -98,10 +118,15 @@
                         <span class="ml-2 sr-only">More</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="moreDropdown">
+                        @can('view','App\\Models\User')
                         <a class="nav-link pl-lg-2" href="{{route('users.index')}}"><span class="ml-1">المستخدمين</span></a>
+                        @endcan
+                        @can('view','App\\Models\Constant')
                         <a class="nav-link pl-lg-2" href="{{route('constants.index')}}"><span class="ml-1">ثوابت النظام</span></a>
+                        @endcan
+                        @can('view','App\\Models\Currency')
                         <a class="nav-link pl-lg-2" href="{{route('currencies.index')}}"><span class="ml-1">العملات</span></a>
-
+                        @endcan
                     </ul>
                 </li>
             </ul>

@@ -1,4 +1,4 @@
-<x-front-layout  classC="shadow p-0 mb-5 bg-white rounded">
+<x-front-layout  classC="shadow p-0 bg-white rounded">
     @push('styles')
         <!-- DataTables CSS -->
         <link rel="stylesheet" href="{{asset('css/datatable/jquery.dataTables.min.css')}}">
@@ -13,11 +13,23 @@
     <x-slot:extra_nav>
         @can('create', 'App\\Models\Exchange')
         <li class="nav-item mx-2">
-            <button type="button" class="btn btn-icon text-success my-2 mx-0" id="createNew">
+            <a href="{{ route('exchanges.create') }}" class="btn btn-icon text-success m-0 text-center">
                 <i class="fe fe-plus fe-16"></i>
-            </button>
+            </a>
         </li>
         @endcan
+        <li class="nav-item dropdown d-flex align-items-center justify-content-center mx-2">
+            <a class="nav-link dropdown-toggle text-white pr-0" href="#" id="navbarDropdownMenuLink"
+                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="avatar avatar-sm mt-2">
+                    <i class="fe fe-filter fe-16"></i>
+                </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <button class="btn btn-nav" id="filterBtn">تصفية</button>
+                <button class="btn btn-nav" id="filterBtnClear">إزالة التصفية</button>
+            </div>
+        </li>
         <li class="nav-item d-flex align-items-center justify-content-center">
             <button type="button" class="btn" id="refreshData"><span class="fe fe-refresh-ccw fe-16 text-white"></span></button>
         </li>
@@ -29,23 +41,52 @@
                     <table id="exchanges-table" class="table table-striped table-bordered table-hover sticky" style="width:100%; height: calc(100vh - 100px);">
                         <thead>
                             <tr>
-                                <th></th>
                                 <th class="text-white text-center">#</th>
                                 <th>تاريخ الصرف</th>
                                 <th class="sticky" style="right: 0px; white-space: nowrap;">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <span>الاسم</span>
-                                        <div class="filter-dropdown ml-4" style="display: block;">
+                                        <div class="filter-dropdown ml-4">
                                             <div class="dropdown">
-                                                <button class="btn btn-secondary btn-filter" id="btn-filter-3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button class="btn btn-secondary btn-filter" id="btn-filter-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fe fe-pocket text-white"></i>
                                                 </button>
                                                 <div class="filterDropdownMenu dropdown-menu dropdown-menu-right p-2" aria-labelledby="employee_name_filter">
                                                     <!-- إضافة checkboxes بدلاً من select -->
                                                     <div class="searchable-checkbox">
                                                         <div class="d-flex justify-content-between align-items-center">
+                                                            <input type="search" class="form-control search-checkbox" data-index="2" placeholder="ابحث...">
+                                                            <button class="btn btn-success text-white filter-apply-btn-checkbox" data-target="2" data-field="employee_name">
+                                                                <i class="fe fe-check"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="checkbox-list-box">
+                                                            <label style="display: block;">
+                                                                <input type="checkbox" value="all" class="all-checkbox" data-index="2"> الكل
+                                                            </label>
+                                                            <div class="checkbox-list checkbox-list-2">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span>الجمعية</span>
+                                        <div class="filter-dropdown ml-4">
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary btn-filter" id="btn-filter-3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fe fe-pocket text-white"></i>
+                                                </button>
+                                                <div class="filterDropdownMenu dropdown-menu dropdown-menu-right p-2" aria-labelledby="association_filter">
+                                                    <!-- إضافة checkboxes بدلاً من select -->
+                                                    <div class="searchable-checkbox">
+                                                        <div class="d-flex justify-content-between align-items-center">
                                                             <input type="search" class="form-control search-checkbox" data-index="3" placeholder="ابحث...">
-                                                            <button class="btn btn-success text-white filter-apply-btn-checkbox" data-target="3" data-field="employee_name">
+                                                            <button class="btn btn-success text-white filter-apply-btn-checkbox" data-target="3" data-field="association_field">
                                                                 <i class="fe fe-check"></i>
                                                             </button>
                                                         </div>
@@ -63,7 +104,34 @@
                                     </div>
                                 </th>
                                 <th>
-                                    <span>الجمعية</span>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span>مكان العمل</span>
+                                        <div class="filter-dropdown ml-4">
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary btn-filter" id="btn-filter-4" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fe fe-pocket text-white"></i>
+                                                </button>
+                                                <div class="filterDropdownMenu dropdown-menu dropdown-menu-right p-2" aria-labelledby="workplace_filter">
+                                                    <!-- إضافة checkboxes بدلاً من select -->
+                                                    <div class="searchable-checkbox">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <input type="search" class="form-control search-checkbox" data-index="4" placeholder="ابحث...">
+                                                            <button class="btn btn-success text-white filter-apply-btn-checkbox" data-target="4" data-field="workplace_field">
+                                                                <i class="fe fe-check"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="checkbox-list-box">
+                                                            <label style="display: block;">
+                                                                <input type="checkbox" value="all" class="all-checkbox" data-index="4"> الكل
+                                                            </label>
+                                                            <div class="checkbox-list checkbox-list-4">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
                                 <th>خصم المستحقات ش</th>
                                 <th>خصم الإدخارات $</th>
@@ -78,66 +146,6 @@
                             </tr>
                         </thead>
                     </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Fullscreen modal -->
-    <div class="modal fade modal-full" id="editExchanges" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <button aria-label="" type="button" class="close px-2" data-dismiss="modal" aria-hidden="true">
-            <span aria-hidden="true">×</span>
-        </button>
-        <div class="modal-dialog modal-dialog-centered w-100" role="document" style="max-width: 95%;">
-            <div class="modal-content">
-                <div class="modal-body text-center p-0">
-                    <form id="editForm">
-                        @include('dashboard.exchanges.editModal')
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> <!-- small modal -->
-
-    <div class="modal fade" id="searchEmployee" tabindex="-5" role="dialog" aria-labelledby="searchEmployeeLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="searchEmployeeLabel">البحث عن الموظفين</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div class="row mt-3">
-                            <div class="form-group col-md-6">
-                                <x-form.input name="employee_id_search" label="رقم الهوية" type="number" class="employee_fields_search"
-                                    placeholder="إملا رقم هوية الموظف"  />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <x-form.input name="employee_name_search" label="إسم الموظف" type="text" class="employee_fields_search"
-                                    placeholder="إملا إسم الموظف" />
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">رقم الموظف</th>
-                                    <th scope="col">رقم الهوية</th>
-                                    <th scope="col">الإسم</th>
-                                    <th scope="col">تاريخ الميلاد</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table_employee">
-                                <tr>
-                                    <td colspan='4'>يرجى تعبئة البيانات</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -180,18 +188,11 @@
                         }
                     },
                     columns: [
-                        { data: 'edit', name: 'edit', orderable: false, searchable: false, render: function(data, type, row) {
-                            @can('edit','App\\Models\Exchange')
-                            let link = `<button class="btn btn-sm btn-icon text-primary edit_row"  style="padding: 1px;" data-id=":allocation"><i class="fe fe-edit"></i></button>`.replace(':allocation', data);
-                            return link ;
-                            @else
-                            return '';
-                            @endcan
-                        }},
                         { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false}, // عمود الترقيم التلقائي
                         { data: 'discount_date', name: 'discount_date', orderable: false},
                         { data: 'name', name: 'name'  , orderable: false, class: 'sticky'},
                         { data: 'association', name: 'association', orderable: false},
+                        { data: 'workplace', name: 'workplace', orderable: false},
                         { data: 'receivables_discount', name: 'receivables_discount', orderable: false, render: function(data, type, row) {
                             return  formatNumber(data,2);
                         }},
@@ -213,7 +214,7 @@
                         { data: 'notes', name: 'notes', orderable: false},
                         { data: 'username', name: 'username', orderable: false},
                         { data: 'print', name: 'print', orderable: false, searchable: false, render: function (data, type, row) {
-                            @can('print','App\\Models\Allocation')
+                            @can('print','App\\Models\Exchange')
                             return `
                                 <form method="post" action="{{route('exchanges.printPdf',':exchanges')}}" target="_blank">
                                     @csrf
@@ -230,7 +231,7 @@
                         }},
                         { data: 'delete', name: 'delete', orderable: false, searchable: false, render: function(data, type, row) {
                             @can('delete','App\\Models\Exchange')
-                            let link = `<button class="btn btn-sm p-1 btn-icon text-danger delete_row"  style="padding: 1px;" data-id=":allocation"><i class="fe fe-trash"></i></button>`.replace(':allocation', data);
+                            let link = `<button class="btn btn-sm p-1 btn-icon text-danger delete_row"  style="padding: 1px;" data-id=":exchange"><i class="fe fe-trash"></i></button>`.replace(':exchange', data);
                             return link ;
                             @else
                             return '';
@@ -301,7 +302,9 @@
                 }
                 // دالة لإعادة بناء الفلاتر بناءً على البيانات الحالية
                 function rebuildFilters() {
-                    isColumnFiltered(3) ? '' : populateFilterOptions(3, '.checkbox-list-3','employee_name');
+                    isColumnFiltered(2) ? '' : populateFilterOptions(2, '.checkbox-list-2','employee_name');
+                    isColumnFiltered(3) ? '' : populateFilterOptions(3, '.checkbox-list-3','association_field');
+                    isColumnFiltered(4) ? '' : populateFilterOptions(4, '.checkbox-list-4','workplace_field');
                     for (let i = 1; i <= 4; i++) {
                         if (isColumnFiltered(i)) {
                             $('#btn-filter-' + i).removeClass('btn-secondary');
@@ -415,184 +418,25 @@
                 $(document).on('click', '#refreshData', function() {
                     table.ajax.reload();
                 });
-                $(document).on('click', '.edit_row', function () {
-                    const id = $(this).data('id'); // الحصول على ID الصف
-                    editExchangesForm(id);
+                $(document).on('click', '#filterBtnClear', function() {
+                    $('.filter-dropdown').slideUp();
+                    $('#filterBtn').text('تصفية');
+                    $('.filterDropdownMenu input').val('');
+                    $('th input[type="checkbox"]').prop('checked', false);
+                    table.columns().search('').draw(); // إعادة رسم الجدول بدون فلاتر
                 });
-                let exhanges = {
-                    id : '',
-                    name: '',
-                    employee_id: '',
-                    exchange_type: '',
-                    discount_date: '',
-                    notes: '',
-                    username: '',
-                    receivables_discount: 0,
-                    savings_discount: 0,
-                    reward : 0,
-                    association_loan: 0,
-                    savings_loan: 0,
-                    shekel_loan: 0,
-                    totals: [],
-                };
-                function editExchangesForm(id) {
-                    $.ajax({
-                        url: '{{ route("exchanges.edit", ":id") }}'.replace(':id', id),
-                        method: 'GET',
-                        data: {
-                            id: id,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function (response) {
-                            exhanges.id = response.id;
-                            exhanges.name = response.name;
-                            exhanges.employee_id = response.employee_id;
-                            exhanges.totals = response.totals;
-                            exhanges.exchange_type = response.exchange_type;
-                            exhanges.discount_date = response.discount_date;
-                            exhanges.notes = response.notes;
-                            exhanges.username = response.username;
-                            exhanges.receivables_discount = response.receivables_discount;
-                            exhanges.savings_discount = response.savings_discount;
-                            exhanges.reward = response.reward;
-                            exhanges.association_loan = response.association_loan;
-                            exhanges.savings_loan = response.savings_loan;
-                            exhanges.shekel_loan = response.shekel_loan;
-                            $.each(exhanges, function(key, value) {
-                                let input = $('#' + key); // البحث عن العنصر باستخدام id
-                                if (input.length) { // التحقق إذا كان العنصر موجودًا
-                                    input.val(value); // تعيين القيمة
-                                }
-                            });
-                            $('#employee_name').text(response.name);
-                            $('#receivables_total').text(formatNumber(exhanges.totals.total_receivables,2));
-                            $('#savings_total').text(formatNumber(exhanges.totals.total_savings,2));
-                            $('#editExchanges').modal('show');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            alert('هنالك خطأ في الإتصال بالسيرفر.');
-                        },
-                    });
-                }
-                $(document).on('click', '#update', function () {
-                    let formData = $('#editForm').serialize(); // جمع بيانات النموذج في سلسلة بيانات
-                    let association_loan_total = parseFloat($('#association_loan_total').text()) || 0;
-                    let savings_loan_total = parseFloat($('#savings_loan_total').text()) || 0;
-                    let shekel_loan_total = parseFloat($('#shekel_loan_total').text()) || 0;
-                    if(association_loan_total < 0 || savings_loan_total < 0 || shekel_loan_total < 0){
-                        alert('لا يمكن أن يكون إجمالي القروض أقل من الصفر يرجى التدقيق لخصم القروض');
-                        return;
-                    }
-                    $.ajax({
-                        url: "{{ route('fixed_entries.update', ':id') }}".replace(':id', entry.id),
-                        method: 'PUT',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            year: year
-                        },
-                        data: formData,  // البيانات التي تم جمعها من النموذج
-                        success: function(response) {
-                            $('#editExchanges').modal('hide');
-                            table.ajax.reload();
-                            alert('تم التعديل بنجاح');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            alert('هنالك خطأ في الإتصال بالسيرفر.');
-                        }
-                    });
-                });
-                $(document).on('click', '#createNew', function () {
-                    $.ajax({
-                        url: '{{ route("exchanges.create") }}',
-                        method: 'GET',
-                        success: function (response) {
-                            allocation.id = response.id;
-                            allocation.date_allocation = response.date_allocation;
-                            allocation.budget_number = response.budget_number;
-                            allocation.broker_name = response.broker_name;
-                            allocation.organization_name = response.organization_name;
-                            allocation.project_name = response.project_name;
-                            allocation.item_name = response.item_name;
-                            allocation.quantity = response.quantity;
-                            allocation.price = response.price;
-                            allocation.total_dollar = response.total_dollar;
-                            allocation.allocation = response.allocation;
-                            allocation.currency_allocation = response.currency_allocation;
-                            allocation.currency_allocation_name = response.currency_allocation_name;
-                            allocation.currency_allocation_value = response.currency_allocation_value;
-                            allocation.amount = response.amount;
-                            allocation.number_beneficiaries = response.number_beneficiaries;
-                            allocation.implementation_items = response.implementation_items;
-                            allocation.date_implementation = response.date_implementation;
-                            allocation.implementation_statement = response.implementation_statement;
-                            allocation.amount_received = response.amount_received;
-                            allocation.arrest_receipt_number = response.arrest_receipt_number;
-                            allocation.notes = response.notes;
-                            allocation.user_name = response.user_name;
-                            allocation.manager_name = response.manager_name;
-                            $.each(allocation, function(key, value) {
-                                const input = $('#' + key); // البحث عن العنصر باستخدام id
-                                if (input.length) { // التحقق إذا كان العنصر موجودًا
-                                    input.val(value); // تعيين القيمة
-                                }
-                            });
-                            $('#addAllocation').remove();
-                            $('#update').remove();
-                            $('#btns_form').append(`
-                                <button type="button" id="addAllocation" class="btn btn-primary mx-2">
-                                    <i class="fe fe-plus"></i>
-                                    أضف
-                                </button>
-                            `);
-                            $('.editForm').css('display','none');
-                            $('#editAllocation').modal('show');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            alert('هنالك خطأ في الإتصال بالسيرفر.');
-                        },
-                    })
-                });
-                $(document).on('click', '#addAllocation', function () {
-                    const id = $(this).data('id'); // الحصول على ID الصف
-                    createAllocationForm(id);
-                });
-                function createAllocationForm(id){
-                    $.each(allocation, function(key, value) {
-                        const input = $('#' + key); // البحث عن العنصر باستخدام id
-                        if(key == 'id'){
-                            allocation['id'] = null;
-                        }else if(key == 'currency_allocation_value'){
-                            allocation['currency_allocation_value'] = 1 / $('#currency_allocation_value').val();
-                        }else{
-                            allocation[key] = input.val();
-                        }
-                    });
-                    console.log(allocation);
-                    $.ajax({
-                        url: "{{ route('exchanges.store') }}",
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        data: allocation,
-                        success: function (response) {
-                            $('#editAllocation').modal('hide');
-                            table.ajax.reload();
-                            alert('تم إضافة التخصيص بنجاح');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            alert('هنالك خطأ في الإتصال بالسيرفر.');
-                        },
-                    })
-                };
-
             });
         </script>
         <script>
+            $(document).on('click', '#filterBtn', function() {
+                let text = $(this).text();
+                if (text != 'تصفية') {
+                    $(this).text('تصفية');
+                }else{
+                    $(this).text('إخفاء التصفية');
+                }
+                $('.filter-dropdown').slideToggle();
+            });
             $(document).ready(function() {
                 if (curentTheme == "light") {
                     $('#stickyTableLight').prop('disabled', false); // تشغيل النمط Light

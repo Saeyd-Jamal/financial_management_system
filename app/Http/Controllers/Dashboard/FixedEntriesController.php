@@ -166,30 +166,12 @@ class FixedEntriesController extends Controller
                     'mobile_allowance' => $request['mobile_allowance-'.$i] ?? 0,
                     'health_insurance' => $request['health_insurance-'.$i] ?? 0,
                     'f_Oredo' =>  $request['f_Oredo-'.$i] ?? 0,
-                    'association_loan' => $request['association_loan-'.$i] ?? 0,
                     'tuition_fees' => $request['tuition_fees-'.$i] ?? 0,
                     'voluntary_contributions' => $request['voluntary_contributions-'.$i] ?? 0,
-                    'savings_loan' => $request['savings_loan-'.$i] ?? 0,
-                    'shekel_loan' =>  $request['shekel_loan-'.$i] ?? 0,
                     'paradise_discount' => $request['paradise_discount-'.$i] ?? 0,
                     'other_discounts' => $request['other_discounts-'.$i] ?? 0,
                     'proportion_voluntary' => $request['proportion_voluntary-'.$i] ?? 0,
                     'savings_rate' => $request['savings_rate-'.$i] ?? 0,
-                ]);
-
-                $total = $fixedEntries->employee->totals;
-                $association_loan = $request['association_loan-'.$i] ?? 0;
-                $savings_loan = $request['savings_loan-'.$i] ?? 0;
-                $shekel_loan = $request['shekel_loan-'.$i] ?? 0;
-                if($fixedEntriesOld){
-                    $association_loan = $fixedEntriesOld->association_loan - $association_loan;
-                    $savings_loan = $fixedEntriesOld->savings_loan - $savings_loan;
-                    $shekel_loan = $fixedEntriesOld->shekel_loan - $shekel_loan;
-                }
-                $total->update([
-                    'total_association_loan' =>  ($total->total_association_loan + $association_loan) ?? 0,
-                    'total_savings_loan' => ($total->total_savings_loan + $savings_loan)  ?? 0,
-                    'total_shekel_loan' => ($total->total_shekel_loan + $shekel_loan) ?? 0,
                 ]);
             }
             FixedEntries::updateOrCreate([
@@ -205,11 +187,8 @@ class FixedEntriesController extends Controller
                 'mobile_allowance' => $request['mobile_allowance-0000'] ?? -01,
                 'health_insurance' => $request['health_insurance-0000'] ?? -01,
                 'f_Oredo' =>  $request['f_Oredo-0000'] ?? -01,
-                'association_loan' => $request['association_loan-0000'] ?? -01,
                 'tuition_fees' => $request['tuition_fees-0000'] ?? -01,
                 'voluntary_contributions' => $request['voluntary_contributions-0000'] ?? -01,
-                'savings_loan' => $request['savings_loan-0000'] ?? -01,
-                'shekel_loan' =>  $request['shekel_loan-0000'] ?? -01,
                 'paradise_discount' => $request['paradise_discount-0000'] ?? -01,
                 'other_discounts' => $request['other_discounts-0000'] ?? -01,
                 'proportion_voluntary' => $request['proportion_voluntary-0000'] ?? -01,
@@ -245,7 +224,7 @@ class FixedEntriesController extends Controller
 
     public function getData(Request $request){
         $id = $request->id;
-        $employee = Employee::with(['workData','totals'])->findOrFail($id);
+        $employee = Employee::with(['workData'])->findOrFail($id);
         return $employee;
     }
 }
