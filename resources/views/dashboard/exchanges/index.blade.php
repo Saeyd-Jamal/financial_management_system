@@ -134,7 +134,9 @@
                                     </div>
                                 </th>
                                 <th>خصم المستحقات ش</th>
+                                <th>إضافة المستحقات ش</th>
                                 <th>خصم الإدخارات $</th>
+                                <th>إضافة الإدخارات $</th>
                                 <th>مكافأة مالية</th>
                                 <th>قرض الجمعية</th>
                                 <th>قرض الإدخار</th>
@@ -196,7 +198,13 @@
                         { data: 'receivables_discount', name: 'receivables_discount', orderable: false, render: function(data, type, row) {
                             return  formatNumber(data,2);
                         }},
+                        { data: 'receivables_addition', name: 'receivables_addition', orderable: false, render: function(data, type, row) {
+                            return  formatNumber(data,2);
+                        }},
                         { data: 'savings_discount', name: 'savings_discount', orderable: false, render: function(data, type, row) {
+                            return  formatNumber(data,2);
+                        }},
+                        { data: 'savings_addition', name: 'savings_addition', orderable: false, render: function(data, type, row) {
                             return  formatNumber(data,2);
                         }},
                         { data: 'reward', name: 'reward', orderable: false, render: function(data, type, row) {

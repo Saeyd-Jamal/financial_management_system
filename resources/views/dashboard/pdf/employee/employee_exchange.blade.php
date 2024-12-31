@@ -135,6 +135,12 @@
                 <table class="table">
                     <tbody>
                         <tr>
+                            <td class="head_td">رقم الهوية :</td>
+                            <td class="data_td wide-cell">{{ $employee->id }}</td>
+                            <td class="head_td gender-label">تاريخ العمل  :&nbsp;</td>
+                            <td class="data_td medium-cell">{{ $employee->workData->working_date }}</td>
+                        </tr>
+                        <tr>
                             <td class="head_td">قيمة الصرف :</td>
                             <td class="data_td wide-cell">
                                 @if ($exchange->exchange_type == 'receivables_discount')

@@ -85,8 +85,8 @@ class ExchangeController extends Controller
             ReceivablesLoans::updateOrCreate([
                 'employee_id' => $request->employee_id,
             ],[
-                'total_receivables' => DB::raw('total_receivables - (' . ($request->receivables_discount ?? 0) . ')'),
-                'total_savings' => DB::raw('total_savings - (' . ($request->savings_discount ?? 0) . ') - (' . ($request->savings_loan ?? 0) . ')'),
+                'total_receivables' => DB::raw('total_receivables - (' . ($request->receivables_discount ?? 0) . ') + (' . ($request->receivables_addition ?? 0) . ')'),
+                'total_savings' => DB::raw('total_savings - (' . ($request->savings_discount ?? 0) . ') - (' . ($request->savings_loan ?? 0) . ') + (' . ($request->savings_addition ?? 0) . ')'),
                 'total_association_loan' => DB::raw('total_association_loan + (' . ($request->association_loan ?? 0) . ')'),
                 'total_savings_loan' => DB::raw('total_savings_loan + (' . ($request->savings_loan ?? 0) . ')'),
                 'total_shekel_loan' => DB::raw('total_shekel_loan + (' . ($request->shekel_loan ?? 0) . ')'),
@@ -95,7 +95,8 @@ class ExchangeController extends Controller
             DB::commit();
         }catch (\Exception $exception){
             DB::rollBack();
-            return redirect()->back()->with('danger', $exception->getMessage());
+            throw $exception;
+            // return redirect()->back()->with('danger', $exception->getMessage());
         }
 
         if($request->ajax()) {
@@ -136,8 +137,8 @@ class ExchangeController extends Controller
         $this->authorize('delete', Exchange::class);
         ReceivablesLoans::where('employee_id',$exchange->employee_id)
             ->update([
-                'total_receivables' => DB::raw('total_receivables + '. ($exchange->receivables_discount )),
-                'total_savings' => DB::raw('total_savings + ' . $exchange->savings_discount . ' + ' . $exchange->savings_loan),
+                'total_receivables' => DB::raw('total_receivables + '. ($exchange->receivables_discount ) . ' - ' . $exchange->receivables_addition),
+                'total_savings' => DB::raw('total_savings + ' . $exchange->savings_discount . ' + ' . $exchange->savings_loan . ' - ' . $exchange->savings_addition),
                 'total_association_loan' => DB::raw('total_association_loan - ' . $exchange->association_loan),
                 'total_savings_loan' => DB::raw('total_savings_loan - ' . $exchange->savings_loan),
                 'total_shekel_loan' => DB::raw('total_shekel_loan - ' . $exchange->shekel_loan),
@@ -166,8 +167,8 @@ class ExchangeController extends Controller
             'format' => 'A4',
             'default_font_size' => 12,
             'default_font' => 'Arial',
-            'margin_left' => 0,
-            'margin_right' => 0,
+            'margin_left' => 10,
+            'margin_right' => 10,
             'margin_top' => $margin_top ,
             'margin_bottom' => 0,
         ]);

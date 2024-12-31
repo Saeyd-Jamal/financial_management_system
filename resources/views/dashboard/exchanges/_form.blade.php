@@ -11,7 +11,9 @@
                 <select class="custom-select" id="exchange_type" name="exchange_type" required>
                     <option value="">تحديد نوع الصرف</option>
                     <option value="receivables_discount" @selected($exchange->exchange_type == 'receivables_discount')>خصم من المستحقات ش</option>
+                    <option value="receivables_addition" @selected($exchange->exchange_type == 'receivables_addition')>اضافة للمستحقات ش</option>
                     <option value="savings_discount" @selected($exchange->exchange_type == 'savings_discount')>خصم من الإدخارات $</option>
+                    <option value="savings_addition" @selected($exchange->exchange_type == 'savings_addition')>اضافة للإدخارات $</option>
                     <option value="savings_loan" @selected($exchange->exchange_type == 'savings_loan')>قرض إدخار $</option>
                     <option value="shekel_loan" @selected($exchange->exchange_type == 'shekel_loan')>قرض لجنة ش</option>
                     <option value="association_loan" @selected($exchange->exchange_type == 'association_loan')>قرض جمعية ش</option>
@@ -98,12 +100,14 @@
 </div>
 @push('scripts')
 <script>
-    let receivables_discount = parseFloat("{{$exchange->receivables_discount}}");
-    let savings_discount = parseFloat("{{$exchange->savings_discount}}");
-    let reward = parseFloat("{{$exchange->reward}}");
-    let association_loan = parseFloat("{{$exchange->association_loan}}");
-    let savings_loan = parseFloat("{{$exchange->savings_loan}}");
-    let shekel_loan = parseFloat("{{$exchange->shekel_loan}}");
+    let receivables_discount = parseFloat("{{$exchange->receivables_discount ?? 0}}");
+    let receivables_addition = parseFloat("{{$exchange->receivables_addition ?? 0}}");
+    let savings_discount = parseFloat("{{$exchange->savings_discount ?? 0}}");
+    let savings_addition = parseFloat("{{$exchange->savings_addition ?? 0}}");
+    let reward = parseFloat("{{$exchange->reward ?? 0}}");
+    let association_loan = parseFloat("{{$exchange->association_loan ?? 0}}");
+    let savings_loan = parseFloat("{{$exchange->savings_loan ?? 0}}");
+    let shekel_loan = parseFloat("{{$exchange->shekel_loan ?? 0}}");
 </script>
 <script src="{{ asset('js/exchange.js') }}"></script>
 @endpush

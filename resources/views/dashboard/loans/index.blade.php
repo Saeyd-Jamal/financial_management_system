@@ -89,7 +89,7 @@
                 </div>
                 <div class="tab-pane fade pills-exchanges" role="tabpanel" aria-labelledby="pills-exchanges-tab">
                     @can('create', 'App\\Models\Exchange')
-                    <a type="button" class="btn btn-success text-white" data-toggle="modal" data-target="#createItem">
+                    <a href="{{ route('exchanges.create') }}" class="btn btn-success text-white">
                         <i class="fe fe-plus"></i> إضافة صرف جديد
                     </a>
                     @endcan
@@ -294,138 +294,6 @@
         </div>
     </div> <!-- small modal -->
 
-
-    @can('create', 'App\\Models\Exchange')
-    <div class="modal fade" id="createItem" tabindex="-2" role="dialog" aria-labelledby="createItemLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createItemLabel">إنشاء صرف جديد</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{route('exchanges.store')}}" method="post" class="col-12">
-                        @csrf
-                        <div class="row">
-                            <div class="form-group p-1 col-6">
-                                <label for="employee_id">رقم الموظف</label>
-                                <div class="input-group mb-3">
-                                    <x-form.input name="employee_id" placeholder="0" value="{{$employee_id ?? 0}}" readonly required />
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchEmployee" >
-                                            <i class="fe fe-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="name">
-                                </div>
-                            </div>
-                            <div class="form-group p-1 col-6">
-                                <label for="exchange_type">نوع الصرف</label>
-                                <select class="custom-select" name="exchange_type" id="exchange_type" required>
-                                    <option selected="" value="">إختر</option>
-                                    <option value="loans_discount">خصم المستحقات ش</option>
-                                    <option value="savings_discount">خصم الإدخارات $</option>
-                                    <option value="reward">مكافأة</option>
-                                    <option value="association_loan">قرض الجمعية ش</option>
-                                    <option value="savings_loan">قرض الإدخار $</option>
-                                    <option value="shekel_loan">قرض اللجنة ش</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group p-3 col-4 exchanges" id="loans" style="display: none;">
-                                <x-form.input type="number" min="0" value="0"  label="خصم المستحقات ش" name="loans_discount" placeholder="0.." />
-                                <span class="totals" id="loans_total">
-                                    {{$totals['total_loans'] ?? ''}}
-                                </span>
-                            </div>
-                            <div class="form-group p-3 col-4 exchanges" id="savings"  style="display: none;">
-                                <x-form.input type="number" min="0" value="0"  label="خصم الإدخارات $" name="savings_discount" placeholder="0.." />
-                                <span class="totals" id="savings_total">
-                                    {{$totals['total_savings']  ?? ''}}
-                                </span>
-                            </div>
-                            <div class="form-group p-3 col-4 exchanges" id="reward"  style="display: none;">
-                                <x-form.input type="number" min="0" value="0"  label="صرف مكافأة ش" name="reward" placeholder="0.." />
-                            </div>
-                            <div class="form-group p-3 col-4 exchanges" id="association_loan"  style="display: none;">
-                                <x-form.input type="number" min="0" value="0"  label="صرف قرض الجمعية" name="association_loan" placeholder="0.." />
-                            </div>
-                            <div class="form-group p-3 col-4 exchanges" id="savings_loan"  style="display: none;">
-                                <x-form.input type="number" min="0" value="0"  label="صرف قرض الإدخار" name="savings_loan" placeholder="0.." />
-                            </div>
-                            <div class="form-group p-3 col-4 exchanges" id="shekel_loan"  style="display: none;">
-                                <x-form.input type="number" min="0" value="0"  label="صرف قرض اللجنة" name="shekel_loan" placeholder="0.." />
-                            </div>
-                            <div class="form-group p-3 col-4">
-                                <x-form.input type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}"  label="تاريخ الصرف" name="discount_date"  />
-                            </div>
-                            <div class="form-group p-3 col-12">
-                                <label for="notes">ملاحظات حول الصرف</label>
-                                <textarea class="form-control" id="notes" name="notes" placeholder="....." rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="row align-items-center mb-2">
-                            <div class="col">
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">
-                                    {{$btn_label ?? "أضف"}}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endcan
-    <div class="modal fade" id="searchEmployee" tabindex="-5" role="dialog" aria-labelledby="searchEmployeeLabel" aria-hidden="true">
-        <div class="modal-dialog  modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="searchEmployeeLabel">البحث عن الموظفين</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div class="row mt-3">
-                            <div class="form-group col-md-6">
-                                <x-form.input name="employee_id_search" label="رقم الهوية" type="number" class="employee_fields_search"
-                                    placeholder="إملا رقم هوية الموظف"  />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <x-form.input name="employee_name_search" label="إسم الموظف" type="text" class="employee_fields_search"
-                                    placeholder="إملا إسم الموظف" />
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">رقم الموظف</th>
-                                    <th scope="col">رقم الهوية</th>
-                                    <th scope="col">الإسم</th>
-                                    <th scope="col">تاريخ الميلاد</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table_employee">
-                                <tr>
-                                    <td colspan='4'>يرجى تعبئة البيانات</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <input type="hidden" name="field" id="field" value="savings_loan">
     <input type="hidden" name="total_field" id="total_field" value="total_savings_loan">
 

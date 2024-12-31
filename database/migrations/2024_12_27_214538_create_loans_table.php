@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+            $table->string('month');
             $table->decimal('association_loan', 10, 2)->default(0)->comment('قرض الجمعية');
             $table->decimal('savings_loan', 10, 2)->default(0)->comment('قرض إدخار');
             $table->decimal('shekel_loan', 10, 2)->default(0)->comment('قرض شيكل');

@@ -12,7 +12,9 @@ class Exchange extends Model
     protected $fillable = [
         'employee_id',
         'receivables_discount',
+        'receivables_addition',
         'savings_discount',
+        'savings_addition',
         'reward',
         'discount_date',
         'exchange_type',

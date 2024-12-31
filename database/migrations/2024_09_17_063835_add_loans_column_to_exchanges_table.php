@@ -15,7 +15,7 @@ return new class extends Migration
             $table->decimal('association_loan', 10, 2)->default(0)->comment('قرض الجمعية');
             $table->decimal('savings_loan', 10, 2)->default(0)->comment('قرض إدخار');
             $table->decimal('shekel_loan', 10, 2)->default(0)->comment('قرض شيكل');
-            $table->enum('exchange_type', ['receivables_discount','savings_discount','savings_loan', 'shekel_loan', 'association_loan','reward'])->nullable();
+            $table->enum('exchange_type', ['receivables_discount','receivables_addition','savings_discount','savings_addition' ,'savings_loan', 'shekel_loan', 'association_loan','reward'])->nullable();
         });
     }
 

@@ -55,7 +55,7 @@ class ReceivableController extends Controller
                     })
                     ->make(true);
         }
-        $exchanges = Exchange::where('exchange_type','receivables_discount')->get();
+        $exchanges = Exchange::whereIn('exchange_type',['receivables_discount','receivables_addition'])->get();
         return view('dashboard.receivables.index',compact('exchanges','year'));
     }
 

@@ -75,12 +75,30 @@
             </div>
             `;
         }
+        if(exchange_type == 'receivables_addition'){
+            inp = `
+            <div class="form-group p-3 col-4" id="receivables_addition_div">
+                <label for="receivables_addition">قيمة المستحقات المضافة</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${receivables_addition}" id="receivables_addition" name="receivables_addition" required placeholder="قيمة المستحقات المضافة"/>
+                <span class="warning text-danger" id="receivables_addition_span_warning"></span>
+            </div>
+            `;
+        }
         if(exchange_type == 'savings_discount'){
             inp = `
             <div class="form-group p-3 col-4" id="savings_discount_div">
                 <label for="savings_discount">قيمة الإدخارات المخصومة $</label>
                 <input type="number" min="0" step="0.01" class="form-control" value="${savings_discount}" id="savings_discount" name="savings_discount" required placeholder="قيمة الإدخارات المخصومة"/>
                 <span class="warning text-danger" id="savings_discount_span_warning"></span>
+            </div>
+            `;
+        }
+        if(exchange_type == 'savings_addition'){
+            inp = `
+            <div class="form-group p-3 col-4" id="savings_addition_div">
+                <label for="savings_addition">قيمة الإدخارات المضافة $</label>
+                <input type="number" min="0" step="0.01" class="form-control" value="${savings_addition}" id="savings_addition" name="savings_addition" required placeholder="قيمة الإدخارات المضافة"/>
+                <span class="warning text-danger" id="savings_addition_span_warning"></span>
             </div>
             `;
         }
@@ -123,7 +141,7 @@
     exchange_type();
     $("#exchange_type").on('change',exchange_type);
 
-    $(document).on('input', '#receivables_discount , #savings_discount, #association_loan, #savings_loan, #shekel_loan', function () {
+    $(document).on('input', '#receivables_discount , #savings_discount, #receivables_addition, #savings_addition, #association_loan, #savings_loan, #shekel_loan', function () {
         let name = $(this).attr('name');
         if(name == 'receivables_discount'){
             let total_receivables = parseFloat($('#total_receivables').text());
@@ -135,6 +153,13 @@
                 $('#receivables_discount_span_warning').text('')
             }
         }
+
+        if(name == 'receivables_addition'){
+            let total_receivables = parseFloat($('#total_receivables').text());
+            let receivables_addition = parseFloat($('#receivables_addition').val());
+            $('#total_receivables_span').text(`(${(total_receivables + receivables_addition).toFixed(2)})`);
+        }
+
         if(name == 'savings_discount'){
             let total_savings = parseFloat($('#total_savings').text());
             let savings_discount = $('#savings_discount').val();
@@ -145,6 +170,12 @@
                 $('#savings_discount_span_warning').text('')
             }
         }
+        if(name == 'savings_addition'){
+            let total_savings = parseFloat($('#total_savings').text());
+            let savings_addition = parseFloat($('#savings_addition').val());
+            $('#total_savings_span').text(`(${(total_savings + savings_addition).toFixed(2)})`);
+        }
+
         if(name == 'association_loan'){
             let total_association_loan = parseFloat($('#total_association_loan').text());
             let association_loan = parseFloat($('#association_loan').val());

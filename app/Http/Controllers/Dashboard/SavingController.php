@@ -67,7 +67,7 @@ class SavingController extends Controller
                     })
                     ->make(true);
         }
-        $exchanges = Exchange::where('exchange_type','savings_discount')->get();
+        $exchanges = Exchange::whereIn('exchange_type',['savings_discount','savings_addition'])->get();
         return view('dashboard.savings.index',compact('exchanges','year'));
     }
 
