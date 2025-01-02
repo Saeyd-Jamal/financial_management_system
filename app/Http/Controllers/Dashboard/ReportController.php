@@ -157,6 +157,7 @@ class ReportController extends Controller
         if($request->employee_id != null){
             $employees = Employee::where('id',$request->employee_id)->get();
         }
+        $type_print = $request->type_print ?? 'A4';
         if($request->report_type == 'employees'){
             if($request->export_type == 'view'){
                 $margin_top = 3;
@@ -167,6 +168,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -183,6 +185,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.employees',['employees' =>  $employees,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -349,7 +352,7 @@ class ReportController extends Controller
                 $pdf = PDF::loadView('dashboard.pdf.salaries',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
                 [
                     'mode' => 'utf-8',
-                    'format' => 'A4-L',
+                    'format' => $type_print,
                     'default_font_size' => 12,
                     'default_font' => 'Arial',
                 ]);
@@ -359,7 +362,7 @@ class ReportController extends Controller
                 $pdf = PDF::loadView('dashboard.pdf.salaries',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
                 [
                     'mode' => 'utf-8',
-                    'format' => 'A4-L',
+                    'format' => $type_print,
                     'default_font_size' => 12,
                     'default_font' => 'Arial',
                 ]);
@@ -450,6 +453,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -467,6 +471,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.accounts',['accounts' =>  $accounts,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -525,6 +530,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all(),'totalsFooterArray' => $totalsFooterArray],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -542,6 +548,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.totals',['totals' =>  $totals,'filter' => $request->all(),'totalsFooterArray' => $totalsFooterArray],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -622,7 +629,7 @@ class ReportController extends Controller
             if($request->export_type == 'view'){
                 $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month,'fixedEntriesTotalsArray' => $fixedEntriesTotalsArray],[],[
                     'mode' => 'utf-8',
-                    'format' => 'A4-L',
+                    'format' => $type_print,
                     'default_font_size' => 12,
                     'default_font' => 'Arial',
                 ]);
@@ -633,7 +640,7 @@ class ReportController extends Controller
             if($request->export_type == 'export_pdf'){
                 $pdf = PDF::loadView('dashboard.pdf.fixed_entries',['fixed_entries' =>  $fixed_entries,'filter' => $request->all(),'month' => $month,'fixedEntriesTotalsArray' => $fixedEntriesTotalsArray],[],[
                     'mode' => 'utf-8',
-                    'format' => 'A4-L',
+                    'format' => $type_print,
                     'default_font_size' => 12,
                     'default_font' => 'Arial',
                 ]);
@@ -707,6 +714,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.bank',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'monthName' => $monthName,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -724,6 +732,7 @@ class ReportController extends Controller
                     $margin_top = 35;
                 }
                 $pdf = PDF::loadView('dashboard.pdf.bank',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'monthName' => $monthName,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -868,6 +877,7 @@ class ReportController extends Controller
                 $pdf = PDF::loadView('dashboard.pdf.customization',['salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'workplaces' => $workplaces,'month' => $request->month,'USD' => $USD,'filter' => $request->all()],[],
                 [
                     'mode' => 'utf-8',
+                    'format' => $type_print,
                     'default_font' => 'Arial',
                     'margin_left' => 3,
                     'margin_right' => 3,
@@ -880,7 +890,66 @@ class ReportController extends Controller
 
 
 
+        // استمارة موظف
+        if($request->report_type == 'employee_form'){
+            $USD = Currency::where('code', 'USD')->first()->value;
+            $month = $request->month ?? Carbon::now()->format('Y-m');
+            $year = Carbon::parse($month)->format('Y');
+            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
+            $employee = Employee::where('id', $request->employee_id)->with(['workData','totals','fixedEntries','loans','salaries'])->first();
+            $salaries = $employee->salaries->where('month', $month)->first();
+            $fixedEntries = $employee->fixedEntries->where('month', $month)->first();
+            if($salaries == null){
+                $salaries = new Salary();
+            }
+            if($fixedEntries == null){
+                $fixedEntries = new FixedEntries();
+            }
+            // دوال الموجوع اخر سطر في التقرير
+            $salariesTotal = collect($salaries)->map(function ($salary) use ($month) {
+                return [
+                    'net_salary' => $salary->net_salary ?? '0',
+                ];
+            });
+            $salariesTotalArray = [
+                'net_salary' => collect($salariesTotal->pluck('net_salary')->toArray())->sum(),
+            ];
 
+            // معاينة pdf
+            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
+                $margin_top = 30;
+                if($employee->workData->association == 'صلاح' || $employee->workData->association == 'حطين'){
+                    $margin_top = 45;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_form',['employee' =>  $employee,'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'fixedEntries' => $fixedEntries,'month' => $month,'year' => $year,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'mode' => 'utf-8',
+                    'default_font' => 'Arial',
+                    'format' => $type_print,
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                ]);
+                return $pdf->stream();
+            }
+            // تحميل الملف المصدر
+            if($request->export_type == 'export_pdf'){
+                $margin_top = 30;
+                if($employee->workData->association == 'صلاح' || $employee->workData->association == 'حطين'){
+                    $margin_top = 45;
+                }
+                $pdf = PDF::loadView('dashboard.pdf.employee.employee_form',['employee' =>  $employee,'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'year' => $year,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'mode' => 'utf-8',
+                    'default_font' => 'Arial',
+                    'format' => $type_print,
+                    'margin_left' => 3,
+                    'margin_right' => 3,
+                    'margin_top' => $margin_top,
+                    'margin_bottom' => 10,
+                ]);
+                return $pdf->download('كشف حساب للموظف' . ' - ' . $employees->first()->name  . ' - ' .  $time .'.pdf');
+            }
+        }
         // كشف حساب للموظف
         if($request->report_type == 'employee_accounts'){
             $USD = Currency::where('code', 'USD')->first()->value;
@@ -918,6 +987,7 @@ class ReportController extends Controller
             if($request->export_type == 'view' || $request->export_type == 'export_excel'){
                 $margin_top = 3;
                 $pdf = PDF::loadView('dashboard.pdf.employee.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -929,6 +999,7 @@ class ReportController extends Controller
             if($request->export_type == 'export_pdf'){
                 $margin_top = 3;
                 $pdf = PDF::loadView('dashboard.pdf.employee.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
@@ -1012,12 +1083,12 @@ class ReportController extends Controller
             if($request->export_type == 'view' || $request->export_type == 'export_excel'){
                 $margin_top = 3;
                 $pdf = PDF::loadView('dashboard.pdf.employee.employee_salaries',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
                     'margin_bottom' => 10,
                     'mode' => 'utf-8',
-                    'format' => 'A4-L',
                     'default_font_size' => 12,
                     'default_font' => 'Arial',
                 ]);
@@ -1027,130 +1098,16 @@ class ReportController extends Controller
             if($request->export_type == 'export_pdf'){
                 $margin_top = 3;
                 $pdf = PDF::loadView('dashboard.pdf.employee.employee_accounts',['employee' =>  $employees->first(),'salaries' =>  $salaries,'salariesTotalArray' => $salariesTotalArray,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
+                    'format' => $type_print,
                     'margin_left' => 3,
                     'margin_right' => 3,
                     'margin_top' => $margin_top,
                     'margin_bottom' => 10,
                     'mode' => 'utf-8',
-                    'format' => 'A4-L',
                     'default_font_size' => 12,
                     'default_font' => 'Arial',
                 ]);
                 return $pdf->download('كشف رواتب للموظف' . ' - ' . $employees->first()->name  . ' - ' . $time .'.pdf');
-            }
-        }
-        // كشف مستحقات الموظف
-        if($request->report_type == 'employee_receivables_savings'){
-
-            $USD = Currency::where('code', 'USD')->first()->value;
-            $month = $request->month ?? Carbon::now()->format('Y-m');
-            $to_month = $request->to_month ?? Carbon::now()->format('Y-m');
-            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
-
-            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
-                        ->whereBetween('month', [$month, $to_month])
-                        ->get();
-
-            $months = Salary::whereIn('employee_id', $employees->pluck('id'))
-                ->whereBetween('month', [$month, $to_month])
-                ->distinct()
-                ->pluck('month');
-
-            $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
-            $endOfMonth = Carbon::createFromFormat('Y-m', $to_month)->endOfMonth();
-
-
-            $exchanges = Exchange::whereIn('employee_id', $employees->pluck('id'))
-                                ->whereBetween('discount_date', [$startOfMonth, $endOfMonth])
-                                ->get();
-
-            // معاينة pdf
-            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
-                $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee.employee_receivables_savings',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
-                    'margin_left' => 3,
-                    'margin_right' => 3,
-                    'margin_top' => $margin_top,
-                    'margin_bottom' => 10,
-                    'mode' => 'utf-8',
-                    'format' => 'A4',
-                    'default_font_size' => 12,
-                    'default_font' => 'Arial',
-                ]);
-                return $pdf->stream();
-            }
-            // تحميل الملف المصدر
-            if($request->export_type == 'export_pdf'){
-                $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee.employee_receivables_savings',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
-                    'margin_left' => 3,
-                    'margin_right' => 3,
-                    'margin_top' => $margin_top,
-                    'margin_bottom' => 10,
-                    'mode' => 'utf-8',
-                    'format' => 'A5-L',
-                    'default_font_size' => 12,
-                    'default_font' => 'Arial',
-                ]);
-                return $pdf->download('كشف المستحقات للموظف' . ' - ' . $employees->first()->name  . ' - ' . $time .'.pdf');
-            }
-        }
-
-        // كشف القروض الموظف
-        if($request->report_type == 'employee_loans'){
-
-            $USD = Currency::where('code', 'USD')->first()->value;
-            $month = $request->month ?? Carbon::now()->format('Y-m');
-            $to_month = $request->to_month ?? Carbon::now()->format('Y-m');
-            $monthName = $this->monthNameAr[Carbon::parse($month)->format('m')];
-
-            $salaries = Salary::whereIn('employee_id', $employees->pluck('id'))
-                        ->whereBetween('month', [$month, $to_month])
-                        ->get();
-
-            $months = Salary::whereIn('employee_id', $employees->pluck('id'))
-                ->whereBetween('month', [$month, $to_month])
-                ->distinct()
-                ->pluck('month');
-
-            $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
-            $endOfMonth = Carbon::createFromFormat('Y-m', $to_month)->endOfMonth();
-
-
-            $exchanges = Exchange::whereIn('employee_id', $employees->pluck('id'))
-                                ->whereBetween('discount_date', [$startOfMonth, $endOfMonth])
-                                ->get();
-
-            // معاينة pdf
-            if($request->export_type == 'view' || $request->export_type == 'export_excel'){
-                $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee.employee_loans',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
-                    'margin_left' => 3,
-                    'margin_right' => 3,
-                    'margin_top' => $margin_top,
-                    'margin_bottom' => 10,
-                    'mode' => 'utf-8',
-                    'format' => 'A4',
-                    'default_font_size' => 12,
-                    'default_font' => 'Arial',
-                ]);
-                return $pdf->stream();
-            }
-
-            // تحميل الملف المصدر
-            if($request->export_type == 'export_pdf'){
-                $margin_top = 3;
-                $pdf = PDF::loadView('dashboard.pdf.employee.employee_loans',['employee' =>  $employees->first(),'salaries' =>  $salaries,'exchanges' => $exchanges,'month' => $month,'to_month' => $to_month,'months' => $months,'monthName' => $monthName,'USD' => $USD,'filter' => $request->all()],[],[
-                    'margin_left' => 3,
-                    'margin_right' => 3,
-                    'margin_top' => $margin_top,
-                    'margin_bottom' => 10,
-                    'mode' => 'utf-8',
-                    'format' => 'A5-L',
-                    'default_font_size' => 12,
-                    'default_font' => 'Arial',
-                ]);
-                return $pdf->download('كشف المستحقات للموظف' . ' - ' . $employees->first()->name  . ' - ' . $time .'.pdf');
             }
         }
 

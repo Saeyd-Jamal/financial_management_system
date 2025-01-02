@@ -211,6 +211,7 @@
                                         <th>تاريخ الصرف</th>
                                         <th>الموظف</th>
                                         <th>المبلغ المصروف</th>
+                                        <th>المبلغ المضاف</th>
                                         <th>السبب</th>
                                         <th></th>
                                     </tr>
@@ -222,6 +223,7 @@
                                         <td>{{$exchange->discount_date}}</td>
                                         <td style="white-space: nowrap;">{{$exchange->employee->name}}</td>
                                         <td>{{$exchange->receivables_discount}}</td>
+                                        <td>{{$exchange->receivables_addition}}</td>
                                         <td>{{$exchange->notes}}</td>
                                         <td>
                                             <button class="btn btn-sm dropdown-toggle more-horizontal" type="button"

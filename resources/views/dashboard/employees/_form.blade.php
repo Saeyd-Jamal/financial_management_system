@@ -493,7 +493,9 @@
                         <tr style="background: #dddddd;">
                             <th>#</th>
                             <th>خصم المستحقات ش</th>
+                            <th>إضافة المستحقات ش</th>
                             <th>خصم الإدخارات $</th>
+                            <th>إضافة الإدخارات $</th>
                             <th>مكافأة مالية</th>
                             <th>قرض الجمعية</th>
                             <th>قرض الإدخار</th>
@@ -509,7 +511,9 @@
                             <tr class="exchange_select" data-id="{{ $exchange->id }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $exchange->receivables_discount }}</td>
+                                <td>{{ $exchange->receivables_addition }}</td>
                                 <td>{{ $exchange->savings_discount }}</td>
+                                <td>{{ $exchange->savings_addition }}</td>
                                 <td>{{ $exchange->reward }}</td>
                                 <td>{{ $exchange->association_loan }}</td>
                                 <td>{{ $exchange->savings_loan }}</td>
@@ -526,7 +530,7 @@
                                         {{-- <a class="dropdown-item" style="margin: 0.5rem -0.75rem; text-align: right;"
                                     href="{{route('salaries.edit',$salary->id)}}">تعديل</a> --}}
                                         @can('print', 'App\\Models\Exchange')
-                                            <form action="{{ route('exchanges.printPdf', ['id' => $exchange->id]) }}"
+                                            <form action="{{ route('exchanges.printPdf', $exchange->id) }}"
                                                 method="post" target="_blank">
                                                 @csrf
                                                 <button type="submit" class="dropdown-item"

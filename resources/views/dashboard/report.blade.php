@@ -149,7 +149,7 @@
                 </div>
             </div>
             <h3 class="h5">أومر التصدير</h3>
-            <div class="row">
+            <div class="row align-items-center mb-2">
                 <div class="form-group col-md-3">
                     <label for="report_type">نوع الكشف</label>
                     <select class="custom-select" name="report_type" id="report_type" required>
@@ -164,12 +164,14 @@
                             <option value="customization">كشف التخصيصات</option>
                         </optgroup>
                         <optgroup label="كشوفات لموظف معين">
-                            <option value="employee_accounts">كشف الحساب</option>
-                            <option value="employee_salaries">كشف الرواتب للموظف</option>
+                            <option value="employee_form" type="employee">استمارة موظف</option>
+                            <option value="employee_accounts" type="employee">كشف الحساب</option>
+                            <option value="employee_salaries" type="employee">كشف الرواتب للموظف</option>
                             {{-- <option value="employee_receivables_savings">كشف المستحقات والإدخارات</option> --}}
                             {{-- <option value="employee_loans">كشف القروض</option> --}}
                         </optgroup>
                     </select>
+                    <span id="report_warning"></span>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="export_type">طريقة التصدير</label>
@@ -179,17 +181,19 @@
                         <option value="export_excel">Excel</option>
                     </select>
                 </div>
-                <div class="form-group col-4">
-                    <label for="gender">إختيار موظف معين</label>
-                    <div class="input-group mb-3">
-                        <x-form.input name="employee_id" placeholder="0"/>
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchEmployee">
-                                <i class="fe fe-search"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="form-group col-md-3">
+                    <label for="type_print">نوع الورق</label>
+                    <select class="custom-select" name="type_print" id="type_print">
+                        <option selected="" value="a4">A4</option>
+                        <option value="a4-l">A4 افقي</option>
+                        <option value="a5">A5</option>
+                        <option value="a5-l">A5 افقي</option>
+                    </select>
                 </div>
+                <x-form.input name="employee_id" type="hidden" />
+                <button type="button" id="serchEmployee" style="display: none;" class="btn btn-primary mx-2"  data-toggle="modal" data-target="#searchEmployee">
+                    <i class="fa fa-search"></i> إختيار الموظف
+                </button>
             </div>
             <div class="row" id="bankDiv" style="display: none;">
                 <div class="form-group col-md-3">
@@ -219,7 +223,7 @@
                         مسح
                     </button>
                     <button type="submit"  class="btn btn-primary">
-                        تصدير
+                        <i class="fa fa-print"></i> طباعة
                     </button>
                 </div>
             </div>
@@ -274,7 +278,6 @@
         const app_link = "{{config('app.url')}}/";
     </script>
     <script src="{{asset('js/report.js')}}"></script>
-    <script src="{{ asset('js/getEmployee.js') }}"></script>
     <script src='{{ asset('assets/js/select2.min.js') }}'></script>
     <script>
         $('.select2-multi').select2(

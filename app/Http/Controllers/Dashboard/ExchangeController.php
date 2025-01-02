@@ -144,6 +144,10 @@ class ExchangeController extends Controller
                 'total_shekel_loan' => DB::raw('total_shekel_loan - ' . $exchange->shekel_loan),
             ]);
         $exchange->delete();
+        $request = request();
+        if($request->ajax()) {
+            return response()->json(['success' => 'تم حذف الصرف بنجاح']);
+        }
         return redirect()->route('exchanges.index')->with('danger', 'تم حذف الصرف قديم');
     }
 
