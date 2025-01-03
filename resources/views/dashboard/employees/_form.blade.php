@@ -646,9 +646,10 @@
     <script>
         const csrf_token = "{{ csrf_token() }}";
         const app_link = "{{ config('app.url') }}";
+        const association = "{{ $employee->workData->association }}";
     </script>
     <!-- Your custom script -->
     <script src="{{asset('js/jquery.validate.min.js')}}"></script>
-    <script src="{{ asset('js/formEmployee.js?v=0.2') }}"></script>
+    <script src="{{ asset('js/formEmployee.js?v=0.3') }}"></script>
     <script src="{{ asset('js/exchange.js') }}"></script>
 @endpush

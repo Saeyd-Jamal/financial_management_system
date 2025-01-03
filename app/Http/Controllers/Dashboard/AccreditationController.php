@@ -50,7 +50,24 @@ class AccreditationController extends Controller
      */
     public function destroy(Accreditation $accreditation)
     {
-        $accreditation->delete();
+        DB::beginTransaction();
+        try{
+            $month = Carbon::parse($accreditation->month)->format('Y-m');
+            if(Carbon::parse($month)->format('m') == 12){
+                $employees = Employee::with('workData')->whereHas('workData', function ($query) {
+                    $query->where('type_appointment', 'مثبت');
+                })->get();
+                foreach($employees as $employee){
+                    AnnualTransfer::transferReverse($employee);
+                }
+            }
+            $accreditation->delete();
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+            throw $e;
+            // return redirect()->back()->with('danger', 'حدث خطأ ما');
+        }
         return redirect()->back()->with('danger', 'تم حذف إعتماد الشهر بنجاح');
     }
 }

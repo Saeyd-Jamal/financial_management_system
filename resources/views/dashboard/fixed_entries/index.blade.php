@@ -8,47 +8,8 @@
         <link id="stickyTableLight" rel="stylesheet" href="{{ asset('css/stickyTable.css') }}">
         <link id="stickyTableDark" rel="stylesheet" href="{{ asset('css/stickyTableDark.css') }}" disabled>
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-        <style>
-            body{
-                font-family: 'Cairo', sans-serif;
-            }
-            .main-content{
-                margin: 15px 0 0 0 !important;
-            }
-            table.dataTable th, table.dataTable td {
-                box-sizing: content-box !important;
-                white-space: nowrap !important;
-            }
-            tbody td{
-                padding: 2px 5px !important;
-            }
-            /* تعطيل مؤشر الفرز لرأس العمود */
-            th.no-sort::after {
-                display: none !important;
-            }
-            .breadcrumb{
-                display: none !important;
-            }
-            .filter-dropdown{
-                /* display: none; */
-            }
-            .dt-layout-row{
-                margin: 0 !important;
-            }
-            .dt-search{
-                display: none !important;
-            }
-            .organization{
-                width: 130px !important;
-                overflow: hidden;
-                display: block;
+        <link rel="stylesheet" href="{{ asset('css/datatableIndex.css') }}">
 
-                transition: all 0.5s ease-in-out;
-            }
-            .organization:hover {
-                width: 100% !important;
-            }
-        </style>
     @endpush
     <x-slot:extra_nav>
         <li class="nav-item d-flex align-items-center justify-content-center mx-2">
@@ -469,6 +430,79 @@
                     $('#stickyTableDark').prop('disabled', false); // تشغيل النمط Dark
                 }
             });
+        </script>
+        <script>
+            $(document).ready(function() {
+                let currentRow = 0;
+                let currentCol = 0;
+
+                // الحصول على الصفوف من tbody فقط
+                const rows = $('#entries-table tbody tr');
+
+                // إضافة الكلاس للخلايا عند تحميل الصفحة
+                highlightCell(currentRow, currentCol);
+
+                // التنقل باستخدام الأسهم
+                $(document).on('keydown', function(e) {
+                    // تحديث عدد الصفوف والأعمدة المرئية عند كل حركة
+                    const totalRows = $('#entries-table tbody tr:visible').length;
+                    const totalCols = $('#entries-table tbody tr:visible').eq(0).find('td').length;
+
+                    // التحقق من وجود صفوف وأعمدة لتجنب NaN
+                    if (totalRows === 0 || totalCols === 0) return;
+
+                    // التنقل باستخدام الأسهم
+                    if (e.key === 'ArrowLeft') {
+                        if (currentCol < 32) {
+                            currentCol = (currentCol + 1) % totalCols;
+                        }
+                    } else if (e.key === 'ArrowRight') {
+                        if (currentCol > 0) {
+                            currentCol = (currentCol - 1 + totalCols) % totalCols;
+                        }
+                    } else if (e.key === 'ArrowDown') {
+                        currentRow = (currentRow + 1) % totalRows;
+                    } else if (e.key === 'ArrowUp') {
+                        // إذا كنت في الصف الأول، لا تفعل شيئاً
+                        if (currentRow > 0) {
+                            currentRow = (currentRow - 1 + totalRows) % totalRows;
+                        }
+                    } else {
+                        return;
+                    }
+                    highlightCell(currentRow, currentCol);
+                });
+
+                // التحديد عند النقر المزدوج بالماوس
+                $('#entries-table tbody').on('dblclick', 'td', function() {
+                    const cell = $(this);
+                    currentRow = cell.closest('tr').index();
+                    currentCol = cell.index();
+                    highlightCell(currentRow, currentCol);
+                });
+
+                // دالة لتحديث الخلية النشطة
+                function highlightCell(row, col) {
+                    // استهداف الصفوف المرئية فقط
+                    const visibleRows = $('#entries-table tbody tr:visible');
+                    // التحقق من وجود الصف
+                    if (visibleRows.length > row) {
+                        // تحديد الصف والخلية المطلوبة
+                        const targetRow = visibleRows.eq(row);
+                        const targetCell = targetRow.find('td').eq(col);
+                        if (targetCell.length) {
+                            // إزالة التنسيقات السابقة
+                            $('#entries-table tbody td').removeClass('active');
+                            // إضافة التنسيق للخلية المطلوبة
+                            targetCell.addClass('active');
+                            targetCell.focus();
+                        }
+                    }
+                }
+
+
+            });
+
         </script>
     @endpush
 </x-front-layout>

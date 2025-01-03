@@ -591,5 +591,78 @@
                 }
             });
         </script>
+        <script>
+            $(document).ready(function() {
+                let currentRow = 0;
+                let currentCol = 0;
+
+                // الحصول على الصفوف من tbody فقط
+                const rows = $('#savings-table tbody tr');
+
+                // إضافة الكلاس للخلايا عند تحميل الصفحة
+                highlightCell(currentRow, currentCol);
+
+                // التنقل باستخدام الأسهم
+                $(document).on('keydown', function(e) {
+                    // تحديث عدد الصفوف والأعمدة المرئية عند كل حركة
+                    const totalRows = $('#savings-table tbody tr:visible').length;
+                    const totalCols = $('#savings-table tbody tr:visible').eq(0).find('td').length;
+
+                    // التحقق من وجود صفوف وأعمدة لتجنب NaN
+                    if (totalRows === 0 || totalCols === 0) return;
+
+                    // التنقل باستخدام الأسهم
+                    if (e.key === 'ArrowLeft') {
+                        if (currentCol < 32) {
+                            currentCol = (currentCol + 1) % totalCols;
+                        }
+                    } else if (e.key === 'ArrowRight') {
+                        if (currentCol > 0) {
+                            currentCol = (currentCol - 1 + totalCols) % totalCols;
+                        }
+                    } else if (e.key === 'ArrowDown') {
+                        currentRow = (currentRow + 1) % totalRows;
+                    } else if (e.key === 'ArrowUp') {
+                        // إذا كنت في الصف الأول، لا تفعل شيئاً
+                        if (currentRow > 0) {
+                            currentRow = (currentRow - 1 + totalRows) % totalRows;
+                        }
+                    } else {
+                        return;
+                    }
+                    highlightCell(currentRow, currentCol);
+                });
+
+                // التحديد عند النقر المزدوج بالماوس
+                $('#savings-table tbody').on('dblclick', 'td', function() {
+                    const cell = $(this);
+                    currentRow = cell.closest('tr').index();
+                    currentCol = cell.index();
+                    highlightCell(currentRow, currentCol);
+                });
+
+                // دالة لتحديث الخلية النشطة
+                function highlightCell(row, col) {
+                    // استهداف الصفوف المرئية فقط
+                    const visibleRows = $('#savings-table tbody tr:visible');
+                    // التحقق من وجود الصف
+                    if (visibleRows.length > row) {
+                        // تحديد الصف والخلية المطلوبة
+                        const targetRow = visibleRows.eq(row);
+                        const targetCell = targetRow.find('td').eq(col);
+                        if (targetCell.length) {
+                            // إزالة التنسيقات السابقة
+                            $('#savings-table tbody td').removeClass('active');
+                            // إضافة التنسيق للخلية المطلوبة
+                            targetCell.addClass('active');
+                            targetCell.focus();
+                        }
+                    }
+                }
+
+
+            });
+
+        </script>
     @endpush
 </x-front-layout>

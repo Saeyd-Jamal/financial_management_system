@@ -1,7 +1,6 @@
 body{
     /* font-family: 'Cairo', sans-serif; */
     font-family: 'Tajawal', sans-serif !important;
-
 }
 .main-content{
     margin: 15px 0 0 0 !important;
@@ -68,4 +67,8 @@ table .dropdown-menu.show {
 }
 .searchable-checkbox{
     width: 100%;
+}
+td.active {
+    border: 2px solid #007bff;
+    background-color: #e7f1ff !important;
 }

@@ -140,6 +140,9 @@
                 isValid = form.validate().form(); // تحقق من صحة النموذج
             }
         });
+        if(association == 'حيفا'){
+            isValid = true;
+        }
         if (isValid) {
             $('#alerts').slideUp();
         }else{
