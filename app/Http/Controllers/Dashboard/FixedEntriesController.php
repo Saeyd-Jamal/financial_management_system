@@ -129,7 +129,7 @@ class FixedEntriesController extends Controller
                                     })
                                     ->get();
             }else{
-                $filteredEntries = new FixedEntries();
+                $filteredEntries = FixedEntries::where('employee_id', $id)->where('month', '0000-00')->get();
             }
             return response()->json($filteredEntries);
         }
@@ -148,8 +148,10 @@ class FixedEntriesController extends Controller
             for ($i=1; $i <= 12; $i++) {
                 $monthlast = Carbon::parse($month_last)->format('m');
                 $i = $i < 10 ? '0'.$i : $i;
-                if($i <= $monthlast){
-                    continue;
+                if($monthlast != 12){
+                    if($i <= $monthlast){
+                        continue;
+                    }
                 }
                 $month = $year.'-'.$i;
                 $fixedEntriesOld = FixedEntries::where('employee_id', $id)->where('month', $month)->first();
@@ -171,9 +173,10 @@ class FixedEntriesController extends Controller
                     'paradise_discount' => $request['paradise_discount-'.$i] ?? 0,
                     'other_discounts' => $request['other_discounts-'.$i] ?? 0,
                     'proportion_voluntary' => $request['proportion_voluntary-'.$i] ?? 0,
-                    'savings_rate' => $request['savings_rate-'.$i] ?? 0,
+                    'savings_rate' => $request['savings_rate-'.$i] == "on" ? 1 : 0,
                 ]);
-            }
+            }            
+
             FixedEntries::updateOrCreate([
                 'employee_id' => $id,
                 'month' => '0000-00',
@@ -192,7 +195,7 @@ class FixedEntriesController extends Controller
                 'paradise_discount' => $request['paradise_discount-0000'] ?? -01,
                 'other_discounts' => $request['other_discounts-0000'] ?? -01,
                 'proportion_voluntary' => $request['proportion_voluntary-0000'] ?? -01,
-                'savings_rate' => $request['savings_rate-0000'] ?? -01,
+                'savings_rate' => $request['savings_rate-0000'] == "on" ? 1 : -01,
             ]);
             $employee = Employee::findOrFail($id);
             $salary = Salary::where('employee_id',$id)->where('month',Carbon::now()->format('Y-m'))->first();

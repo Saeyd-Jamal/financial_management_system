@@ -12,6 +12,18 @@
 
     @endpush
     <x-slot:extra_nav>
+        <li class="nav-item dropdown d-flex align-items-center justify-content-center mx-2">
+            <a class="nav-link dropdown-toggle text-white pr-0" href="#" id="navbarDropdownMenuLink"
+                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="avatar avatar-sm mt-2">
+                    <i class="fe fe-filter fe-16"></i>
+                </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <button class="btn btn-nav" id="filterBtn">تصفية</button>
+                <button class="btn btn-nav" id="filterBtnClear">إزالة التصفية</button>
+            </div>
+        </li>
         <li class="nav-item d-flex align-items-center justify-content-center mx-2">
             <button type="button" class="btn" id="refreshData"><span class="fe fe-refresh-ccw fe-16 text-white"></span></button>
         </li>
@@ -70,7 +82,7 @@
                                 <th>خصم اللجنة</th>
                                 <th>خصومات الإخرى</th>
                                 <th>تبرعات للحركة</th>
-                                <th>إدخار 5%</th>
+                                <th>نسبة إدخار للموظف</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -133,7 +145,6 @@
                     }
                     return new Intl.NumberFormat('en-US', { minimumFractionDigits: min, maximumFractionDigits: 2 }).format(number);
                 };
-
                 let formatData = (data,field) => {
                     if (data == null) {
                         return 0.00;
@@ -288,6 +299,13 @@
                 $(document).on('click', '#refreshData', function() {
                     table.ajax.reload();
                 });
+                $(document).on('click', '#filterBtnClear', function() {
+                    $('.filter-dropdown').slideUp();
+                    $('#filterBtn').text('تصفية');
+                    $('.filterDropdownMenu input').val('');
+                    $('th input[type="checkbox"]').prop('checked', false);
+                    table.columns().search('').draw(); // إعادة رسم الجدول بدون فلاتر
+                });
                 $(document).on('click', '.edit_row', function () {
                     const id = $(this).data('id'); // الحصول على ID الصف
                     editEntriesForm(id);
@@ -312,7 +330,7 @@
                     'paradise_discount'  : 'خصم اللجنة',
                     'other_discounts'  : 'خصومات أخرى',
                     'proportion_voluntary'  : 'تبرعات للحركة',
-                    'savings_rate'  : 'إدخار 5%	',
+                    'savings_rate'  : 'نسبة إدخار للموظف',
                 };
                 function editEntriesForm(id) {
                     $.ajax({
@@ -350,16 +368,25 @@
                                 }else{
                                     staticVal = '';
                                 }
-                                $('#' + key + '_row').append(`
-                                    <td>
-                                        <x-form.inputentry  month="0000-00" data-field="${key}" name="${key}-0000" value="${staticVal}" class="const" />
-                                    </td>
-                                `);
+                                if(key == "savings_rate"){
+                                    $('#' + key + '_row').append(`
+                                        <td>
+                                            <input type="checkbox" id="${key}-0000" name="${key}-0000" ${staticVal == 1 ? 'checked' : ''} class="form-control const" style="width: 20px" month="0000-00" data-field="${key}">
+                                        </td>
+                                    `);
+                                }else{
+                                    $('#' + key + '_row').append(`
+                                        <td>
+                                            <x-form.input  month="0000-00" data-field="${key}" name="${key}-0000" value="${staticVal}" class="const" />
+                                        </td>
+                                    `);
+                                }
+
                                 for (let i = 1; i <= 12; i++) {
                                     if(i<10){
                                         i = '0'+i;
                                     }
-                                    let  monthToFind = "2024-" + i;
+                                    let  monthToFind = year + "-" + i;
                                     let foundEntry = data.find(entry => entry.month === monthToFind);
                                     let val = 0;
                                     if(foundEntry){
@@ -367,14 +394,26 @@
                                     }else{
                                         val = '0.00';
                                     }
-                                    $('#' + key + '_row').append(`
-                                        <td>
-                                            <x-form.inputentry value="${val}"  employee_id="${id}" field="${key}" month="${i}" name="${key}-${i}" />
-                                        </td>
-                                    `);
-                                    if (i <= currentMonth) {
-                                         $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
+                                    if(key == "savings_rate"){
+                                        $('#' + key + '_row').append(`
+                                            <td>
+                                                <input type="checkbox" id="${key}-${i}" name="${key}-${i}" ${val == 1 ? 'checked' : ''} class="form-control" month="${i}" style="width: 20px"  employee_id="${id}" field="${key}">
+                                            </td>
+                                        `);
+                                    }else{
+                                        $('#' + key + '_row').append(`
+                                            <td>
+                                                <x-form.input value="${val}"  employee_id="${id}" field="${key}" month="${i}" name="${key}-${i}" />
+                                            </td>
+                                        `);
                                     }
+                                    
+                                    if(currentMonth != '12'){
+                                        if (i <= currentMonth) {
+                                            $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
+                                        }
+                                    }
+
                                 }
                             });
                             $('#editEntries').modal('show');
@@ -409,19 +448,56 @@
                 $(document).on('input', '.const', function () {
                     let field = $(this).data('field');
                     let value = $(this).val();
-                    for (let i = 1; i <= 12; i++) {
-                        i = i < 10 ? '0' + i : i;
-                        if (i > currentMonth) {
-                            let fieldId = '#' + field + '-' + i;
-                            $(fieldId).val(value);
+                    console.log(field,value);
+                    if(field == "savings_rate"){
+                        for (let i = 1; i <= 12; i++) {
+                            i = i < 10 ? '0' + i : i;
+                            if (currentMonth != '12'){
+                                if (i > currentMonth) {
+                                    let fieldId = '#' + field + '-' + i;
+                                    if ($(this).is(':checked')) {
+                                        $(fieldId).prop('checked', true);
+                                    } else {
+                                        $(fieldId).prop('checked', false);
+                                    }
+                                }
+                            }else{
+                                let fieldId = '#' + field + '-' + i;
+                                if ($(this).is(':checked')) {
+                                    $(fieldId).prop('checked', true);
+                                } else {
+                                    $(fieldId).prop('checked', false);
+                                }
+                            }
                         }
-
+                    }else{
+                        for (let i = 1; i <= 12; i++) {
+                            i = i < 10 ? '0' + i : i;
+                            if(currentMonth != '12'){
+                                if (i > currentMonth) {
+                                    let fieldId = '#' + field + '-' + i;
+                                    $(fieldId).val(value);
+                                }
+                            }else{
+                                let fieldId = '#' + field + '-' + i;
+                                $(fieldId).val(value);
+                            }
+                        }
                     }
                 });
             });
         </script>
         <script>
             $(document).ready(function() {
+                $(document).on('click', '#filterBtn', function() {
+                    let text = $(this).text();
+                    if (text != 'تصفية') {
+                        $(this).text('تصفية');
+                    }else{
+                        $(this).text('إخفاء التصفية');
+                    }
+                    $('.filter-dropdown').slideToggle();
+                });
                 if (curentTheme == "light") {
                     $('#stickyTableLight').prop('disabled', false); // تشغيل النمط Light
                     $('#stickyTableDark').prop('disabled', true);  // تعطيل النمط Dark

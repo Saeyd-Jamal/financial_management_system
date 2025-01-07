@@ -113,6 +113,7 @@ class EmployeeController extends Controller
         $contract_type = WorkData::select('contract_type')->distinct()->pluck('contract_type')->toArray();
 
         $employee = new Employee();
+        $employee->workData = new WorkData();   
         $workData = new WorkData();
         $totals = new ReceivablesLoans();
         $banks = Bank::all();

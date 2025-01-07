@@ -369,7 +369,7 @@
                         <tr>
                             <td class="head_td">الإدخار ومكافأة الخدمة التراكمي :</td>
                             <td class="data_td wide-cell">
-                                {{number_format($employee->totals->total_savings - (($salaries->savings_rate + $salaries->termination_service) / $USD ),2)}}
+                                {{number_format($employee->totals->total_savings - ($salaries->savings_loan + (($salaries->savings_rate + $salaries->termination_service) / $USD )),2)}}
                             </td>
                             <td class="head_td gender-label">الإدخار الشهري ومكافأة نهاية الخدمة  :&nbsp;</td>
                             <td class="data_td medium-cell">
@@ -379,7 +379,7 @@
                         <tr>
                             <td class="head_td">قيمة القسط الشهري :</td>
                             <td class="data_td wide-cell">
-                                {{number_format(0,2)}}
+                                {{number_format($salaries->savings_loan,2)}}
                             </td>
                             <td class="head_td gender-label">إجمالي الادخار ومكافأة نهاية الخدمة  :&nbsp;</td>
                             <td class="data_td medium-cell">

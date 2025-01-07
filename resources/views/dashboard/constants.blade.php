@@ -1,157 +1,159 @@
 <x-front-layout classC="shadow p-3 mb-5 bg-white rounded ">
-    <x-slot:breadcrumbs>
-        <div class="row align-items-center">
-            <div class="col">
-                <h2 class="h5 page-title">ثوابت النظام</h2>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#menu1" id="tab1" disabled>
+                مبلغ السلفة
+            </a>
+        </li>
+        {{-- <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#menu2" id="tab2">
+                حالة الفعالية
+            </a>
+        </li> --}}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#menu3" id="tab3">
+                نسبة نهاية الخدمة
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#menu4" id="tab4">
+                رواتب الصحة المثبتين
+            </a>
+        </li>
+
+    </ul>
+
+    <!-- Tab panes -->
+<form action="{{ route('constants.store') }}" method="post">
+    @csrf
+<div class="tab-content">
+    <div class="tab-pane active" id="menu1">
+        <h2 class="h3 mt-4">تحديد ملبغ السلفة حسب حالة الدوام للثبتين</h2>
+        <div class="row">
+            <div class="form-group my-2 col-md-6 d-flex align-items-end">
+                <label for="advance_payment_rate">مبلغ السلفة - نسبة</label>
+                <div class="col-8 input-group">
+                    <x-form.input required type="number" value="{{$constants->where('type_constant', 'advance_payment_rate')->first() ? $constants->where('type_constant', 'advance_payment_rate')->first()->value : 0 }}" min="0" name="advance_payment_rate" placeholder="1000" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">₪</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group my-2  col-md-6 d-flex  align-items-end">
+                <label for="advance_payment_riyadh">مبلغ السلفة - رياض</label>
+                <div class="col-8 input-group">
+                    <x-form.input required type="number" min="0" :value="$constants->where('type_constant', 'advance_payment_riyadh')->first() ? $constants->where('type_constant', 'advance_payment_riyadh')->first()->value : 0"  name="advance_payment_riyadh" placeholder="1000" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">₪</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group my-2  col-md-6 d-flex align-items-end">
+                <label for="advance_payment_permanent">مبلغ السلفة - مداوم</label>
+                <div class="col-8 input-group">
+                    <x-form.input required type="number" min="0" :value="$constants->where('type_constant', 'advance_payment_permanent')->first() ? $constants->where('type_constant', 'advance_payment_permanent')->first()->value : 0"  name="advance_payment_permanent" placeholder="1000" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">₪</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group my-2  col-md-6 d-flex  align-items-end">
+                <label for="advance_payment_non_permanent">مبلغ السلفة - غير مداوم</label>
+                <div class="col-8 input-group">
+                    <x-form.input required type="number" min="0" :value="$constants->where('type_constant', 'advance_payment_non_permanent')->first() ? $constants->where('type_constant', 'advance_payment_non_permanent')->first()->value : 0"  name="advance_payment_non_permanent" placeholder="1000" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">₪</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </x-slot:breadcrumbs>
-    <hr class=" border-danger border-2 opacity-50">
-
-
-    {{-- btns collapse --}}
-    <div>
-        <button class="btn btn-info m-2"
-                type="button" data-toggle="collapse"
-                data-target="#advance_payment" aria-expanded="false"
-                aria-controls="advance_payment">
-            مبلغ السلفة
-        </button>
-        <button class="btn btn-info m-2"
-                type="button" data-toggle="collapse"
-                data-target="#state_effectiveness" aria-expanded="false"
-                aria-controls="state_effectiveness">
-            حالة الفعالية المجهزة
-        </button>
-        <button class="btn btn-info m-2"
-                type="button" data-toggle="collapse"
-                data-target="#termination_service" aria-expanded="false"
-                aria-controls="termination_service">
-            نسبة نهاية الخدمة
-        </button>
-        <button class="btn btn-info m-2"
-                type="button" data-toggle="collapse"
-                data-target="#termination_service" aria-expanded="false"
-                aria-controls="termination_service">
-            الفئات
-        </button>
-        <hr class="border-danger border-2 opacity-50 w-100">
+        <div class="row justify-content-end align-items-center mb-2">
+            <button type="submit" class="btn btn-primary mx-2">
+                تعديل
+            </button>
+        </div>
     </div>
 
-    {{-- contents --}}
-    <div class="collapse multi-collapse" id="advance_payment">
-        <form action="{{ route('constants.store') }}" method="post">
-            @csrf
-            <div class="row p-3">
-                <div class="form-group m-0 col-6 d-flex align-items-end">
-                    <label for="advance_payment_rate">مبلغ السلفة - نسبة</label>
-                    <div class="col-8 input-group">
-                        <x-form.input required type="number" :value="$advance_payment_rate" min="0" name="advance_payment_rate" placeholder="1000" class="d-inline" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">₪</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group m-0 col-6 d-flex  align-items-end">
-                    <label for="advance_payment_riyadh">مبلغ السلفة - رياض</label>
-                    <div class="col-8 input-group">
-                        <x-form.input required type="number" min="0" :value="$advance_payment_riyadh"  name="advance_payment_riyadh" placeholder="1000" class="d-inline" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">₪</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row p-3">
-                <div class="form-group m-0 col-6 d-flex align-items-end">
-                    <label for="advance_payment_permanent">مبلغ السلفة - مداوم</label>
-                    <div class="col-8 input-group">
-                        <x-form.input required type="number" min="0" :value="$advance_payment_permanent"  name="advance_payment_permanent" placeholder="1000" class="d-inline" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">₪</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group m-0 col-6 d-flex  align-items-end">
-                    <label for="advance_payment_non_permanent">مبلغ السلفة - غير مداوم</label>
-                    <div class="col-8 input-group">
-                        <x-form.input required type="number" min="0" :value="$advance_payment_non_permanent"  name="advance_payment_non_permanent" placeholder="1000" class="d-inline" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">₪</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex flex-row-reverse pr-3">
-                <button class="btn btn-success" type="submit">
-                    <i class="fe fe-check"></i>
-                </button>
-            </div>
-        </form>
-        <hr class="border-danger border-2 opacity-50 w-100">
+    <div class="tab-pane fade" id="menu2">
+        <div class="row">
+
+        </div>
+        <div class="row justify-content-end align-items-center mb-2">
+            <button type="submit" class="btn btn-primary mx-2">
+                تعديل
+            </button>
+        </div>
     </div>
-    <div class="collapse multi-collapse" id="state_effectiveness">
-        <form action="{{ route('constants.store') }}" method="post">
-            @csrf
-            <div class="row p-3">
-                <div class="form-group m-0 col-12 d-flex justify-content-between align-items-end">
-                    <label for="state_effectivenessEmployees">حالة الفعالية للموظفين</label>
-                    <select class="custom-select" id="state_effectivenessEmployees" name="state_effectiveness">
-                        <option selected>عرض القيم المتوفرة</option>
-                        @foreach ($state_effectivenessEmployees as $state_effectivenes)
-                            <option value="{{$state_effectivenes}}">{{$state_effectivenes}}</option>
-                        @endforeach
-                    </select>
-                    <button class="btn btn-success" type="submit">
-                        <i class="fe fe-check"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
-        <form action="{{ route('constants.destroy') }}" method="post">
-            @csrf
-            @method('delete')
-            <div class="row p-3">
-                <div class="form-group m-0 col-12 d-flex justify-content-between align-items-end">
-                    <div class="input-group">
-                        <label for="state_effectiveness">حالة الفعالية المحدد لها الراتب</label>
-                        <select class="custom-select" id="state_effectiveness" name="state_effectiveness">
-                            <option selected>عرض القيم المتوفرة</option>
-                            @foreach ($state_effectiveness as $state_effectiveness)
-                                <option value="{{$state_effectiveness['id']}}">{{$state_effectiveness['value']}}</option>
-                            @endforeach
-                        </select>
-                        <div class="input-group-prepend">
-                            <button class="btn btn-danger" type="submit">
-                                <i class="fe fe-delete fe-30"></i>
-                            </button>
-                        </div>
+
+    <div class="tab-pane fade" id="menu3">
+        <h2 class="h3 mt-4">تحديد نسبة الخدمة</h2>
+        <div class="row">
+            <div class="form-group my-2 col-6 d-flex align-items-end">
+                <label for="termination_service">نسبة نهاية الخدمة للمؤسسة (الإدخار للمؤسسة)</label>
+                <div class="col-4 input-group">
+                    <x-form.input required type="number" :value="$constants->where('type_constant', 'termination_service')->first() ? $constants->where('type_constant', 'termination_service')->first()->value : 0" min="0" name="termination_service" placeholder="10" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">%</span>
                     </div>
                 </div>
             </div>
-        </form>
-        <hr class="border-danger border-2 opacity-50 w-100">
-    </div>
-    <div class="collapse multi-collapse" id="termination_service">
-        <form action="{{ route('constants.store') }}" method="post">
-            @csrf
-            <div class="row p-3">
-                <div class="form-group m-0 col-6 d-flex align-items-end">
-                    <label for="termination_service">نسبة نهاية الخدمة</label>
-                    <div class="col-4 input-group">
-                        <x-form.input required type="number" :value="$termination_service" min="0" name="termination_service" placeholder="1000" class="d-inline" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">%</span>
-                        </div>
+        </div>
+        <div class="row">
+            <div class="form-group my-2 col-6 d-flex align-items-end">
+                <label for="termination_service">نسبة إدخار للموظف</label>
+                <div class="col-4 input-group">
+                    <x-form.input required type="number" :value="$constants->where('type_constant', 'termination_employee')->first() ? $constants->where('type_constant', 'termination_employee')->first()->value : 0" min="0" name="termination_employee" placeholder="5" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">%</span>
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-end align-items-end">
-                <button class="btn btn-success" type="submit">
-                    <i class="fe fe-check"></i>
-                </button>
-            </div>
-        </form>
-        <hr class="border-danger border-2 opacity-50 w-100">
+        </div>
+        <div class="row justify-content-end align-items-center mb-2">
+            <button type="submit" class="btn btn-primary mx-2">
+                تعديل
+            </button>
+        </div>
     </div>
+    <div class="tab-pane fade" id="menu4">
+        <h2 class="h3 mt-4">تحديد رواتب الصحة المثبتين</h2>
+        <div class="row">
+            <div class="form-group my-2 col-6 d-flex align-items-end">
+                <label for="health_bachelor">البكالوريوس</label>
+                <div class="input-group">
+                    <x-form.input required type="number" :value="$constants->where('type_constant', 'health_bachelor')->first() ? $constants->where('type_constant', 'health_bachelor')->first()->value : 0" min="0" name="health_bachelor" placeholder="" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">₪</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group my-2 col-6 d-flex align-items-end">
+                <label for="health_diploma">الدبلوم</label>
+                <div class="input-group">
+                    <x-form.input required type="number" :value="$constants->where('type_constant', 'health_diploma')->first() ? $constants->where('type_constant', 'health_diploma')->first()->value : 0" min="0" name="health_diploma" placeholder="" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">₪</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group my-2 col-6 d-flex align-items-end">
+                <label for="health_secondary">ثانوية عامة</label>
+                <div class="input-group">
+                    <x-form.input required type="number" :value="$constants->where('type_constant', 'health_secondary')->first() ? $constants->where('type_constant', 'health_secondary')->first()->value : 0" min="0" name="health_secondary" placeholder="" class="d-inline" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">₪</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end align-items-center mb-2">
+            <button type="submit" class="btn btn-primary mx-2">
+                تعديل
+            </button>
+        </div>
+    </div>
+</div>
+</form>
+
 </x-front-layout>

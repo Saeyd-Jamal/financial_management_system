@@ -129,13 +129,13 @@ class AddSalaryEmployee{
             $initial_salary = SalaryScale::where('id',$employee->workData->allowance)->first()->{$employee->workData->grade}; // الراتب الأولي
             if($employee->workData->contract_type == 'صحة' && $employee->workData->type_appointment == 'مثبت'){
                 if($employee->scientific_qualification == 'بكالوريوس'){
-                    $initial_salary = 900;
+                    $initial_salary = Constant::where('type_constant', 'health_bachelor')->first() ? Constant::where('type_constant', 'health_bachelor')->first()->value : 900;
                 }
                 if($employee->scientific_qualification == 'دبلوم'){
-                    $initial_salary = 800;
+                    $initial_salary = Constant::where('type_constant', 'health_diploma')->first() ? Constant::where('type_constant', 'health_diploma')->first()->value : 800;
                 }
                 if($employee->scientific_qualification == 'ثانوية عامة'){
-                    $initial_salary = 700;
+                    $initial_salary = Constant::where('type_constant', 'health_secondary')->first() ? Constant::where('type_constant', 'health_secondary')->first()->value : 700;
                 }
             }
             $grade_allowance_ratio = $employee->workData->grade_allowance_ratio; // نسبة علاوة درجة
@@ -247,6 +247,14 @@ class AddSalaryEmployee{
         $other_discounts = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'other_discounts');
         $proportion_voluntary = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'proportion_voluntary');
         $savings_rate = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'savings_rate');
+
+        if($savings_rate == 1){
+            
+            $savings_rate_percentage = Constant::where('type_constant','termination_employee')->first()->value / 100;
+            $savings_rate = ($secondary_salary + $nature_work_increase + $administrative_allowance) * $savings_rate_percentage;
+        }else{
+            $savings_rate = 0;
+        }
 
         // القروض
         $loans = $employee->loans->where('month',$month)->first();

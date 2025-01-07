@@ -23,12 +23,12 @@
             الإجماليات
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#menu5" id="tab5">
-            ملفات شخصية
-        </a>
-    </li>
     @if (isset($btn_label))
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#menu5" id="tab5">
+                ملفات شخصية
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#menu7" id="tab7">
                 الصرف
@@ -444,32 +444,34 @@
             </button>
         </div>
     </div>
-    {{-- <div class="tab-pane fade" id="menu5">
-        <div class="row">
 
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card shadow mb-4">
-                    <div class="card-header">
-                        <strong>رفع ملفات شخصية</strong>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('employees.importExcel') }}" enctype="multipart/form-data" method="post">
-                            @csrf
-                            <label for="images" class="drop-container" id="dropcontainer">
-                                <span class="drop-title">إسقاط الملف هنا</span>
-                                أو
-                                <input type="file" name="fileUplode" placeholder="أختيار الملفات" id="fileUplode" required>
-                            </label>
-                            <button type="submit" class="btn btn-primary">ارسال</button>
-                        </form>
-                    </div> <!-- .card-body -->
-                </div> <!-- .card -->
-            </div> <!-- .col -->
-        </div>
-    </div> --}}
     @if (isset($btn_label))
+        {{-- <h2 class="h3">ملفات شخصية</h2> --}}
+        <div class="tab-pane fade" id="menu5">
+            <div class="row">
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header">
+                            <strong>رفع ملفات شخصية</strong>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('employees.importExcel') }}" enctype="multipart/form-data" method="post">
+                                @csrf
+                                <label for="images" class="drop-container" id="dropcontainer">
+                                    <span class="drop-title">إسقاط الملف هنا</span>
+                                    أو
+                                    <input type="file" name="fileUplode" placeholder="أختيار الملفات" id="fileUplode" required>
+                                </label>
+                                <button type="submit" class="btn btn-primary">ارسال</button>
+                            </form>
+                        </div> <!-- .card-body -->
+                    </div> <!-- .card -->
+                </div> <!-- .col -->
+            </div>
+        </div>
         {{-- <h2 class="h3">قسم الصرف</h2> --}}
         <div class="tab-pane fade" id="menu7">
             <div class="row justify-content-end">
@@ -646,7 +648,7 @@
     <script>
         const csrf_token = "{{ csrf_token() }}";
         const app_link = "{{ config('app.url') }}";
-        const association = "{{ $employee->workData->association }}";
+        const association = "{{ $employee->workData->association  }}";
     </script>
     <!-- Your custom script -->
     <script src="{{asset('js/jquery.validate.min.js')}}"></script>
