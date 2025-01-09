@@ -38,7 +38,8 @@ class WorkData extends Model
         'payroll_statement',
         'installation_new',
         'contract_type',
-        'number_working_days'
+        'number_working_days',
+        'files'
     ];
 
     // Relationships

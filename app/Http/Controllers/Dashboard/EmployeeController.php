@@ -23,6 +23,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
+use App\Helper\FormatSize;
+use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class EmployeeController extends Controller
@@ -113,7 +115,7 @@ class EmployeeController extends Controller
         $contract_type = WorkData::select('contract_type')->distinct()->pluck('contract_type')->toArray();
 
         $employee = new Employee();
-        $employee->workData = new WorkData();   
+        $employee->workData = new WorkData();
         $workData = new WorkData();
         $totals = new ReceivablesLoans();
         $banks = Bank::all();
@@ -247,9 +249,9 @@ class EmployeeController extends Controller
         }
 
 
-
-
-        return view('dashboard.employees.edit', compact('employee','workData','totals','banks','bank_employee','salaries','USD','exchanges','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
+        // Files
+        $files = json_decode($employee->workData->files) ?? [];
+        return view('dashboard.employees.edit', compact('employee','workData','files','totals','banks','bank_employee','salaries','USD','exchanges','btn_label',"advance_payment_rate","advance_payment_permanent","advance_payment_non_permanent","advance_payment_riyadh","areas","working_status","nature_work","type_appointment","field_action","matrimonial_status","scientific_qualification","state_effectiveness","association","workplace","section","dependence","establishment","foundation_E","payroll_statement",'contract_type'));
     }
 
     /**
@@ -608,19 +610,60 @@ class EmployeeController extends Controller
         return $pdf->stream();
     }
 
-    public function uplodeImage(Request $request){
-        dd($request->all());
-        $file = $request->file('file'); // احصل على الملف المرفوع
-
+    public function uplodeFiles(Request $request){
+        // uploade Files
+        $employee = Employee::with('workData')->findOrFail($request->employee_id);
+        $file = $request->file('fileUpload'); // احصل على الملف المرفوع
         if ($file) {
+            $name_file = $request->fileName ?? $file->getClientOriginalName();
+            $size_file = $file->getSize();
+            $extension = $file->getClientOriginalExtension();
+            if(in_array($extension, ['pdf','docx','xlsx','txt'])){
+                $icon = 'fe-file-text';
+            }elseif(in_array($extension, ['jpg','png','jpeg'])){
+                $icon = 'fe-image';
+            }else{
+                $icon = "fe-file";
+            }
             // قم بتخزين الملف في المجلد الذي ترغب فيه
-            // $filePath = $file->store('uploads', 'public');
-
+            $filePath = $file->storeAs('employeeFiles', Str::slug($name_file) . '.' . $extension . '-' . time(), 'public');
+            $files = json_decode($employee->workData->files);
+            $files[] = [
+                'name' => $name_file,
+                'size' => $size_file,
+                'icon' => $icon,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                'file_path' => asset('storage/' . $filePath),
+                'employee_id' => $employee->id
+            ];
+            $employee->workData->files = json_encode($files);
+            $employee->workData->save();
             // إذا أردت إرجاع رابط الوصول للملف
-            // return response()->json(['filePath' => asset('storage/' . $filePath)], 200);
-            return response()->json(['filePath'], 200);
+            return response()->json([
+                'index' => count($files) - 1,
+                'employee_id' => $employee->id,
+                'file_path' => asset('storage/' . $filePath),
+                'size' => FormatSize::formatSize($size_file),
+                'name' => $name_file,
+                'icon' => $icon,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ], 200);
         }
 
         return response()->json(['error' => 'No file uploaded'], 400);
+    }
+    public function files_destroy(Request $request){
+        // uploade Files
+        $index = $request->index;
+        $employee = Employee::with('workData')->findOrFail($request->employee_id);
+        $file = $employee->workData->files; // احصل على الملف المرفوع
+        $file = json_decode($file);
+        unset($file[$index]); // حذف العنصر المطلوب
+        $file = array_values($file); // إعادة ترتيب المصفوفة بدون مفاتيح رقمية
+        $employee->workData->files = json_encode($file, JSON_UNESCAPED_UNICODE);
+        $employee->workData->save();
+
+        $files = json_decode($employee->workData->files) ?? [];
+        return response()->json($files, 200);
     }
 }

@@ -51,6 +51,10 @@
             <div class="alert alert-danger alert-dismissible fade show" style="display: none;" id="alerts">
             </div>
         </div> <!-- /. col -->
+        <div class="col-12 mb-4">
+            <div class="alert alert-success alert-dismissible fade show" style="display: none;" id="alert-success">
+            </div>
+        </div> <!-- /. col -->
     </div>
     <div class="row align-items-center mb-2">
         <div class="col">
@@ -59,7 +63,7 @@
         </div>
     </div>
     <div class="row">
-        <form action="{{route('employees.update',$employee->id)}}"  id="myForm" method="post" class="col-12  mt-3">
+        <form action="{{route('employees.update',$employee->id)}}" enctype="multipart/form-data"  id="myForm" method="post" class="col-12  mt-3">
             @csrf
             @method('PUT')
             @include("dashboard.employees._form")

@@ -278,6 +278,8 @@
         </div>
     </div>
 
+
+
     <!-- Fullscreen modal -->
     <div class="modal fade modal-full" id="editLoan" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <button aria-label="" type="button" class="close px-2" data-dismiss="modal" aria-hidden="true">
@@ -356,7 +358,7 @@
                     },
                     columns: [
                         { data: 'edit', name: 'edit', orderable: false, searchable: false, render: function(data, type, row) {
-                            @can('edit','App\\Models\LoansLoans')
+                            @can('edit','App\\Models\Loans')
                                 let link = `<button class="btn btn-sm btn-icon text-primary edit_row"  style="padding: 1px;" data-id=":loan"><i class="fe fe-edit"></i></button>`.replace(':loan', data);
                                 return link ;
                             @else
@@ -609,6 +611,7 @@
                     totals : [],
                     totals_old : [],
                     totals_last : [],
+                    loans : [],
                 };
                 let name_loan = {
                     'savings_loan' : 'قرض الإدخار',
@@ -626,46 +629,48 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function (response) {
+                            response = response.employee;
                             loan.id = response.id;
                             loan.name = response.name;
                             loan.totals = response.totals;
                             loan.totals_old = response.totals;
                             loan.totals_last = response.totals_last;
-                            $('input[field="association_loan"]:not([disabled])').each(function() {
-                                if(lastMonthAccreditations == 1){
-                                    if ($(this).attr('month') == nextLastMonth) {
-                                        //
-                                    }else{
-                                        loan.totals.total_association_loan -= parseFloat($(this).val()) || 0;
-                                    }
-                                }else{
-                                    loan.totals.total_association_loan -= parseFloat($(this).val()) || 0;
-                                }
-                            });
-                            $('input[field="savings_loan"]:not([disabled])').each(function() {
-                                if(lastMonthAccreditations == 1){
-                                    if ($(this).attr('month') == nextLastMonth) {
-                                        //
-                                    }else{
-                                        loan.totals.total_savings_loan -= parseFloat($(this).val()) || 0;
-                                    }
-                                }else{
-                                    loan.totals.total_savings_loan -= parseFloat($(this).val()) || 0;
-                                }
-                                // loan.totals.total_savings_loan -= parseFloat($(this).val()) || 0;
-                            });
-                            $('input[field="shekel_loan"]:not([disabled])').each(function() {
-                                if(lastMonthAccreditations == 1){
-                                    if ($(this).attr('month') == nextLastMonth) {
-                                        //
-                                    }else{
-                                        loan.totals.total_shekel_loan -= parseFloat($(this).val()) || 0;
-                                    }
-                                }else{
-                                    loan.totals.total_shekel_loan -= parseFloat($(this).val()) || 0;
-                                }
-                                // loan.totals.total_shekel_loan -= parseFloat($(this).val()) || 0;
-                            });
+                            loan.loans = response.loans;
+                            // $('input[field="association_loan"]:not([disabled])').each(function() {
+                            //     if(lastMonthAccreditations == 12){
+                            //         if ($(this).attr('month') == nextLastMonth) {
+                            //             //
+                            //         }else{
+                            //             loan.totals.total_association_loan -= parseFloat($(this).val()) || 0;
+                            //         }
+                            //     }else{
+                            //         loan.totals.total_association_loan -= parseFloat($(this).val()) || 0;
+                            //     }
+                            // });
+                            // $('input[field="savings_loan"]:not([disabled])').each(function() {
+                            //     if(lastMonthAccreditations == 12){
+                            //         if ($(this).attr('month') == nextLastMonth) {
+                            //             //
+                            //         }else{
+                            //             loan.totals.total_savings_loan -= parseFloat($(this).val()) || 0;
+                            //         }
+                            //     }else{
+                            //         loan.totals.total_savings_loan -= parseFloat($(this).val()) || 0;
+                            //     }
+                            //     // loan.totals.total_savings_loan -= parseFloat($(this).val()) || 0;
+                            // });
+                            // $('input[field="shekel_loan"]:not([disabled])').each(function() {
+                            //     if(lastMonthAccreditations == 12){
+                            //         if ($(this).attr('month') == nextLastMonth) {
+                            //             //
+                            //         }else{
+                            //             loan.totals.total_shekel_loan -= parseFloat($(this).val()) || 0;
+                            //         }
+                            //     }else{
+                            //         loan.totals.total_shekel_loan -= parseFloat($(this).val()) || 0;
+                            //     }
+                            //     // loan.totals.total_shekel_loan -= parseFloat($(this).val()) || 0;
+                            // });
                             $('#employee_name').text(loan.name);
                             $('#association_loan_total').val(parseFloat(loan.totals.total_association_loan).toFixed(2));
                             $('#savings_loan_total').val(parseFloat(loan.totals.total_savings_loan).toFixed(2));
@@ -703,7 +708,7 @@
                                     if(i<10){
                                         i = '0'+i;
                                     }
-                                    let  monthToFind = "2024-" + i;
+                                    let  monthToFind = year + "-" + i;
                                     let foundloan = data.find(loan => loan.month === monthToFind);
                                     let val = 0;
                                     if(foundloan){
@@ -716,8 +721,10 @@
                                             <x-form.input value="${val}"  employee_id="${id}" field="${key}" month="${i}" name="${key}-${i}" />
                                         </td>
                                     `);
-                                    if (i <= currentMonth) {
-                                         $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
+                                    if(currentMonth != '12'){
+                                        if (i <= currentMonth) {
+                                            $("#" + key + "-" + i).attr('disabled', true);  // تعطيل الحقل إذا كان الشهر الحالي أكبر من الشهر المحدد
+                                        }
                                     }
                                 }
                             });
@@ -760,9 +767,24 @@
                 $(document).on('input', '.const', function () {
                     let field = $(this).data('field');
                     let value = $(this).val();
+                    // let total = 0;
+                    // if(field == "savings_loan"){
+                    //     total = loan.totals.total_savings_loan;
+                    // }
+                    // if(field == "association_loan"){
+                    //     total = loan.totals.total_association_loan;
+                    // }
+                    // if(field == "shekel_loan"){
+                    //     total = loan.totals.total_shekel_loan;
+                    // }
                     for (let i = 1; i <= 12; i++) {
                         i = i < 10 ? '0' + i : i;
-                        if (i > currentMonth) {
+                        if(currentMonth != '12'){
+                            if (i > currentMonth) {
+                                let fieldId = '#' + field + '-' + i;
+                                $(fieldId).val(value);
+                            }
+                        }else{
                             let fieldId = '#' + field + '-' + i;
                             $(fieldId).val(value);
                         }
@@ -772,43 +794,57 @@
                     let total = 0 ;
                     $('input[field="association_loan"]:not([disabled])').each(function() {
                         if ($(this).attr('month') !== '0000-00') {
-                            total += parseFloat($(this).val()) || 0;
+                            let data = loan.loans;
+                            let loanMonth = data.find(loan => loan.month == ( year + '-' + $(this).attr('month')));
+                            if(loanMonth){
+                                let association_loan = (parseFloat(loanMonth.association_loan) || 0) - (parseFloat($(this).val()) || 0);
+                                if((loanMonth.association_loan != $(this).val())){
+                                    total += parseFloat(association_loan) || 0;
+                                }else{
+                                    // total += parseFloat($(this).val()) || 0;
+                                }
+                            }
                         }
                     });
-                    let totalFinal = loan.totals_old.total_association_loan - total;
+                    let totalFinal = parseFloat(loan.totals_old.total_association_loan) + total;
                     $('#association_loan_total').val(totalFinal.toFixed(2));
                 });
                 $(document).on('input', 'input[field="savings_loan"], #savings_loan-0000', function () {
                     let total = 0 ;
                     $('input[field="savings_loan"]:not([disabled])').each(function() {
                         if ($(this).attr('month') !== '0000-00') {
-                            if(lastMonthAccreditations == 1){
-                                if ($(this).attr('month') == nextLastMonth) {
-                                    let oldVal = loan.totals_last.savings_loan;
-                                    let newVal = parseFloat($(this).val()) || 0;
-                                    console.log(oldVal,newVal,loan.totals_last.savings_loan);
-                                    total -= oldVal;
-                                    total += newVal;
+                            let data = loan.loans;
+                            let loanMonth = data.find(loan => loan.month == ( year + '-' + $(this).attr('month')));
+                            if(loanMonth){
+                                let savings_loan = (parseFloat(loanMonth.savings_loan) || 0) - (parseFloat($(this).val()) || 0);
+                                if((loanMonth.savings_loan != $(this).val())){
+                                    total += parseFloat(savings_loan) || 0;
                                 }else{
-                                    total += parseFloat($(this).val()) || 0;
+                                    // total += parseFloat($(this).val()) || 0;
                                 }
-                            }else{
-                                total += parseFloat($(this).val()) || 0;
                             }
-                            // total += parseFloat($(this).val()) || 0;
                         }
                     });
-                    let totalFinal = loan.totals_old.total_savings_loan - total;
+                    let totalFinal = (parseFloat(loan.totals_old.total_savings_loan) + total);
                     $('#savings_loan_total').val(totalFinal.toFixed(2));
                 });
                 $(document).on('input', 'input[field="shekel_loan"], #shekel_loan-0000', function () {
                     let total = 0;
                     $('input[field="shekel_loan"]:not([disabled])').each(function() {
                         if ($(this).attr('month') !== '0000-00') {
-                            total += parseFloat($(this).val()) || 0;
+                            let data = loan.loans;
+                            let loanMonth = data.find(loan => loan.month == ( year + '-' + $(this).attr('month')));
+                            if(loanMonth){
+                                let shekel_loan = (parseFloat(loanMonth.shekel_loan) || 0) - (parseFloat($(this).val()) || 0);
+                                if((loanMonth.shekel_loan != $(this).val())){
+                                    total += parseFloat(shekel_loan) || 0;
+                                }else{
+                                    // total += parseFloat($(this).val()) || 0;
+                                }
+                            }
                         }
                     });
-                    let totalFinal = loan.totals_old.total_shekel_loan - total;
+                    let totalFinal = parseFloat(loan.totals_old.total_shekel_loan) + total;
                     $('#shekel_loan_total').val(totalFinal.toFixed(2));
                 });
             });

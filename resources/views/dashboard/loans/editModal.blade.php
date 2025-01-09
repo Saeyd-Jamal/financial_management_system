@@ -34,16 +34,16 @@
     <div class="row">
         <div class="col-12 d-flex justify-content-between">
             <div class="d-flex align-items-center">
-                <span class="h5">إجمالي قرض الجمعية : </span>
-                <x-form.input name="association_loan_total" style="width: 80px; padding: 0 5px;" type="number" step="0.01" min="0" />
+                <span class="h5">إجمالي قرض الإدخار : </span>
+                <x-form.input name="savings_loan_total" style="width: 121px; padding: 0 5px;" type="number" step="0.01" min="0" />
             </div>
             <div class="d-flex align-items-center">
-                <span class="h5">إجمالي قرض الإدخار : </span>
-                <x-form.input name="savings_loan_total" style="width: 80px; padding: 0 5px;" type="number" step="0.01" min="0" />
+                <span class="h5">إجمالي قرض الجمعية : </span>
+                <x-form.input name="association_loan_total" style="width: 121px; padding: 0 5px;" type="number" step="0.01" min="0" />
             </div>
             <div class="d-flex align-items-center">
                 <span class="h5">إجمالي قرض اللجنة (الشيكل) : </span>
-                <x-form.input name="shekel_loan_total" style="width: 80px; padding: 0 5px;" type="number" step="0.01" min="0" />
+                <x-form.input name="shekel_loan_total" style="width: 121px; padding: 0 5px;" type="number" step="0.01" min="0" />
             </div>
         </div>
     </div>

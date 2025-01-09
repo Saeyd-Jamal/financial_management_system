@@ -140,7 +140,7 @@ class LoanController extends Controller
                                     })
                                     ->get();
             }else{
-                $filteredloans = new Loan();
+                $filteredloans = Loan::where('employee_id', $id)->where('month', '0000-00')->get();
             }
             return response()->json($filteredloans);
         }
@@ -174,8 +174,10 @@ class LoanController extends Controller
             for ($i=1; $i <= 12; $i++) {
                 $monthlast = Carbon::parse($month_last)->format('m');
                 $i = $i < 10 ? '0'.$i : $i;
-                if($i <= $monthlast){
-                    continue;
+                if($monthlast != 12){
+                    if($i <= $monthlast){
+                        continue;
+                    }
                 }
                 $month = $year.'-'.$i;
                 $loansOld = Loan::where('employee_id', $id)->where('month', $month)->first();
@@ -187,20 +189,10 @@ class LoanController extends Controller
                     'association_loan' => $request['association_loan-'.$i] ?? 0,
                     'shekel_loan' => $request['shekel_loan-'.$i] ?? 0,
                 ]);
-                $total = $loans->employee->totals;
-                $association_loan = $request['association_loan-'.$i] ?? 0;
-                $savings_loan = $request['savings_loan-'.$i] ?? 0;
-                $shekel_loan = $request['shekel_loan-'.$i] ?? 0;
-                if($loansOld){
-                    $association_loan = $loansOld->association_loan - $association_loan;
-                    $savings_loan = $loansOld->savings_loan - $savings_loan;
-                    $shekel_loan = $loansOld->shekel_loan - $shekel_loan;
-                }
-                $total->update([
-                    'total_association_loan' =>  ($total->total_association_loan + $association_loan) ?? 0,
-                    'total_savings_loan' => ($total->total_savings_loan + $savings_loan)  ?? 0,
-                    'total_shekel_loan' => ($total->total_shekel_loan + $shekel_loan) ?? 0,
-                ]);
+                // $total = $loans->employee->totals;
+                // $association_loan = $request['association_loan-'.$i] ?? 0;
+                // $savings_loan = $request['savings_loan-'.$i] ?? 0;
+                // $shekel_loan = $request['shekel_loan-'.$i] ?? 0;
             }
             Loan::updateOrCreate([
                 'employee_id' => $id,
@@ -244,9 +236,13 @@ class LoanController extends Controller
         $year = $request->year;
         $employee = Employee::with(['workData','totals'])->findOrFail($id);
         $nextLastMonth = Carbon::parse($year . $request->nextLastMonth)->format('Y-m');
+        $loans = Loan::where('employee_id', $id)->whereBetween('month',[$year .'-01', $year .'-12'])->get();
         $totals_last = Loan::where('employee_id', $id)->where('month', $nextLastMonth)->first();
+        $employee->loans = $loans;
         $employee->totals_last = $totals_last;
-        return $employee;
+        return response()->json([
+            'employee' => $employee
+        ]);
     }
 
     public function print(Request $request,$id){

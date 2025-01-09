@@ -27,10 +27,11 @@ Route::group([
 ], function () {
     // outhers fields
     Route::get('/employees/getEmployee', [EmployeeController::class,'getEmployee'])->name('employees.getEmployee');
-    Route::post('/employees/uplodeImage', [EmployeeController::class,'uplodeImage'])->name('employees.uplodeImage');
+    Route::post('/employees/uplodeFiles', [EmployeeController::class,'uplodeFiles'])->name('employees.uplodeFiles');
+    Route::delete('/employees/files_destroy', [EmployeeController::class,'files_destroy'])->name('employees.files_destroy');
     Route::post('/employees/filterEmployee', [EmployeeController::class,'filterEmployee'])->name('employees.filterEmployee');
 
-
+    
     Route::post('/fixed_entries/getData', [FixedEntriesController::class,'getData'])->name('fixed_entries.getData');
     Route::post('/loans/getData', [LoanController::class,'getData'])->name('loans.getData');
 

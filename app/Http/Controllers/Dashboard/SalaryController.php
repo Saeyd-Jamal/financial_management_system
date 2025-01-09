@@ -9,6 +9,7 @@ use App\Models\Accreditation;
 use App\Models\BanksEmployees;
 use App\Models\Currency;
 use App\Models\Employee;
+use App\Models\FixedEntries;
 use App\Models\LogRecord;
 use App\Models\ReceivablesLoans;
 use App\Models\Salary;
@@ -56,6 +57,13 @@ class SalaryController extends Controller
 
         $employees = Employee::with(['workData','loans','fixedEntries','salaries'])->whereIn('id',$employee_ids)->get()->map(function ($employee) use ($month) {
             $fixedEntries = $employee->fixedEntries->where('month', $month)->first();
+            $fixedEntriesStatic = $employee->fixedEntries->where('month', '0000-00')->first();
+            if($fixedEntries == null){
+                $fixedEntries = new FixedEntries();
+            }
+            if($fixedEntriesStatic == null){
+                $fixedEntriesStatic = $fixedEntries;
+            }
             $salaries = $employee->salaries->where('month', $month)->first();
             $employee->association = $employee->workData->association ?? '';
             $employee->workplace = $employee->workData->workplace ?? '';
@@ -66,16 +74,16 @@ class SalaryController extends Controller
             $employee->secondary_salary = $salaries->secondary_salary ?? 0;
             $employee->allowance_boys = $salaries->allowance_boys ?? 0;
             $employee->nature_work_increase = $salaries->nature_work_increase ?? 0;
-            $employee->administrative_allowance = $fixedEntries->administrative_allowance ?? 0;
-            $employee->scientific_qualification_allowance = $fixedEntries->scientific_qualification_allowance ?? 0;
-            $employee->transport = $fixedEntries->transport ?? 0;
-            $employee->extra_allowance = $fixedEntries->extra_allowance ?? 0;
-            $employee->salary_allowance = $fixedEntries->salary_allowance ?? 0;
-            $employee->ex_addition = $fixedEntries->ex_addition ?? 0;
-            $employee->mobile_allowance = $fixedEntries->mobile_allowance ?? 0;
+            $employee->administrative_allowance = $fixedEntriesStatic->administrative_allowance != '-01' ? $fixedEntriesStatic->administrative_allowance : $fixedEntries->administrative_allowance;
+            $employee->scientific_qualification_allowance = $fixedEntriesStatic->scientific_qualification_allowance != '-01' ? $fixedEntriesStatic->scientific_qualification_allowance : $fixedEntries->scientific_qualification_allowance;
+            $employee->transport = $fixedEntriesStatic->transport != '-01' ? $fixedEntriesStatic->transport : $fixedEntries->transport;
+            $employee->extra_allowance = $fixedEntriesStatic->extra_allowance != '-01' ? $fixedEntriesStatic->extra_allowance : $fixedEntries->extra_allowance;
+            $employee->salary_allowance = $fixedEntriesStatic->salary_allowance != '-01' ? $fixedEntriesStatic->salary_allowance : $fixedEntries->salary_allowance;
+            $employee->ex_addition = $fixedEntriesStatic->ex_addition != '-01' ? $fixedEntriesStatic->ex_addition : $fixedEntries->ex_addition;
+            $employee->mobile_allowance = $fixedEntriesStatic->mobile_allowance != '-01' ? $fixedEntriesStatic->mobile_allowance : $fixedEntries->mobile_allowance;
             $employee->termination_service = $salaries->termination_service ?? 0;
             $employee->gross_salary = $salaries->gross_salary ?? 0;
-            $employee->health_insurance = $fixedEntries->health_insurance ?? 0;
+            $employee->health_insurance = $fixedEntriesStatic->health_insurance != '-01' ? $fixedEntriesStatic->health_insurance : $fixedEntries->health_insurance;
             $employee->z_Income = $salaries->z_Income ?? 0;
             $employee->savings_rate = $salaries->savings_rate ?? 0;
             $employee->association_loan = $salaries->association_loan ?? 0;
@@ -218,7 +226,7 @@ class SalaryController extends Controller
         try {
 
             // التجربة لموظف
-            // $employee = Employee::findOrFail(1);
+            // $employee = Employee::findOrFail(17);
             // $month = $request->month ?? Carbon::now()->format('Y-m');
             // AddSalaryEmployee::addSalary($employee,$month);
 
@@ -279,9 +287,6 @@ class SalaryController extends Controller
                     ],[
                         'total_receivables' => DB::raw('total_receivables - '. ($salary->late_receivables )),
                         'total_savings' => DB::raw('total_savings - ' . $total_savings),
-                        'total_savings_loan' => DB::raw('total_savings_loan + '.$savings_loan),
-                        'total_shekel_loan' => DB::raw('total_shekel_loan + '.($loans->shekel_loan ?? 0)),
-                        'total_association_loan' => DB::raw('total_association_loan + '.($loans->association_loan ?? 0))
                     ]);
                     $salary->forceDelete();
                     LogRecord::where('type', 'errorSalary')->where('related_id', "employee_$salary->employee_id")->delete();

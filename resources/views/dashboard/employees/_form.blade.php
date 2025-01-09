@@ -1,6 +1,6 @@
 <!-- Nav tabs -->
 @push('styles')
-    <link rel="stylesheet" href="{{asset('css/employeeForm.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/employeeForm.css') }}">
 @endpush
 <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -154,9 +154,11 @@
             </div>
 
             {{-- حقول خاصة بالموظف الثابت --}}
-            <div class="row" id="proven" @if ($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
+            <div class="row" id="proven"
+                @if ($workData->type_appointment == 'مثبت') style="display: flex; margin: 0; " @else style="display: none" @endif>
                 <div class="form-group p-3 col-3">
-                    <x-form.input type="number" class="required" label="درجة العلاوة من السلم" min="0" max="40" :value="$workData->allowance" name="allowance" placeholder="0" />
+                    <x-form.input type="number" class="required" label="درجة العلاوة من السلم" min="0"
+                        max="40" :value="$workData->allowance" name="allowance" placeholder="0" />
                 </div>
                 <div class="form-group p-3 col-3">
                     <label for="grade">الدرجة في سلم الرواتب</label>
@@ -178,8 +180,8 @@
                     </select>
                 </div>
                 <div class="form-group p-3 col-3">
-                    <x-form.input type="number" class="required" label="نسبة علاوة درجة" step="0.01" :value="$workData->grade_allowance_ratio"
-                        name="grade_allowance_ratio" placeholder="0.55" />
+                    <x-form.input type="number" class="required" label="نسبة علاوة درجة" step="0.01"
+                        :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="0.55" />
                 </div>
                 <div class="form-group p-3 col-3">
                     <x-form.input type="number" label="نسبة علاوة طبيعة العمل" :value="$workData->percentage_allowance"
@@ -395,8 +397,8 @@
                 </select>
             </div>
             <div class="form-group p-3 col-3">
-                <x-form.input maxlength="9" label="رقم الحساب" :value="$bank_employee->account_number"
-                    name="account_number" placeholder="4000000" />
+                <x-form.input maxlength="9" label="رقم الحساب" :value="$bank_employee->account_number" name="account_number"
+                    placeholder="4000000" />
             </div>
         </div>
         <div class="row justify-content-end align-items-center mb-2">
@@ -448,8 +450,55 @@
     @if (isset($btn_label))
         {{-- <h2 class="h3">ملفات شخصية</h2> --}}
         <div class="tab-pane fade" id="menu5">
-            <div class="row">
-
+            <div class="row p-4">
+                <style>
+                    td{
+                        color: #000 !important;
+                    }
+                    th,td{
+                        border-color: #ddd !important;
+                    }
+                </style>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th colspan="2">اسم الملف</th>
+                            <th>تاريخ الرفع</th>
+                            <th>الحجم</th>
+                            <th>حدث</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filesTbody">
+                        @foreach ($files as $index => $file)
+                            <tr id="file-{{$index}}">
+                                <td>{{$loop->iteration}}</td>
+                                <td class="text-center" style="width: 80px;">
+                                    <div class="circle circle-sm bg-light">
+                                        <span class="fe {{$file->icon}} fe-16 text-muted"></span>
+                                    </div>
+                                    <span class="dot dot-md bg-success mr-1"></span>
+                                </td>
+                                <td>{{$file->name}}</td>
+                                <td>{{$file->created_at}}</td>
+                                <td>{{ \App\Helper\FormatSize::formatSize($file->size) }}</td>
+                                <td style="width: 250px;">
+                                    <div class="btn-group w-100">
+                                        <a href="{{asset($file->file_path)}}" target="_blank" class="btn btn-sm btn-primary">
+                                            <i class="fe fe-eye"></i> عرض
+                                        </a>
+                                        <a href="{{asset($file->file_path)}}" target="_blank" download class="btn btn-sm btn-secondary">
+                                            <i class="fe fe-download"></i> تحميل
+                                        </a>
+                                        <button data-index="{{$index}}" data-id="{{$employee->id}}" type="button" class="btn btn-sm btn-danger deleteFile">
+                                            <i class="fe fe-trash-2"></i> حذف
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
             <div class="row">
                 <div class="col-md-4">
@@ -458,28 +507,139 @@
                             <strong>رفع ملفات شخصية</strong>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('employees.importExcel') }}" enctype="multipart/form-data" method="post">
-                                @csrf
-                                <label for="images" class="drop-container" id="dropcontainer">
-                                    <span class="drop-title">إسقاط الملف هنا</span>
-                                    أو
-                                    <input type="file" name="fileUplode" placeholder="أختيار الملفات" id="fileUplode" required>
-                                </label>
-                                <button type="submit" class="btn btn-primary">ارسال</button>
-                            </form>
+                            <div class="form-group col-12">
+                                <x-form.input type="text" label="اسم الملف" name="fileName" />
+                            </div>
+                            <div class="form-group col-12">
+                                <x-form.input type="file" label="اختر الملف" name="fileUpload" />
+                            </div>
+                            <button type="button" id="sendFiles" class="btn btn-primary">ارسال</button>
                         </div> <!-- .card-body -->
                     </div> <!-- .card -->
                 </div> <!-- .col -->
             </div>
+            @push('scripts')
+                <script>
+                    $(document).ready(function() {
+                        $("#sendFiles").click(function() {
+                            // إنشاء كائن FormData
+                            let formData = new FormData();
+                            formData.append('_token', "{{ csrf_token() }}");
+                            formData.append('fileName', $('input[name=fileName]').val());
+                            formData.append('fileUpload', $('input[name=fileUpload]')[0].files[0]);
+                            formData.append('employee_id', "{{ $employee->id }}");
+
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('employees.uplodeFiles') }}",
+                                data: formData,
+                                processData: false, // تعطيل المعالجة التلقائية للبيانات
+                                contentType: false, // تعطيل تحديد Content-Type تلقائيًا
+                                success: function(data) {
+                                    console.log(data);
+                                    $('#filesTbody').append(`
+                                    <tr id="file-${data.index}">
+                                        <td>${data.index + 1}</td>
+                                        <td class="text-center" style="width: 80px;">
+                                            <div class="circle circle-sm bg-light">
+                                                <span class="fe ${data.icon} fe-16 text-muted"></span>
+                                            </div>
+                                            <span class="dot dot-md bg-success mr-1"></span>
+                                        </td>
+                                        <td>${data.name}</td>
+                                        <td>${data.created_at}</td>
+                                        <td>${data.size}</td>
+                                        <td style="width: 250px;">
+                                            <div class="btn-group w-100">
+                                                <a href="${data.file_path}" target="_blank" class="btn btn-sm btn-primary">
+                                                    <i class="fe fe-eye"></i> عرض
+                                                </a>
+                                                <a href="${data.file_path}" target="_blank" download class="btn btn-sm btn-secondary">
+                                                    <i class="fe fe-download"></i> تحميل
+                                                </a>
+                                                <button data-index="${data.index}" data-id="${data.employee_id}" type="button" class="btn btn-sm btn-danger deleteFile">
+                                                    <i class="fe fe-trash-2"></i> حذف
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    `);
+                                    $('input[name=fileName]').val('');
+                                    $('input[name=fileUpload]').val('');
+                                    $('#alert-success').slideDown();
+                                    $('#alert-success').text('تم رفع الملف بنجاح');
+                                    setTimeout(() => {
+                                        $('#alert-success').slideUp();
+                                        $('#alert-success').text('');
+                                    }, 3000);
+                                }
+                            })
+                        });
+                        $(document).on('click', '.deleteFile', function() {
+                            // إنشاء كائن FormData
+                            let index = $(this).data("index");
+                            let employee_id = $(this).data("id");
+                            $.ajax({
+                                type: "DELETE",
+                                url: "{{ route('employees.files_destroy') }}",
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "index": index,
+                                    "employee_id": employee_id
+                                },
+                                success: function(data) {
+                                    console.log(data);
+                                    $('#filesTbody').empty();
+                                    data.forEach(function(file, index) {
+                                        $('#filesTbody').append(`
+                                            <tr id="file-${index}">
+                                                <td>${index + 1}</td>
+                                                <td class="text-center" style="width: 80px;">
+                                                    <div class="circle circle-sm bg-light">
+                                                        <span class="fe ${file.icon} fe-16 text-muted"></span>
+                                                    </div>
+                                                    <span class="dot dot-md bg-success mr-1"></span>
+                                                </td>
+                                                <td>${file.name}</td>
+                                                <td>${file.created_at}</td>
+                                                <td>${file.size}</td>
+                                                <td style="width: 250px;">
+                                                    <div class="btn-group w-100">
+                                                        <a href="${file.file_path}" target="_blank" class="btn btn-sm btn-primary">
+                                                            <i class="fe fe-eye"></i> عرض
+                                                        </a>
+                                                        <a href="${file.file_path}" target="_blank" download class="btn btn-sm btn-secondary">
+                                                            <i class="fe fe-download"></i> تحميل
+                                                        </a>
+                                                        <button data-index="${index}" data-id="${file.employee_id}" type="button" class="btn btn-sm btn-danger deleteFile">
+                                                            <i class="fe fe-trash-2"></i> حذف
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        `);
+                                    })
+                                    $('#alert-success').slideDown();
+                                    $('#alert-success').text('تم حذف الملف بنجاح');
+                                    setTimeout(() => {
+                                        $('#alert-success').slideUp();
+                                        $('#alert-success').text('');
+                                    }, 3000);
+                                }
+                            })
+                        });
+                    });
+                </script>
+            @endpush
         </div>
         {{-- <h2 class="h3">قسم الصرف</h2> --}}
         <div class="tab-pane fade" id="menu7">
             <div class="row justify-content-end">
                 <div class="form-group p-3">
                     @can('create', 'App\\Models\Exchange')
-                    <a href="{{ route('exchanges.create') }}" class="btn btn-info">
-                        <i class="fe fe-plus"></i> إضافة صرف جديد
-                    </a>
+                        <a href="{{ route('exchanges.create') }}" class="btn btn-info">
+                            <i class="fe fe-plus"></i> إضافة صرف جديد
+                        </a>
                     @endcan
                 </div>
             </div>
@@ -648,10 +808,10 @@
     <script>
         const csrf_token = "{{ csrf_token() }}";
         const app_link = "{{ config('app.url') }}";
-        const association = "{{ $employee->workData->association  }}";
+        const association = "{{ $employee->workData->association }}";
     </script>
     <!-- Your custom script -->
-    <script src="{{asset('js/jquery.validate.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('js/formEmployee.js?v=0.3') }}"></script>
     <script src="{{ asset('js/exchange.js') }}"></script>
 @endpush

@@ -249,7 +249,7 @@ class AddSalaryEmployee{
         $savings_rate = AddSalaryEmployee::fixedEntriesVal($fixedEntries,$fixedEntriesStatic,'savings_rate');
 
         if($savings_rate == 1){
-            
+
             $savings_rate_percentage = Constant::where('type_constant','termination_employee')->first()->value / 100;
             $savings_rate = ($secondary_salary + $nature_work_increase + $administrative_allowance) * $savings_rate_percentage;
         }else{
@@ -409,55 +409,6 @@ class AddSalaryEmployee{
                 'association_loan' => $association_loan,
                 'savings_rate' => $savings_rate,
             ]);
-
-            if($salaryOld == null && $employee->workData->type_appointment != 'نسبة'){
-                ReceivablesLoans::updateOrCreate([
-                    'employee_id' => $employee->id,
-                ],[
-                    'total_savings_loan' => DB::raw('total_savings_loan - '.($savings_loan)),
-                    'total_shekel_loan' => DB::raw('total_shekel_loan - '.($shekel_loan)),
-                    'total_association_loan' => DB::raw('total_association_loan - '.($association_loan)),
-                    'total_receivables' => DB::raw('total_receivables + '.($late_receivables)),
-                    'total_savings' => DB::raw('total_savings + '.($savings_loan + (($savings_rate + $termination_service) / $USD ))),
-                ]);
-            }
-            if($salaryOld != null && $employee->workData->type_appointment != 'نسبة'){
-                if(floatval($salaryOld->savings_loan) != $savings_loan){
-                    ReceivablesLoans::updateOrCreate([
-                        'employee_id' => $employee->id,
-                    ],[
-                        'total_savings_loan' => DB::raw('total_savings_loan + '.($salaryOld->total_savings_loan) .'-' . ($savings_loan)),
-                    ]);
-                }
-                if(floatval($salaryOld->shekel_loan) != $shekel_loan){
-                    ReceivablesLoans::updateOrCreate([
-                        'employee_id' => $employee->id,
-                    ],[
-                        'total_shekel_loan' => DB::raw('total_shekel_loan + '.($salaryOld->total_shekel_loan) .'-' . ($shekel_loan)),
-                    ]);
-                }
-                if(floatval($salaryOld->association_loan) != $association_loan){
-                    ReceivablesLoans::updateOrCreate([
-                        'employee_id' => $employee->id,
-                    ],[
-                        'total_association_loan' => DB::raw('total_association_loan + '.($salaryOld->total_association_loan) .'-' . ($association_loan)),
-                    ]);
-                }
-                if(number_format($salaryOld->late_receivables,0) != number_format($late_receivables,0)){
-                    ReceivablesLoans::updateOrCreate([
-                        'employee_id' => $employee->id,
-                    ],[
-                        'total_receivables' => DB::raw('total_receivables - '.($salaryOld->late_receivables) .'+' . ($late_receivables)),
-                    ]);
-                }
-                if(floatval($salaryOld->savings_loan) != $savings_loan || floatval($salaryOld->savings_rate) != $savings_rate || floatval($salaryOld->termination_service) != $termination_service){
-                    ReceivablesLoans::updateOrCreate([
-                        'employee_id' => $employee->id,
-                    ],[
-                        'total_savings' => DB::raw('total_savings - '.($salaryOld->savings_loan + (($salaryOld->savings_rate + $salaryOld->termination_service) / $USD )) .'+' . ($savings_loan + (($savings_rate + $termination_service) / $USD ))),
-                    ]);
-                }
-            }
             DB::commit();
         }catch(\Exception $e){
             DB::rollBack();

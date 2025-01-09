@@ -120,13 +120,6 @@ class  AnnualTransfer
                     }
                 }
             }
-
-            if ((($allowance + 1) % 5 === 0)) {
-                $employee->workData->update([
-                    'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio + 0.05,
-                ]);
-            }
-
         }
 
         return response()->json('تم التحويل السنوي بنجاح');
