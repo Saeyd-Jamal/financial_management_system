@@ -54,8 +54,8 @@ class SalaryController extends Controller
         $request = request();
         $month = $request->month ?? Carbon::now()->format('Y-m');
         $employee_ids = Salary::where('month', $month)->get('employee_id');
-
-        $employees = Employee::with(['workData','loans','fixedEntries','salaries'])->whereIn('id',$employee_ids)->get()->map(function ($employee) use ($month) {
+        $USD = Currency::where('code', 'USD')->first() ? Currency::where('code', 'USD')->first()->value : 0;
+        $employees = Employee::with(['workData','loans','fixedEntries','salaries'])->whereIn('id',$employee_ids)->get()->map(function ($employee) use ($month, $USD) {
             $fixedEntries = $employee->fixedEntries->where('month', $month)->first();
             $fixedEntriesStatic = $employee->fixedEntries->where('month', '0000-00')->first();
             if($fixedEntries == null){
@@ -87,7 +87,7 @@ class SalaryController extends Controller
             $employee->z_Income = $salaries->z_Income ?? 0;
             $employee->savings_rate = $salaries->savings_rate ?? 0;
             $employee->association_loan = $salaries->association_loan ?? 0;
-            $employee->savings_loan = $salaries->savings_loan ?? 0;
+            $employee->savings_loan = $salaries->savings_loan * $USD ?? 0;
             $employee->shekel_loan = $salaries->shekel_loan ?? 0;
             $employee->late_receivables = $salaries->late_receivables ?? 0;
             $employee->total_discounts = $salaries->total_discounts ?? 0;

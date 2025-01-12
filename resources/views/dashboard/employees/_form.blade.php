@@ -181,7 +181,7 @@
                 </div>
                 <div class="form-group p-3 col-3">
                     <x-form.input type="number" class="required" label="نسبة علاوة درجة" step="0.01"
-                        :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="0.55" />
+                        :value="$workData->grade_allowance_ratio" name="grade_allowance_ratio" placeholder="5%" />
                 </div>
                 <div class="form-group p-3 col-3">
                     <x-form.input type="number" label="نسبة علاوة طبيعة العمل" :value="$workData->percentage_allowance"

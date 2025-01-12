@@ -138,7 +138,7 @@ class AddSalaryEmployee{
                     $initial_salary = Constant::where('type_constant', 'health_secondary')->first() ? Constant::where('type_constant', 'health_secondary')->first()->value : 700;
                 }
             }
-            $grade_allowance_ratio = $employee->workData->grade_allowance_ratio; // نسبة علاوة درجة
+            $grade_allowance_ratio = ($employee->workData->grade_allowance_ratio / 100); // نسبة علاوة درجة
             if($grade_allowance_ratio != 0){
                 $grade_Allowance = number_format($initial_salary * $grade_allowance_ratio,0); // علاوة درجة
             }else{

@@ -448,7 +448,7 @@
                         { data: 'allowance', name: 'allowance', orderable: false},
                         { data: 'grade', name: 'grade', orderable: false},
                         { data: 'grade_allowance_ratio', name: 'grade_allowance_ratio', orderable: false, render: function(data, type, row) {
-                            return formatNumber(data * 100,0) + '%';
+                            return formatNumber(data) + '%';
                         }},
                         { data: 'dual_function', name: 'dual_function', orderable: false},
                         { data: 'years_service', name: 'years_service', orderable: false},

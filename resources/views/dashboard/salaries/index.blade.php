@@ -53,7 +53,7 @@
             </div>
             <div class="d-flex align-items-center justify-content-end">
                 <div class="form-group my-0 mx-2">
-                    <x-form.input name="month" id="month" type="month" value="{{Carbon\Carbon::now()->format('Y-m')}}" />
+                    <x-form.input name="month" min="2024-07" id="month" type="month" value="{{Carbon\Carbon::now()->format('Y-m')}}" />
                 </div>
                 <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#ExtraModal">
                     <i class="fe fe-maximize-2 fe-16"></i>
@@ -338,7 +338,7 @@
                     <h3>تحديد شهر معين للإعتماد</h3>
                     <div class="row">
                         <div class="form-group col-6">
-                            <input type="month" name="month" class="form-control" value="{{date('Y-m')}}">
+                            <input type="month" name="month" min="{{ $monthDownload }}"  class="form-control" value="{{date('Y-m')}}">
                         </div>
                         <div class="form-group col-6">
                             <button type="submit" class="btn btn-primary">اعتماد</button>

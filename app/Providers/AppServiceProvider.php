@@ -68,6 +68,14 @@ class AppServiceProvider extends ServiceProvider
                 return false;
             }
         });
+        Gate::define('admins.super', function ($user) {
+            if($user instanceof User) {
+                if($user->roles->contains('role_name', 'admins.super')) {
+                    return true;
+                }
+                return false;
+            }
+        });
         Gate::policy(FixedEntries::class, FixedEntriesPolicy::class);
         Gate::policy(BanksEmployees::class, BankEmployeePolicy::class);
         Gate::policy(ReceivablesLoans::class, ReceivablesLoansPolicy::class);

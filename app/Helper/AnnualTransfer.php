@@ -73,6 +73,12 @@ class  AnnualTransfer
                     'allowance' => $allowance + 1,
                 ]);
             }else{
+                if(in_array($employee->id,[33,57,60])){
+                    $employee->workData->update([
+                        'allowance' => $allowance + 1,
+                    ]);
+                    return response()->json('تم التحويل السنوي بنجاح');
+                }
                 if(in_array($salary_category, [2, 3, 4, 5])){
                     $start = $salary_category_rank[$salary_category]['start'];
                     if($grade > $start){
@@ -81,7 +87,7 @@ class  AnnualTransfer
                             'allowance' => 0,
                         ]);
                         $employee->workData->update([
-                            'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio + 0.05,
+                            'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio + 5,
                         ]);
                     }
                     if($grade == $start){
@@ -98,7 +104,7 @@ class  AnnualTransfer
                         ]);
                         if ($allowance== 0) {
                             $employee->workData->update([
-                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio + 0.05,
+                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio + 5,
                             ]);
                         }
                     }
@@ -109,7 +115,7 @@ class  AnnualTransfer
                         ]);
                         if ($allowance== 0) {
                             $employee->workData->update([
-                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio + 0.05,
+                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio + 5,
                             ]);
                         }
                     }
@@ -196,28 +202,28 @@ class  AnnualTransfer
                 if($allowance == 0){
                     if(in_array($salary_category, [2, 3, 4, 5])){
                         $employee->workData->update([
-                            'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 0.05,
+                            'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 5,
                             'allowance' => 4,
                             'grade' => $grade + 1,
                         ]);
                     }else{
                         if($grade == 'C'){
                             $employee->workData->update([
-                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 0.05,
+                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 5,
                                 'allowance' => 4,
                                 'grade' => 1,
                             ]);
                         }
                         if($grade == 'B'){
                             $employee->workData->update([
-                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 0.05,
+                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 5,
                                 'allowance' => 4,
                                 'grade' => 'C',
                             ]);
                         }
                         if($grade == 'A'){
                             $employee->workData->update([
-                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 0.05,
+                                'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 5,
                                 'allowance' => 4,
                                 'grade' => 'B',
                             ]);
@@ -263,7 +269,7 @@ class  AnnualTransfer
 
             if ((($allowance) % 5 === 0)) {
                 $employee->workData->update([
-                    'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 0.05,
+                    'grade_allowance_ratio' => $employee->workData->grade_allowance_ratio - 5,
                 ]);
             }
 
